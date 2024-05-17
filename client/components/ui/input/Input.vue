@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
+
 import { useVModel } from '@vueuse/core'
+
 import { cn } from '@/lib/utils'
 
 const props = defineProps<{
-  defaultValue?: string | number
+   defaultValue?: string | number
   modelValue?: string | number
   class?: HTMLAttributes['class']
 }>()
@@ -15,7 +17,7 @@ const emits = defineEmits<{
 
 const modelValue = useVModel(props, 'modelValue', emits, {
   passive: true,
-  defaultValue: props.defaultValue,
+  defaultValue: props.defaultValue
 })
 </script>
 

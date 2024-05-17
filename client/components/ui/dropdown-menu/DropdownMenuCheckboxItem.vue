@@ -1,19 +1,22 @@
 <script setup lang="ts">
 import { type HTMLAttributes, computed } from 'vue'
+
+import { Check } from 'lucide-vue-next'
 import {
   DropdownMenuCheckboxItem,
   type DropdownMenuCheckboxItemEmits,
   type DropdownMenuCheckboxItemProps,
   DropdownMenuItemIndicator,
-  useForwardPropsEmits,
+  useForwardPropsEmits
 } from 'radix-vue'
-import { Check } from 'lucide-vue-next'
+
 import { cn } from '@/lib/utils'
 
 const props = defineProps<DropdownMenuCheckboxItemProps & { class?: HTMLAttributes['class'] }>()
 const emits = defineEmits<DropdownMenuCheckboxItemEmits>()
 
 const delegatedProps = computed(() => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { class: _, ...delegated } = props
 
   return delegated
