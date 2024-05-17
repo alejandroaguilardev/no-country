@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { Button } from "@/components/ui/button";
-import { ToggleTheme } from "@/components/toggles";
+import { ToggleTheme } from '@/components/toggles'
+import { Button } from '@/components/ui/button'
+
 </script>
 
 <template>
   <div>
-    <Button variant="default">Click</Button>
+    <Button variant="default">
+      Click
+    </Button>
     <ToggleTheme />
   </div>
 </template>

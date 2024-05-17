@@ -1,22 +1,20 @@
 <script setup lang="ts">
+
 import type { HTMLAttributes } from 'vue'
 
 import { Primitive, type PrimitiveProps } from 'radix-vue'
 
+import { type MainLayoutVariants, mainLayoutVariants } from '.'
 import { cn } from '@/lib/utils'
 
-import { type ButtonVariants, buttonVariants } from '.'
-
 interface Props extends PrimitiveProps {
-  variant?: ButtonVariants['variant'];
-  size?: ButtonVariants['size'];
+  size?: MainLayoutVariants['size'];
   class?: HTMLAttributes['class'];
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  as: 'button',
-  variant: 'default',
-  size: 'default',
+  as: 'div',
+  size: 'lg',
   class: ''
 })
 </script>
@@ -25,7 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   <Primitive
     :as="as"
     :as-child="asChild"
-    :class="cn(buttonVariants({ variant, size }), props.class)"
+    :class="cn(mainLayoutVariants({ size }), props.class)"
   >
     <slot />
   </Primitive>
