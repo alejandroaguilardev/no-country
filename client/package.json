@@ -23,7 +23,9 @@
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "vue": "^3.4.27",
-    "vue-router": "^4.3.2"
+    "vue-router": "^4.3.2",
+    "embla-carousel": "^8.1.1",
+    "embla-carousel-vue": "^8.1.1"
   },
   "devDependencies": {
     "@nuxtjs/color-mode": "^3.4.1",
