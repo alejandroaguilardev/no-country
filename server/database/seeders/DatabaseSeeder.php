@@ -12,28 +12,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-    //     Course::factory(21)->create();
+        $courses = [
+            '1A', '1B', '1C', '2A', '2B', '2C',
+            '3A', '3B', '3C', '4A', '4B', '4C',
+            '5A', '5B', '5C', '6A', '6B', '6C',
+            '7A', '7B', '7C',
+        ];
 
-        Course::factory()->create(['description' => '1A']);
-        Course::factory()->create(['description' => '1B']);
-        Course::factory()->create(['description' => '1C']);
-        Course::factory()->create(['description' => '2A']);
-        Course::factory()->create(['description' => '2B']);
-        Course::factory()->create(['description' => '2C']);
-        Course::factory()->create(['description' => '3A']);
-        Course::factory()->create(['description' => '3B']);
-        Course::factory()->create(['description' => '3C']);
-        Course::factory()->create(['description' => '4A']);
-        Course::factory()->create(['description' => '4B']);
-        Course::factory()->create(['description' => '4C']);
-        Course::factory()->create(['description' => '5A']);
-        Course::factory()->create(['description' => '5B']);
-        Course::factory()->create(['description' => '5C']);
-        Course::factory()->create(['description' => '6A']);
-        Course::factory()->create(['description' => '6B']);
-        Course::factory()->create(['description' => '6C']);
-        Course::factory()->create(['description' => '7A']);
-        Course::factory()->create(['description' => '7B']);
-        Course::factory()->create(['description' => '7C']);
+        foreach ($courses as $courseDescription) {
+         Course::factory()->create(['description' => $courseDescription]);
+        }
+
+        //tutores
+        $this->call(TutorSeeder::class);
     }
 }

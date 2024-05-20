@@ -18,6 +18,7 @@ class Authorized extends Model
         'documentnumber',
         'phone',
         'photo',
+        'tutorid',
     ];
     
     public function tutor(): BelongsTo

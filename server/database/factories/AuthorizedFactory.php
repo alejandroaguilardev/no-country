@@ -17,11 +17,11 @@ class AuthorizedFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'lastname' => fake()->lastName(),
-            'documentnumber' => fake()->randomNumber(9),
-            'phone' => fake()->phoneNumber(),
-            'photo'=>'user.png'
+            'name' => $this->faker->firstName,
+            'lastname' => $this->faker->lastName,
+            'documentnumber' => $this->faker->unique()->numerify('##########'),
+            'phone' => $this->faker->phoneNumber,
+            'photo' => $this->faker->imageUrl(640, 480, 'people', true),
         ];
     }
 }
