@@ -17,7 +17,7 @@ class StudentRepository
             ->offset($offset)
             ->get();
 
-        $total = $query->count();
+        $total = Student::count();
 
         return [
             "rows" => $results->toArray(),

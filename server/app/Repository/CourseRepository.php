@@ -17,7 +17,7 @@ class CourseRepository
             ->offset($offset)
             ->get();
 
-        $total = $query->count();
+        $total = Course::count();
 
         return [
             "rows" => $results->toArray(),

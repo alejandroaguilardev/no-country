@@ -17,7 +17,7 @@ class AuthorizedRepository
             ->offset($offset)
             ->get();
 
-        $total = $query->count();
+        $total = Authorized::count();
 
         return [
             "rows" => $results->toArray(),

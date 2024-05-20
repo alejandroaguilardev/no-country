@@ -17,7 +17,7 @@ class RetiredRepository
             ->offset($offset)
             ->get();
 
-        $total = $query->count();
+        $total = Retired::count();
 
         return [
             "rows" => $results->toArray(),

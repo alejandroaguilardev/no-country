@@ -17,7 +17,7 @@ class TeacherRepository
             ->offset($offset)
             ->get();
 
-        $total = $query->count();
+        $total = Teacher::count();
 
         return [
             "rows" => $results->toArray(),
