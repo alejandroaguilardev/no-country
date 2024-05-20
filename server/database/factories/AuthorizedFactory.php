@@ -21,7 +21,8 @@ class AuthorizedFactory extends Factory
             'lastname' => $this->faker->lastName,
             'documentnumber' => $this->faker->unique()->numerify('##########'),
             'phone' => $this->faker->phoneNumber,
-            'photo' => $this->faker->imageUrl(640, 480, 'people', true),
+            'photo' => 'user.png',
+            'tutor_id' => null,
         ];
     }
 }
