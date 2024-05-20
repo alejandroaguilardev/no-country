@@ -14,8 +14,8 @@ class TutorSeeder extends Seeder
     public function run(): void
     {
         // Generar 210 tutores y para cada uno generar un autorizado
-        Tutor::factory()->count(210)->create()->each(function ($tutor) {
-            $tutor->authorizeds()->create(Factory(Authorized::class)->make()->toArray());
+        Tutor::factory()->count(1)->create()->each(function ($tutor) {
+            $tutor->authorizeds()->create(Authorized::factory()->make()->toArray());
         });
     }
 }

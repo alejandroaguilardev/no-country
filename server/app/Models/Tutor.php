@@ -25,12 +25,12 @@ class Tutor extends Model
         'password'
     ];
 
-    public function student(): HasMany
+    public function students(): HasMany
     {
         return $this->hasMany(Student::class);
     }
 
-    public function authorized(): HasMany
+    public function authorizeds(): HasMany
     {
         return $this->hasMany(Authorized::class);
     }

@@ -14,6 +14,7 @@ class Retired extends Model
         'date',
         'status',
         'presence',
+        'student_id'
     ];
 
     public function student(): BelongsTo

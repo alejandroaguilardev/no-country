@@ -18,7 +18,7 @@ class Authorized extends Model
         'documentnumber',
         'phone',
         'photo',
-        'tutorid',
+        'tutor_id',
     ];
     
     public function tutor(): BelongsTo
@@ -26,7 +26,7 @@ class Authorized extends Model
         return $this->belongsTo(Tutor::class);
     }
 
-    public function student(): HasMany
+    public function students(): HasMany
     {
         return $this->hasMany(Student::class);
     }

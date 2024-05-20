@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 use App\Models\Course;
+use App\Models\Teacher;
+use App\Models\Tutor;
+use App\Models\Authorized;
+use App\Models\Student;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -18,12 +22,21 @@ class DatabaseSeeder extends Seeder
             '5A', '5B', '5C', '6A', '6B', '6C',
             '7A', '7B', '7C',
         ];
-
+        
+        $courses_id= [ ];
         foreach ($courses as $courseDescription) {
-         Course::factory()->create(['description' => $courseDescription]);
+         $course=Course::factory()->create(['description' => $courseDescription]);
+         Teacher::factory()->create(['course_id' => $course->id]); 
+         $courses_id[]=$course->id;
         }
-
+        
+        Tutor::factory()->count(1)->create()->each(function ($tutor) {
+            $authorized=$tutor->authorizeds()->create(Authorized::factory()->make()->toArray());
+            $tutor->students()->create(Student::factory()->create(['name'=> 'pepita','lastname'=>'pepita', 'documentnumber'=>123456,'course_id' =>1,'tutor_id'=>$tutor->id,'authorized_id'=>$authorized->id])->make()->toArray());
+        });
         //tutores
         $this->call(TutorSeeder::class);
     }
+
+
 }
