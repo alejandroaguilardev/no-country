@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string("documentnumber");
             $table->string("phone");
             $table->string("photo");
-            $table->unsignedBigInteger("tutorid");
-            $table->foreign("tutorid")->references("id")->on("tutors");
+            $table->unsignedBigInteger("tutor_id");
+            $table->foreign("tutor_id")->references("id")->on("tutors");
             
         });
     }

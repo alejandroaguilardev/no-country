@@ -14,12 +14,12 @@ class Course extends Model
         'description'
     ]; 
 
-    public function teacher(): HasMany
+    public function teachers(): HasMany
     {
         return $this->hasMany(Teacher::class);
     }
 
-    public function student(): HasMany
+    public function students(): HasMany
     {
         return $this->hasMany(Student::class);
     }

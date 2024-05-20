@@ -7,14 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-
 class Student extends Model
 {
     use HasFactory;
     protected $fillable = [
         'name',
         'lastname',
-        'documentnumber'
+        'documentnumber',
+        'course_id',
+        'tutor_id',
+        'authorized_id',
+
     ];
 
     public function course(): BelongsTo
@@ -25,6 +28,11 @@ class Student extends Model
     public function tutor(): BelongsTo
     {
         return $this->belongsTo(Tutor::class);
+    }
+
+    public function authorized(): BelongsTo
+    {
+        return $this->belongsTo(Authorized::class);
     }
 
     public function retired(): HasOne

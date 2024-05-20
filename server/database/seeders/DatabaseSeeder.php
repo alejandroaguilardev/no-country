@@ -1,39 +1,44 @@
 <?php
 
 namespace Database\Seeders;
+
+use App\Models\Authorized;
 use App\Models\Course;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Student;
+use App\Models\Teacher;
+use App\Models\Tutor;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
+    private $totalStudents = 420;
+
+    private $courses = [
+        '1A', '1B', '1C', '2A', '2B', '2C',
+        '3A', '3B', '3C', '4A', '4B', '4C',
+        '5A', '5B', '5C', '6A', '6B', '6C',
+        '7A', '7B', '7C',
+    ];
+    private $courses_id = [];
+
     public function run(): void
     {
-    //     Course::factory(21)->create();
+        foreach ($this->courses as $courseDescription) {
+            $course = Course::factory()->create(['description' => $courseDescription]);
+            Teacher::factory()->create(['course_id' => $course->id]);
+            $this->courses_id[] = $course->id;
+        }
 
-        Course::factory()->create(['description' => '1A']);
-        Course::factory()->create(['description' => '1B']);
-        Course::factory()->create(['description' => '1C']);
-        Course::factory()->create(['description' => '2A']);
-        Course::factory()->create(['description' => '2B']);
-        Course::factory()->create(['description' => '2C']);
-        Course::factory()->create(['description' => '3A']);
-        Course::factory()->create(['description' => '3B']);
-        Course::factory()->create(['description' => '3C']);
-        Course::factory()->create(['description' => '4A']);
-        Course::factory()->create(['description' => '4B']);
-        Course::factory()->create(['description' => '4C']);
-        Course::factory()->create(['description' => '5A']);
-        Course::factory()->create(['description' => '5B']);
-        Course::factory()->create(['description' => '5C']);
-        Course::factory()->create(['description' => '6A']);
-        Course::factory()->create(['description' => '6B']);
-        Course::factory()->create(['description' => '6C']);
-        Course::factory()->create(['description' => '7A']);
-        Course::factory()->create(['description' => '7B']);
-        Course::factory()->create(['description' => '7C']);
+        Tutor::factory()->count($this->totalStudents)->create()->each(function ($tutor) {
+            $authorized = Authorized::factory()->create(["tutor_id" => $tutor->id]);
+
+            Student::factory()->create(['course_id' => $this->courseRandom(), 'tutor_id' => $tutor->id, 'authorized_id' => $authorized->id]);
+        });
+    }
+
+    private function courseRandom()
+    {
+        $randomKey = array_rand($this->courses_id);
+        return $this->courses_id[$randomKey];
     }
 }

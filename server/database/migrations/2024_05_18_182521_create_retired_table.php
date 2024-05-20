@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('retired', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->unsignedBigInteger("studentid");
-            $table->foreign("studentid")->references("id")->on("students");
+            $table->unsignedBigInteger("student_id");
+            $table->foreign("student_id")->references("id")->on("students");
             $table->date("date");
             $table->boolean("status");
             $table->boolean("presence");

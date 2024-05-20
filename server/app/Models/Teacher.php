@@ -17,6 +17,7 @@ class Teacher extends Model
         'phone',
         'email',
         'password',
+        'course_id'
     ];
 
     protected $hidden = [

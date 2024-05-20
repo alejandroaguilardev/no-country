@@ -17,12 +17,12 @@ return new class extends Migration
             $table->string("name");
             $table->string("lastname");
             $table->string("documentnumber");
-            $table->unsignedBigInteger("courseid");
-            $table->foreign("courseid")->references("id")->on("courses");
-            $table->unsignedBigInteger("tutorid");
-            $table->foreign("tutorid")->references("id")->on("tutors");
-            $table->unsignedBigInteger("authorizedid");
-            $table->foreign("authorizedid")->references("id")->on("authorizeds");
+            $table->unsignedBigInteger("course_id");
+            $table->foreign("course_id")->references("id")->on("courses");
+            $table->unsignedBigInteger("tutor_id");
+            $table->foreign("tutor_id")->references("id")->on("tutors");
+            $table->unsignedBigInteger("authorized_id");
+            $table->foreign("authorized_id")->references("id")->on("authorizeds");
 
 
         });
