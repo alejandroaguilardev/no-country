@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "student-withdrawal-manager is a system dedicated to the efficient management of the student withdrawal process in educational institutions. It facilitates the administration of requests, status tracking, and report generation, ensuring precise and organized handling of information.",
   "scripts": {
-    "install:all": "pnpm install && cd server && composer install",
+    "install": "pnpm install && cd client && pnpm dev && cd ../server && composer install",
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "dev:client": "cd client && pnpm dev",
+    "dev:server": "cd server && php artisan serve",
+    "build": "cd client && pnpm build && cd ../server && composer install --optimize-autoloader --no-dev",
     "prepare": "husky"
   },
   "author": "",
@@ -11,6 +15,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
+    "concurrently": "^8.2.2",
     "husky": "^9.0.11"
   }
 }
