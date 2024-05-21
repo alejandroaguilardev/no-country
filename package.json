@@ -1,13 +1,15 @@
 {
-  "name": "student-withdrawal-manager",
+  "name": "safe-kids",
   "version": "1.0.0",
-  "description": "student-withdrawal-manager is a system dedicated to the efficient management of the student withdrawal process in educational institutions. It facilitates the administration of requests, status tracking, and report generation, ensuring precise and organized handling of information.",
+  "description": "Safe kis is a system dedicated to the efficient management of the student withdrawal process in educational institutions. It facilitates the administration of requests, status tracking, and report generation, ensuring precise and organized handling of information.",
   "scripts": {
-    "install": "pnpm install && cd client && pnpm dev && cd ../server && composer install",
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "dev:client": "cd client && pnpm dev",
     "dev:server": "cd server && php artisan serve",
+    "rename-env-file": "cd server && cp .env.example .env && php artisan key:generate",
+    "load:data": "pnpm rename-env-file && cd server &&  php artisan migrate:fresh --seed",
     "build": "cd client && pnpm build && cd ../server && composer install --optimize-autoloader --no-dev",
+    "install:all": "pnpm install && cd client && pnpm install && cd ../server && composer install && cd .. && pnpm rename-env-file",
     "prepare": "husky"
   },
   "author": "",
