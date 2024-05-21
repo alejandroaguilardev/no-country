@@ -3,16 +3,16 @@ import { ref } from 'vue'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { DropdownMenu } from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 const schoolInfo = {
   logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTRJlM7tWbKZYxzdthfmaF9ndkO4CH7peOI95Er9jFgA&s'
 }
 
 const alumnos = ref([
-  { value: 'Luis', index: '1' },
-  { value: 'Susy', index: '2' },
-  { value: 'Emma', index: '3' }
+  { value: 'Luis Molina', index: '1' },
+  { value: 'Susy Grandel', index: '2' },
+  { value: 'Emma Nación', index: '3' }
 ])
 
 const codigoPais = ref([
@@ -34,9 +34,16 @@ const retiroSinAcompanante = ref(false)
       </h3>
       <section class="flex flex-col gap-5 w-full">
         <div class="grid gap-4">
-          <select v-for="item in alumnos" :key="item.value" class="appearance-none bg-slate-70 dark:bg-slate-700 p-2 rounded">
-            <option>{{ item.value }}</option>
-          </select>
+          <DropdownMenu class="col-span-1">
+            <DropdownMenuTrigger as-child>
+              <Button variant="outline">
+                Selecciona un Alumno
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent v-for="alumno in alumnos" :key="alumno.value" class="w-56">
+              {{ alumno.value }}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <svg class="pointer-events-none row-start-1 col-start-1">
             <!-- SVG content here -->
           </svg>
@@ -50,18 +57,25 @@ const retiroSinAcompanante = ref(false)
           </label>
           <Input type="text" placeholder="Nombre y apellido" class="caret-black p-2 rounded" />
           <Input type="number" placeholder="D.N.I." class="p-2 rounded" />
-          <div class="grid gap-4">
+          <div class="grid grid-cols-3 gap-4">
             <div>
               <h4 class="text-base">
                 Teléfono:
               </h4>
             </div>
             <div class="grid grid-cols-3 gap-4">
-              <DropdownMenu class="col-span-1" />
-              <select v-for="item in codigoPais" :key="item.value" class="appearance-none bg-slate-70 dark:bg-slate-700 p-2 rounded col-span-1">
-                <option>{{ item.index }}</option>
-              </select>
-              <Input type="tel" placeholder="Teléfono" class="col-span-1 p-2 rounded" />
+              <DropdownMenu class="col-span-1">
+                <DropdownMenuTrigger as-child>
+                  <Button variant="outline">
+                    Open
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent v-for="pais in codigoPais" :key="pais.value" class="w-56">
+                  {{ pais.value }}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <Input type="tel" placeholder="Teléfono" class="col-span-2 p-2 rounded" />
             </div>
           </div>
         </div>
