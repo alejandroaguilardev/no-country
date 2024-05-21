@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import Table from '@/pages/students/_components/Table.vue';
+import Table from '@/pages/tutors/_components/Table.vue';
 import { columns } from './_components/columns';
 import type { Tutor } from './_components/interfaces/tutor';
 
