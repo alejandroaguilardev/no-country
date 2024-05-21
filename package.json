@@ -6,8 +6,8 @@
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "dev:client": "cd client && pnpm dev",
     "dev:server": "cd server && php artisan serve",
-    "rename-env-file": "cd server && cp .env.example .env && php artisan key:generate",
-    "load:data": "pnpm rename-env-file && cd server &&  php artisan migrate:fresh --seed",
+    "rename-env-file": "cd server && copy .env.example .env && php artisan key:generate",
+    "load:data": "cd server &&  php artisan migrate:fresh --seed",
     "build": "cd client && pnpm build && cd ../server && composer install --optimize-autoloader --no-dev",
     "install:all": "pnpm install && cd client && pnpm install && cd ../server && composer install && cd .. && pnpm rename-env-file",
     "prepare": "husky"
