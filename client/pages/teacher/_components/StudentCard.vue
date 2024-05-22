@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Badge } from '@/components/ui/badge'
-import type { StudentType } from '@/lib/types'
+import type { StudentType } from '@/types/models/Student'
 
 defineProps<{
   data: StudentType

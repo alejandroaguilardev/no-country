@@ -2,11 +2,10 @@
 
 import { ChevronRight } from 'lucide-vue-next'
 
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-
 import type { WithClassAsProps } from './interface'
 import { useCarousel } from './useCarousel'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 const props = defineProps<WithClassAsProps>()
 

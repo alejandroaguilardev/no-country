@@ -1,15 +1,15 @@
 export type User = {
-  id: number
-  name: string
-  email: string
+  id?: number
+  name?: string
+  email?: string
   email_verified_at?: Date | null
-  password: string
-  rememberToken: string
-  Role: Role
+  password?: string
+  rememberToken?: string
+  Role?: Role
 }
 
 export const enum Role {
-  ADMIN = "admin",
+  AUTHORIZED = "authorized",
   TEACHER = "teacher",
-  PARENT = "parent",
+  DIRECTIVE = "directive",
 }

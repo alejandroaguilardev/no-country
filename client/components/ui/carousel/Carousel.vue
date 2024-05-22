@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils'
 
 import type { CarouselEmits, CarouselProps, WithClassAsProps } from './interface'
 import { useProvideCarousel } from './useCarousel'
+import { cn } from '@/lib/utils'
 
 const props = withDefaults(defineProps<CarouselProps & WithClassAsProps>(), {
   orientation: 'horizontal'

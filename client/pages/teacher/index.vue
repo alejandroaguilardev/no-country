@@ -6,9 +6,7 @@ import {
   DialogContent,
   DialogTrigger
 } from '@/components/ui/dialog'
-import { StudentStatusEnum } from '@/lib/enums'
-
-import type { StudentType } from '@/lib/types'
+import { StudentStatusEnum, type StudentType } from '@/types/models'
 
 const students: StudentType[] = [
   {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/_button'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
