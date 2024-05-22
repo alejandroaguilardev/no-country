@@ -4,9 +4,8 @@ import type { HTMLAttributes } from 'vue'
 
 import { Primitive, type PrimitiveProps } from 'radix-vue'
 
-import { cn } from '@/lib/utils'
-
 import { type MainLayoutVariants, mainLayoutVariants } from '.'
+import { cn } from '@/lib/utils'
 
 interface Props extends PrimitiveProps {
   size?: MainLayoutVariants['size'];

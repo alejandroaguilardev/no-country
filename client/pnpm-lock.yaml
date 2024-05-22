@@ -5469,6 +5469,9 @@ snapshots:
   '@ioredis/commands@1.2.0': {}
 
   '@isaacs/cliui@8.0.2':
+  '@ioredis/commands@1.2.0': {}
+
+  '@isaacs/cliui@8.0.2':
     dependencies:
       string-width: 5.1.2
       string-width-cjs: string-width@4.2.3
