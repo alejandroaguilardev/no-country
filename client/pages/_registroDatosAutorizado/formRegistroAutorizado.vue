@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -20,19 +20,31 @@ const codigoPais = ref([
   { value: 'España', index: '+34' },
   { value: 'Venezuela', index: '+58' }
 ])
+const form = reactive({
+  nombreAlumno: '',
+  seleccionarTodos: false,
+  retiroSinAcompanante: false,
+  nombreApellidoAutorizado: '',
+  dni: 0,
+  codigoPais: '',
+  telefono: ''
 
-const selectAll = ref(false)
-const retiroSinAcompanante = ref(false)
+})
+const siguiente = () => {
+  console.table(form)
+  router.push()
+}
+
 </script>
 
 <template>
   <div class="lg:h-screen lg:h-[100dvh] py-5 grid place-items-center">
-    <form class="bg-white flex flex-col gap-5 items-center p-10 rounded-3xl font-normal text-3xl w-full max-w-xl">
-      <img :src="schoolInfo.logo" alt="Logo School" class="w-24 h-24 mb-4">
+    <form id="form" class="bg-white flex flex-col gap-5 items-center p-10 rounded-3xl font-normal text-3xl w-full max-w-xl">
+      <img :src="schoolInfo.logo" alt="Logo School" class="w-50 h-50 mb-1">
       <h3 class="uppercase hidden sm:block text-center">
         Registro de datos de autorización
       </h3>
-      <section class="flex flex-col gap-5 w-full">
+      <section class="flex flex-col gap-1 w-full">
         <div class="grid gap-4">
           <DropdownMenu class="col-span-1">
             <DropdownMenuTrigger as-child>
@@ -40,8 +52,10 @@ const retiroSinAcompanante = ref(false)
                 Selecciona un Alumno
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent v-for="alumno in alumnos" :key="alumno.value" class="w-56">
-              {{ alumno.value }}
+            <DropdownMenuContent class="w-56">
+              <DropdownMenuItem v-for="alumno in alumnos" :key="alumno.value" v-model="form.nombreAlumno">
+                {{ alumno.value }}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <svg class="pointer-events-none row-start-1 col-start-1">
@@ -49,14 +63,14 @@ const retiroSinAcompanante = ref(false)
           </svg>
           <label for="selectAll" class="text-base w-full flex justify-between items-center">
             <p class="select-none">Seleccionar Todos</p>
-            <Checkbox id="selectAll" v-model="selectAll" />
+            <Checkbox id="selectAll" v-model="form.seleccionarTodos" />
           </label>
           <label for="retiroSinAcompanante" class="text-base w-full flex justify-between items-center">
             <p class="select-none">El alumno se retira sin acompañante</p>
-            <Checkbox id="retiroSinAcompanante" v-model="retiroSinAcompanante" />
+            <Checkbox id="retiroSinAcompanante" v-model="form.retiroSinAcompanante" />
           </label>
-          <Input type="text" placeholder="Nombre y apellido" class="caret-black p-2 rounded" />
-          <Input type="number" placeholder="D.N.I." class="p-2 rounded" />
+          <Input v-model="form.nombreApellidoAutorizado" type="text" placeholder="Nombre y apellido" class="caret-black p-2 rounded" />
+          <Input v-model="form.dni" type="number" placeholder="D.N.I." class="p-2 rounded" />
           <div class="grid grid-cols-3 gap-4">
             <div>
               <h4 class="text-base">
@@ -66,46 +80,55 @@ const retiroSinAcompanante = ref(false)
             <div class="grid grid-cols-3 gap-4">
               <DropdownMenu class="col-span-1">
                 <DropdownMenuTrigger as-child>
-                  <Button variant="outline">
+                  <Button variant="outline" class="">
                     Open
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent v-for="pais in codigoPais" :key="pais.value" class="w-56">
-                  {{ pais.value }}
+                <DropdownMenuContent class="w-56 ">
+                  <DropdownMenuItem
+                    v-for="(value, index) in codigoPais"
+                    :key="index"
+                    v-model="form.codigoPais"
+                    :value="value"
+                  >
+                    {{ value.value }}
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              <Input type="tel" placeholder="Teléfono" class="col-span-2 p-2 rounded" />
+              <Input v-model="form.telefono" type="tel" placeholder="Teléfono" class="col-span-2 p-2 rounded" />
             </div>
           </div>
         </div>
       </section>
-      <Button type="button" class="cursor-pointer mt-4">
+      <Button type="button" class="cursor-pointer mt-4" @click="siguiente(form)">
         Siguiente
       </Button>
-      <div class="flex items-center mt-6">
+      <div class="flex items-center mt-6 w-100">
         <!-- Step 1 -->
         <div class="flex items-center">
           <div class="relative">
-            <div class="w-8 h-8 flex items-center justify-center bg-blue-500 text-white rounded-full">
+            <div class="w-8 h-8 text-base flex items-center justify-center bg-blue-500 text-white rounded-full">
               1
             </div>
-            <div class="absolute top-1/2 transform -translate-y-1/2 w-10 h-1 bg-blue-500 left-8" />
+            <div class="absolute top-1/2 transform -translate-y-1/2 w-20 h-1 bg-blue-500 left-8" />
           </div>
-          <div class="ml-4">
+          <div class="px-4 text-base pt-8">
             Step 1
           </div>
         </div>
 
         <!-- Step 2 -->
         <div class="flex items-center">
-          <div class="relative">
-            <div class="w-8 h-8 flex items-center justify-center bg-gray-300 text-gray-600 rounded-full">
-              2
+          <div>
+            <div class="relative">
+              <div class="w-8 h-8  text-base flex items-center justify-center bg-gray-300 text-gray-600 rounded-full">
+                2
+              </div>
+              <div class="absolute top-1/2 transform -translate-y-1/2 w-20 h-1 bg-gray-300 left-8" />
             </div>
-            <div class="absolute top-1/2 transform -translate-y-1/2 w-10 h-1 bg-gray-300 left-8" />
           </div>
-          <div class="ml-4">
+          <div class=" px-4 text-base pt-8">
             Step 2
           </div>
         </div>
@@ -113,11 +136,11 @@ const retiroSinAcompanante = ref(false)
         <!-- Step 3 -->
         <div class="flex items-center">
           <div class="relative">
-            <div class="w-8 h-8 flex items-center justify-center bg-gray-300 text-gray-600 rounded-full">
+            <div class="w-8 h-8  text-base flex items-center justify-center bg-gray-300 text-gray-600 rounded-full">
               3
             </div>
           </div>
-          <div class="ml-4">
+          <div class="px-4 text-base pt-8">
             Step 3
           </div>
         </div>
