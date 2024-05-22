@@ -32,7 +32,6 @@ const form = reactive({
 })
 const siguiente = () => {
   console.table(form)
-  router.push()
 }
 
 </script>
