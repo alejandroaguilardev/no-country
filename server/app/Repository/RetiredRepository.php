@@ -2,23 +2,18 @@
 
 namespace App\Repository;
 
+use App\Domain\Criteria\Criteria;
+use App\Eloquent\EloquentQuery;
 use App\Models\Retired;
 
 class RetiredRepository
 {
-
-    public function getRecords(?int $limit = null, ?int $offset = null)
+    public function getRecords(Criteria $criteria)
     {
-        $limit = $limit ?? 10;
-        $offset = $offset ?? 0;
+        $query = EloquentQuery::queryConverter(new Retired(), Retired::with('student'), $criteria);
 
-        $query = Retired::with('student');
-        $results = $query->limit($limit)
-            ->offset($offset)
-            ->get();
-
+        $results = $query->get();
         $total = Retired::count();
-
         return [
             "rows" => $results->toArray(),
             "count" => $total,

@@ -6,23 +6,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-
 class Tutor extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
-        'lastname',
-        'documentnumber',
+        'last_name',
+        'document_number',
         'phone',
         'email',
         'password',
-        'photo'
+        'photo',
     ];
 
     protected $hidden = [
-        'password'
+        'password',
     ];
 
     public function students(): HasMany

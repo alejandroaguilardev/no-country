@@ -4,23 +4,27 @@ namespace App\Domain\Criteria;
 
 final class Filters
 {
-    public $filters = [];
+    public array $filters = [];
 
-    public function __construct(
-        $filters,
-    ) {
-        $this->filters = $this->format($filters);
+    public function __construct(array $filters = [])
+    {
+        $this->filters = [];
+        $this->format($filters);
     }
 
-    private function format($filters)
+    private function format(array $filters): void
     {
         foreach ($filters as $filter) {
             $this->filters[] = [
                 "field" => $filter["field"],
-                "operator" => $filter["operator"],
                 "value" => $filter["value"],
             ];
         }
+    }
+
+    public function toArray(): array
+    {
+        return $this->filters;
     }
 
 }

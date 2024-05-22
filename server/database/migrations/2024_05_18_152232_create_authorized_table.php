@@ -15,13 +15,12 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string("name");
-            $table->string("lastname");
-            $table->string("documentnumber");
+            $table->string("last_name");
+            $table->string("document_number");
             $table->string("phone");
             $table->string("photo");
             $table->unsignedBigInteger("tutor_id");
             $table->foreign("tutor_id")->references("id")->on("tutors");
-            
         });
     }
 

@@ -20,8 +20,8 @@ class TutorFactory extends Factory
     {
         return [
             'name' => $this->faker->firstName,
-            'lastname' => $this->faker->lastName,
-            'documentnumber' => $this->faker->unique()->numerify('##########'),
+            'last_name' => $this->faker->lastName,
+            'document_number' => $this->faker->unique()->numerify('##########'),
             'phone' => $this->faker->phoneNumber,
             'email' => $this->faker->unique()->safeEmail,
             'password' => Hash::make('password'), // Hashear la contraseña
