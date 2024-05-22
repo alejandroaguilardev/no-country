@@ -2,23 +2,18 @@
 
 namespace App\Repository;
 
+use App\Domain\Criteria\Criteria;
+use App\Eloquent\EloquentQuery;
 use App\Models\Course;
 
-class CourseRepository
+final class CourseRepository
 {
-
-    public function getRecords(?int $limit = null, ?int $offset = null)
+    public function getRecords(Criteria $criteria)
     {
-        $limit = $limit ?? 10;
-        $offset = $offset ?? 0;
+        $query = EloquentQuery::queryConverter(new Course(), Course::with('teachers', 'students'), $criteria);
 
-        $query = Course::with('teachers', "students");
-        $results = $query->limit($limit)
-            ->offset($offset)
-            ->get();
-
+        $results = $query->get();
         $total = Course::count();
-
         return [
             "rows" => $results->toArray(),
             "count" => $total,

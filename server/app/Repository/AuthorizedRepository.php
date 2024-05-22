@@ -2,23 +2,18 @@
 
 namespace App\Repository;
 
+use App\Domain\Criteria\Criteria;
+use App\Eloquent\EloquentQuery;
 use App\Models\Authorized;
 
-class AuthorizedRepository
+final class AuthorizedRepository
 {
-
-    public function getRecords(?int $limit = null, ?int $offset = null)
+    public function getRecords(Criteria $criteria)
     {
-        $limit = $limit ?? 10;
-        $offset = $offset ?? 0;
+        $query = EloquentQuery::queryConverter(new Authorized(), Authorized::with('students'), $criteria);
 
-        $query = Authorized::with('students');
-        $results = $query->limit($limit)
-            ->offset($offset)
-            ->get();
-
+        $results = $query->get();
         $total = Authorized::count();
-
         return [
             "rows" => $results->toArray(),
             "count" => $total,

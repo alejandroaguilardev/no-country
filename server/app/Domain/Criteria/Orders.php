@@ -4,22 +4,27 @@ namespace App\Domain\Criteria;
 
 final class Orders
 {
-    public $orders = [];
+    public array $orders = [];
 
     public function __construct(
         $orders,
     ) {
-        $this->orders = $this->format($orders);
+        $this->format($orders);
     }
 
     private function format($orders)
     {
-        foreach ($orders as $filter) {
+        foreach ($orders as $order) {
             $this->orders[] = [
-                "orderBy" => $filter["orderBy"],
-                "orderType" => $filter["orderType"],
+                "orderBy" => $order["orderBy"],
+                "orderType" => $order["orderType"],
             ];
         }
+    }
+
+    public function toArray(): array
+    {
+        return $this->orders;
     }
 
 }

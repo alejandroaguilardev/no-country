@@ -6,28 +6,26 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
 class Teacher extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
-        'lastname',
+        'last_name',
         'phone',
         'email',
         'password',
-        'course_id'
+        'course_id',
     ];
 
     protected $hidden = [
-        'password'
+        'password',
     ];
-    
 
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
     }
-   
+
 }
