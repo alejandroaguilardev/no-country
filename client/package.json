@@ -11,6 +11,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@tanstack/vue-table": "^8.17.3",
     "@vee-validate/zod": "^4.12.8",
     "@vueuse/core": "^10.9.0",
     "axios": "^1.6.8",

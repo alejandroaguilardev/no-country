@@ -1,11 +1,1 @@
-# IDE
-
-.idea
-
-# Modules
-
 /node_modules
-
-# Lock
-
-client/pnpm-lock.yaml

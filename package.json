@@ -1,15 +1,9 @@
 {
-  "name": "safe-kids",
+  "name": "student-withdrawal-manager",
   "version": "1.0.0",
-  "description": "Safe kis is a system dedicated to the efficient management of the student withdrawal process in educational institutions. It facilitates the administration of requests, status tracking, and report generation, ensuring precise and organized handling of information.",
+  "description": "student-withdrawal-manager is a system dedicated to the efficient management of the student withdrawal process in educational institutions. It facilitates the administration of requests, status tracking, and report generation, ensuring precise and organized handling of information.",
   "scripts": {
-    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
-    "dev:client": "cd client && pnpm dev",
-    "dev:server": "cd server && php artisan serve",
-    "rename-env-file": "cd server && copy .env.example .env && php artisan key:generate",
-    "load:data": "cd server &&  php artisan migrate:fresh --seed",
-    "build": "cd client && pnpm build && cd ../server && composer install --optimize-autoloader --no-dev",
-    "install:all": "pnpm install && cd client && pnpm install && cd ../server && composer install && cd .. && pnpm rename-env-file",
+    "install:all": "pnpm install && cd server && composer install",
     "prepare": "husky"
   },
   "author": "",
@@ -17,7 +11,6 @@
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
-    "concurrently": "^8.2.2",
     "husky": "^9.0.11"
   }
 }
