@@ -15,15 +15,14 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string("name");
-            $table->string("lastname");
-            $table->string("documentnumber");
+            $table->string("last_name");
+            $table->string("document_number");
             $table->unsignedBigInteger("course_id");
             $table->foreign("course_id")->references("id")->on("courses");
             $table->unsignedBigInteger("tutor_id");
             $table->foreign("tutor_id")->references("id")->on("tutors");
             $table->unsignedBigInteger("authorized_id");
             $table->foreign("authorized_id")->references("id")->on("authorizeds");
-
 
         });
     }

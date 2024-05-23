@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string("name");
-            $table->string("lastname");
+            $table->string("last_name");
             $table->string("phone");
             $table->string("email")->unique();
             $table->string("password");
             $table->unsignedBigInteger("course_id");
             $table->foreign("course_id")->references("id")->on("courses");
-            
+
         });
     }
 

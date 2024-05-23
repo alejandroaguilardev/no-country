@@ -17,12 +17,12 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'=> fake()->name(),
-            'lastname'=>fake()->lastName(),
-            'documentnumber'=>fake()->unique()->numerify('##########'),
-            'course_id'=>null,
-            'tutor_id'=>null,
-            'authorized_id'=>null
+            'name' => fake()->name(),
+            'last_name' => fake()->lastName(),
+            'document_number' => fake()->unique()->numerify('##########'),
+            'course_id' => null,
+            'tutor_id' => null,
+            'authorized_id' => null,
         ];
     }
 }

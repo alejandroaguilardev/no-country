@@ -11,4 +11,15 @@ class Criteria
         public readonly Filters $filters,
         public readonly Orders $orders,
     ) {}
+
+    public function toArray()
+    {
+        return [
+            "limit" => $this->limit,
+            "offset" => $this->offset,
+            "globalFilter" => $this->globalFilter,
+            "filters" => $this->filters->filters,
+            "orders" => $this->orders->orders,
+        ];
+    }
 }

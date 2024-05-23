@@ -2,22 +2,18 @@
 
 namespace App\Repository;
 
+use App\Domain\Criteria\Criteria;
+use App\Eloquent\EloquentQuery;
 use App\Models\Tutor;
 
 class TutorRepository
 {
-
-    public function getRecords(?int $limit = null, ?int $offset = null)
+    public function getRecords(Criteria $criteria)
     {
-        $limit = $limit ?? 10;
-        $offset = $offset ?? 0;
-        $query = Tutor::with('students', 'authorizeds');
-        $results = $query->limit($limit)
-            ->offset($offset)
-            ->get();
+        $query = EloquentQuery::queryConverter(new Tutor(), Tutor::with('students', 'authorizeds'), $criteria);
 
+        $results = $query->get();
         $total = Tutor::count();
-
         return [
             "rows" => $results->toArray(),
             "count" => $total,
