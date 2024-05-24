@@ -24,4 +24,14 @@ class AuthorizedRepository
             "count" => $total,
         ];
     }
+
+    public function updateRecord(int $id,array $data)
+    {
+        $authorized = Authorized::findOrFail($id);
+
+        $authorized->update($data);
+
+        return $authorized;
+
+    }
 }

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Authorized;
 use App\Models\Course;
 use App\Models\Student;
 use App\Models\Teacher;
@@ -30,9 +29,7 @@ class DatabaseSeeder extends Seeder
         }
 
         Tutor::factory()->count($this->totalStudents)->create()->each(function ($tutor) {
-            $authorized = Authorized::factory()->create(["tutor_id" => $tutor->id]);
-
-            Student::factory()->create(['course_id' => $this->courseRandom(), 'tutor_id' => $tutor->id, 'authorized_id' => $authorized->id]);
+            Student::factory()->create(['course_id' => $this->courseRandom(), 'tutor_id' => $tutor->id, 'authorized_id' => $tutor->id]);
         });
     }
 
