@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ClearAuthorizedTable extends Command
 {
@@ -26,8 +26,6 @@ class ClearAuthorizedTable extends Command
      */
     public function handle()
     {
-        DB::table('authorizeds')->truncate();
-
-        $this->info('La tabla authorizeds ha sido vaciada exitosamente.');
+        Storage::append("archivo.txt", "hola mundo");
     }
 }
