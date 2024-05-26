@@ -3,6 +3,7 @@
 namespace App\Eloquent;
 
 use App\Domain\Criteria\Filters;
+use App\Domain\Criteria\GlobalFields;
 use App\Domain\Criteria\Orders;
 use App\Domain\Errors\ErrorDomain;
 use Illuminate\Database\Eloquent\Builder;
@@ -47,6 +48,26 @@ final class EloquentHelper
     {
         foreach ($value->orders as $order) {
             $query->orderBy($order["orderBy"], $order["orderType"]);
+        }
+        return $query;
+    }
+
+    public static function validateGlobalsFields(Model $model, GlobalFields $value)
+    {
+        $fillableFields = $model->getFillable();
+
+        foreach ($value->fields as $field) {
+            $fieldExists = in_array($field, $fillableFields);
+            if (!$fieldExists) {
+                throw new ErrorDomain('El campo ' . $field . ' en los GlobalFields no existe en el modelo Authorized', 400);
+            }
+        }
+    }
+
+    public static function whereAny(Builder $query, GlobalFields $globalFields, string $globalFilter)
+    {
+        if (!empty($globalFields->fields)) {
+            $query->whereAny($globalFields->fields, 'LIKE', '%' . $globalFilter . '%');
         }
         return $query;
     }

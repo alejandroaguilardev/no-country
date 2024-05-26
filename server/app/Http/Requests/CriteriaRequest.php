@@ -30,6 +30,8 @@ final class CriteriaRequest extends FormRequest
             'filters.*.field' => 'string|min:1|max:255',
             'filters.*.value' => 'string|min:1|max:255',
             'sorts' => 'array',
+            'globalFields' => 'array',
+            'globalFields.*' => 'string|min:1|max:255',
             'globalFilter' => 'string|min:1|max:255',
         ];
     }
@@ -56,6 +58,7 @@ final class CriteriaRequest extends FormRequest
             'globalFilter.string' => 'El filtro global debe ser una cadena de texto.',
             'globalFilter.min' => 'El filtro global debe tener al menos 1 carácter.',
             'globalFilter.max' => 'El filtro global no puede tener más de 255 caracteres.',
+            'globalFields' => 'Los global filtros deben ser un array',
         ];
     }
 }

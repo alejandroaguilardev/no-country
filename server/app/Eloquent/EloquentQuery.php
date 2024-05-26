@@ -13,6 +13,7 @@ class EloquentQuery
     {
         self::enSecure($model, $criteria);
 
+        EloquentHelper::whereAny($query, $criteria->globalFields, $criteria->globalFilter);
         EloquentHelper::where($query, $criteria->filters);
         EloquentHelper::order($query, $criteria->orders);
 
@@ -26,6 +27,7 @@ class EloquentQuery
     private static function enSecure(Model $model, Criteria $criteria): void
     {
         EloquentHelper::validateField($model, $criteria->filters);
+        EloquentHelper::validateGlobalsFields($model, $criteria->globalFields);
         EloquentHelper::validateOrders($model, $criteria->orders);
     }
 }
