@@ -17,10 +17,6 @@ class EloquentQuery
         EloquentHelper::where($query, $criteria->filters);
         EloquentHelper::order($query, $criteria->orders);
 
-        $query
-            ->limit($criteria->limit)
-            ->offset($criteria->offset);
-
         return $query;
     }
 

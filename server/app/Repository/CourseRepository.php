@@ -12,8 +12,12 @@ final class CourseRepository
     {
         $query = EloquentQuery::queryConverter(new Course(), Course::with('teachers', 'students'), $criteria);
 
+        $query->limit($criteria->limit)
+            ->offset($criteria->offset);
+
         $results = $query->get();
-        $total = Course::count();
+        $total = $query->count();
+
         return [
             "rows" => $results->toArray(),
             "count" => $total,
