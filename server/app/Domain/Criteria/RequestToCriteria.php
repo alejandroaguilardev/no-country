@@ -11,9 +11,10 @@ class RequestToCriteria
         return new Criteria(
             $data['limit'] ?? 10,
             $data['offset'] ?? 0,
-            $data['globalFilter'] ?? '',
             new Filters($data['filters'] ?? []),
             new Orders($data['sorts'] ?? []),
+            new GlobalFields($data['globalFields'] ?? []),
+            $data['globalFilter'] ?? '',
         );
     }
 }

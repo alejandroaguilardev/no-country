@@ -12,8 +12,12 @@ final class TeacherRepository
     {
         $query = EloquentQuery::queryConverter(new Teacher(), Teacher::with('course'), $criteria);
 
+        $query->limit($criteria->limit)
+            ->offset($criteria->offset);
+
         $results = $query->get();
-        $total = Teacher::count();
+        $total = $query->count();
+
         return [
             "rows" => $results->toArray(),
             "count" => $total,
