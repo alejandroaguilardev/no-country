@@ -41,8 +41,8 @@ class Tutor extends Model
         static::created(function ($tutor) {
             DB::table('authorizeds')->insert([
                 'name' => $tutor->name,
-                'lastname' => $tutor->lastname,
-                'documentnumber' => $tutor->documentnumber,
+                'last_name' => $tutor->last_name,
+                'document_number' => $tutor->document_number,
                 'phone' => $tutor->phone,
                 'photo' => $tutor->photo,
                 'tutor_id' => $tutor->id,

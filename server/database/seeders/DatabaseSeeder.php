@@ -3,9 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\Course;
+use App\Models\Retired;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Tutor;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -29,8 +31,18 @@ class DatabaseSeeder extends Seeder
         }
 
         Tutor::factory()->count($this->totalStudents)->create()->each(function ($tutor) {
-            Student::factory()->create(['course_id' => $this->courseRandom(), 'tutor_id' => $tutor->id, 'authorized_id' => $tutor->id]);
-        });
+            $student=Student::factory()->create([
+                'course_id' => $this->courseRandom(), 
+                'tutor_id' => $tutor->id, 
+                'authorized_id' => $tutor->id]);
+
+        Retired::create([
+            'student_id' => $student->id,
+            'date' => Carbon::now(), // Fecha actual
+            'status' => false, // No retirado
+            'presence' => true, // Asistió
+        ]);
+      });
     }
 
     private function courseRandom()
