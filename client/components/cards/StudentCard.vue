@@ -12,7 +12,8 @@ defineProps<{
     <div class="grid gap-5 text-center">
       <div class="rounded-md bg-[#1D1B20]/40 px-4 py-2.5 shadow-xl">
         <p class="text-xl font-medium uppercase">
-          {{ data.studentName }}
+          {{ data.name }}
+          {{ data.last_name }}
         </p>
       </div>
       <div class="flex items-center justify-between gap-16">
@@ -21,7 +22,7 @@ defineProps<{
           variant="secondary"
           class="bg-[#1D1B20]/40 px-5 text-2xl font-bold"
         >
-          {{ data.studentGrade }}
+          {{ data.course.description }}
         </Badge>
       </div>
     </div>
@@ -52,7 +53,7 @@ defineProps<{
         <div class="text-center">
           <p class="text-xl">Contacto apoderado:</p>
           <p class="font-medium">
-            {{ data.tutorContact }}
+            {{ data.tutor.phone }}
           </p>
         </div>
       </div>

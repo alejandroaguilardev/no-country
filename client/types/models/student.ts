@@ -1,3 +1,5 @@
+import type { CourseType } from "./course";
+import type { TutorType } from "./tutor";
 import type { UserType } from "./user";
 
 export enum StudentStatusEnum {
@@ -8,12 +10,14 @@ export enum StudentStatusEnum {
 
 export type StudentType = {
   id: number;
-  studentName: string;
-  studentPhoto: string;
-  studentContact: string;
-  studentGrade: string;
-  studentStatus: StudentStatusEnum;
-  authorizedName: string;
-  authorizedContact: string;
-  tutorContact: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  last_name: string;
+  document_number: string;
+  course_id: number;
+  tutor_id: number;
+  authorized_id: number;
+  course: CourseType;
+  tutor: TutorType;
 } & UserType;
