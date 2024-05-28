@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/vue-table";
-import type { Student } from "./interfaces/student";
+import type { StudentTableDTO } from "@/dto/studentTableDTO";
 
-export const columns: ColumnDef<Student>[] = [
+export const columns: ColumnDef<StudentTableDTO>[] = [
   {
     accessorKey: "id",
     header: "ID",
@@ -16,12 +16,7 @@ export const columns: ColumnDef<Student>[] = [
   },
   {
     accessorKey: "dni",
-    header: "N° Documento",
-  },
-  {
-    accessorKey: "age",
-    header: () => h("div", { class: "text-center" }, "Edad"),
-    cell: ({ row }) => h("div", { class: "text-center" }, row.getValue("age")),
+    header: "DNI",
   },
   {
     accessorKey: "course",
