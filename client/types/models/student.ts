@@ -1,11 +1,12 @@
+import type { AuthorizedType } from "./authorized";
 import type { CourseType } from "./course";
 import type { TutorType } from "./tutor";
 import type { UserType } from "./user";
 
 export enum StudentStatusEnum {
-  WITHDRAWN = "Retirado",
-  NO_WITHDRAWN = "No Retirado",
-  NO_ATTEND = "No Asistió",
+  WITHDRAWN = "withdrawn",
+  NO_WITHDRAWN = "no_withdrawn",
+  AUSENT = "ausent",
 }
 
 export type StudentType = {
@@ -20,4 +21,5 @@ export type StudentType = {
   authorized_id: number;
   course: CourseType;
   tutor: TutorType;
+  authorized: AuthorizedType;
 } & UserType;

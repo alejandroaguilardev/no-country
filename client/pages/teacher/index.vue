@@ -3,64 +3,7 @@ import { StudentCard } from "@/components/cards";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { teacherService } from "@/services";
-
-// const students: StudentType[] = [
-//   {
-//     id: 1,
-//     studentName: "PEPITA MARTÍNEZ",
-//     studentPhoto: "student1",
-//     studentContact: "222 222 222",
-//     studentGrade: "2B",
-//     studentStatus: StudentStatusEnum.NO_WITHDRAWN,
-//     authorizedName: "JUANITO MOYA",
-//     authorizedContact: "+54 9 3513786543",
-//     tutorContact: "+54 9 3515987234",
-//   },
-//   {
-//     id: 2,
-//     studentName: "PEPITO RODRIGUEZ",
-//     studentPhoto: "student2",
-//     studentContact: "333 333 333",
-//     studentGrade: "2B",
-//     studentStatus: StudentStatusEnum.NO_WITHDRAWN,
-//     authorizedName: "PEDRO MAPACHO",
-//     authorizedContact: "666 666 666",
-//     tutorContact: "+54 9 3515987234",
-//   },
-//   {
-//     id: 3,
-//     studentName: "SANDRA MORÁN",
-//     studentPhoto: "student2",
-//     studentContact: "333 333 333",
-//     studentGrade: "2B",
-//     studentStatus: StudentStatusEnum.WITHDRAWN,
-//     authorizedName: "JULITO RODRIGUEZ",
-//     authorizedContact: "666 666 666",
-//     tutorContact: "+54 9 3515987234",
-//   },
-//   {
-//     id: 3,
-//     studentName: "JULIO VANEGAS",
-//     studentPhoto: "student2",
-//     studentContact: "333 333 333",
-//     studentGrade: "2B",
-//     studentStatus: StudentStatusEnum.NO_ATTEND,
-//     authorizedName: "JULITO RODRIGUEZ",
-//     authorizedContact: "666 666 666",
-//     tutorContact: "+54 9 3515987234",
-//   },
-//   {
-//     id: 4,
-//     studentName: "JUAN BIANCHI",
-//     studentPhoto: "student2",
-//     studentGrade: "2B",
-//     studentContact: "333 333 333",
-//     studentStatus: StudentStatusEnum.WITHDRAWN,
-//     authorizedName: "JULITO RODRIGUEZ",
-//     authorizedContact: "666 666 666",
-//     tutorContact: "+54 9 3515987234",
-//   },
-// ];
+import { StudentStatusEnum } from "@/types/models";
 
 const { getAllStudents } = teacherService();
 
@@ -82,11 +25,13 @@ console.log("students lists=>", students);
               {{ student.name }}
               {{ student.last_name }}
             </Badge>
-            <!-- <Badge
-              class="w-full justify-self-end bg-[#1D1B20]/30 text-base text-foreground"
+            <Badge
+              :variant="StudentStatusEnum.NO_WITHDRAWN"
+              class="w-full justify-self-end text-base text-foreground"
             >
-              {{ student.studentStatus }}
-            </Badge> -->
+              No Retirado
+              <!-- {{ student.studentStatus }} -->
+            </Badge>
           </div>
         </DialogTrigger>
         <DialogContent>
