@@ -23,7 +23,10 @@ class Tutor extends Model
 
     protected $hidden = [
         'password',
+        'created_at',
+        'updated_at',
     ];
+
     public function students(): HasMany
     {
         return $this->hasMany(Student::class);

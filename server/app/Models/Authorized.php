@@ -17,7 +17,12 @@ class Authorized extends Model
         'document_number',
         'phone',
         'photo',
+    ];
+
+    protected $hidden = [
         'tutor_id',
+        'created_at',
+        'updated_at',
     ];
 
     public function tutor(): BelongsTo

@@ -1,3 +1,7 @@
-*
+
 !public/
+!public/images/user.png
 !.gitignore
+/public/images/*
+!/public/images/user.png
+
