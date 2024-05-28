@@ -12,12 +12,11 @@ class RetiredRepository
     public function getRecords(Criteria $criteria)
     {
         $query = EloquentQuery::queryConverter(new Retired(), Retired::with('student'), $criteria);
+        $total = $query->count();
 
         $query->limit($criteria->limit)
             ->offset($criteria->offset);
-
         $results = $query->get();
-        $total = $query->count();
 
         return [
             "rows" => $results->toArray(),
@@ -33,7 +32,7 @@ class RetiredRepository
         $retired->update([
             'status' => $data['status'],
             'presence' => true,
-            'date' => Carbon::now()
+            'date' => Carbon::now(),
         ]);
 
         return $retired;
@@ -45,12 +44,11 @@ class RetiredRepository
 
         // Actualiza el estado, presencia y fecha
         $retired->update([
-            'status' =>false,
+            'status' => false,
             'presence' => $data['presence'],
-            'date' => Carbon::now()
+            'date' => Carbon::now(),
         ]);
 
         return $retired;
     }
 }
-

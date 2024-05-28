@@ -27,7 +27,11 @@ final class EloquentHelper
     public static function where(Builder $query, Filters $value)
     {
         foreach ($value->filters as $filter) {
-            $query->where($filter["field"], "LIKE", $filter["value"] . '%');
+            if (stripos($filter["field"], 'id') && $filter["field"] === "id") {
+                $query->where($filter["field"], "=", $filter["value"]);
+            } else {
+                $query->where($filter["field"], "LIKE", $filter["value"] . '%');
+            }
         }
         return $query;
     }
