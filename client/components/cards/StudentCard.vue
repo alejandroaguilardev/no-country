@@ -46,9 +46,9 @@ const handlePresence = async (studentId: number, studentFullName: string) => {
     <div class="grid gap-5 text-center">
       <div
         v-if="data.name"
-        class="rounded-md bg-[#1D1B20]/40 px-4 py-2.5 shadow-xl"
+        class="rounded-md bg-[#1D1B20]/40 px-4 py-1.5 shadow-xl"
       >
-        <p class="text-xl font-medium uppercase">
+        <p class="text-lg font-medium uppercase">
           {{ data.name }}
           {{ data.last_name }}
         </p>
@@ -57,17 +57,17 @@ const handlePresence = async (studentId: number, studentFullName: string) => {
         v-if="data.course.description"
         class="flex items-center justify-between gap-16"
       >
-        <p class="text-xl font-medium">Grado:</p>
+        <p class="text-lg font-medium">Grado:</p>
         <Badge
           variant="secondary"
-          class="bg-[#1D1B20]/40 px-5 text-2xl font-bold"
+          class="bg-[#1D1B20]/40 px-5 text-lg font-bold"
         >
           {{ data.course.description }}
         </Badge>
       </div>
     </div>
     <div class="grid gap-3">
-      <p class="text-center text-2xl font-medium">Lo retira:</p>
+      <p class="text-center text-xl font-medium">Lo retira:</p>
       <figure
         v-if="data.authorized.photo"
         class="relative mx-auto h-[150px] w-[150px]"
@@ -81,9 +81,9 @@ const handlePresence = async (studentId: number, studentFullName: string) => {
       </figure>
       <div
         v-if="data.authorized.name"
-        class="rounded-md bg-[#1D1B20]/20 px-4 py-2.5 text-center shadow-xl"
+        class="rounded-md bg-[#1D1B20]/20 px-4 py-1.5 text-center shadow-xl"
       >
-        <p class="text-xl font-medium uppercase">
+        <p class="text-lg font-medium uppercase">
           {{ data.authorized.name }}
           {{ data.authorized.last_name }}
         </p>
@@ -92,14 +92,14 @@ const handlePresence = async (studentId: number, studentFullName: string) => {
     <div>
       <div class="mb-3 space-y-1">
         <div v-if="data.authorized.phone" class="text-center">
-          <p class="text-xl">Contacto autorizado:</p>
-          <p class="font-medium">
+          <p class="text-lg">Contacto autorizado:</p>
+          <p class="font-medium text-sm">
             {{ data.authorized.phone }}
           </p>
         </div>
         <div v-if="data.tutor.phone" class="text-center">
-          <p class="text-xl">Contacto apoderado:</p>
-          <p class="font-medium">
+          <p class="text-lg">Contacto apoderado:</p>
+          <p class="font-medium text-sm">
             {{ data.tutor.phone }}
           </p>
         </div>

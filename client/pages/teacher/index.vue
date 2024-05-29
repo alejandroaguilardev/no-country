@@ -47,7 +47,11 @@ console.log("students lists=>", students);
           <StudentCard :data="student" />
         </DialogContent>
       </Dialog>
-      <Button>Editar</Button>
     </div>
   </NuxtLayout>
+  <div
+    class="sticky bottom-0 py-5 px-4 bg-background border border-border shadow-lg"
+  >
+    <Button class="w-full">Editar</Button>
+  </div>
 </template>
