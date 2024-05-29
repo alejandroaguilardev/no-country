@@ -1,23 +1,21 @@
 <script setup lang="ts">
+import type { HTMLAttributes } from "vue";
 
-import type { HTMLAttributes } from 'vue'
+import { Primitive, type PrimitiveProps } from "radix-vue";
 
-import { Primitive, type PrimitiveProps } from 'radix-vue'
-
-import { cn } from '@/lib/utils'
-
-import { type MainLayoutVariants, mainLayoutVariants } from '.'
+import { type MainLayoutVariants, mainLayoutVariants } from ".";
+import { cn } from "@/lib/utils";
 
 interface Props extends PrimitiveProps {
-  size?: MainLayoutVariants['size'];
-   class?: HTMLAttributes['class'];
+  size?: MainLayoutVariants["size"];
+  class?: HTMLAttributes["class"];
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  as: 'div',
-  size: 'lg',
-  class: ''
-})
+  as: "div",
+  size: "lg",
+  class: "",
+});
 </script>
 
 <template>
