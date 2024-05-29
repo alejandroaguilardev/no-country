@@ -2,8 +2,8 @@
 import { StudentCard } from "@/components/cards";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { getStudentStatusText, getStudentStatusVariant } from "@/lib/utils";
 import { teacherService } from "@/services";
-import { StudentStatusEnum } from "@/types/models";
 
 const { getAllStudents } = teacherService();
 
@@ -26,11 +26,20 @@ console.log("students lists=>", students);
               {{ student.last_name }}
             </Badge>
             <Badge
-              :variant="StudentStatusEnum.NO_WITHDRAWN"
+              :variant="
+                getStudentStatusVariant(
+                  student.retired.presence,
+                  student.retired.status,
+                )
+              "
               class="w-full justify-self-end text-base text-foreground"
             >
-              No Retirado
-              <!-- {{ student.studentStatus }} -->
+              {{
+                getStudentStatusText(
+                  student.retired.presence,
+                  student.retired.status,
+                )
+              }}
             </Badge>
           </div>
         </DialogTrigger>
@@ -38,6 +47,7 @@ console.log("students lists=>", students);
           <StudentCard :data="student" />
         </DialogContent>
       </Dialog>
+      <Button>Editar</Button>
     </div>
   </NuxtLayout>
 </template>

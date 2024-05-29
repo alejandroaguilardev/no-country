@@ -6,8 +6,13 @@ import type { UserType } from "./user";
 export enum StudentStatusEnum {
   WITHDRAWN = "withdrawn",
   NO_WITHDRAWN = "no_withdrawn",
-  AUSENT = "ausent",
+  PRESENCE = "ausent",
 }
+
+export type RetiredType = {
+  presence: 1 | 0;
+  status: 1 | 0;
+};
 
 export type StudentType = {
   id: number;
@@ -22,4 +27,5 @@ export type StudentType = {
   course: CourseType;
   tutor: TutorType;
   authorized: AuthorizedType;
+  retired: RetiredType;
 } & UserType;

@@ -34,8 +34,26 @@ export const teacherService = () => {
     }
   };
 
+  const presenceStudent = async (formData: any, idStudent: number) => {
+    try {
+      formData.presence = formData.get("presence") || "0";
+
+      await fetch(`${baseApiUrl}/api/ausent/${idStudent}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+    } catch (error) {
+      console.error("Error updating student presence:", error);
+      throw error;
+    }
+  };
+
   return {
     getAllStudents,
     retiredStudent,
+    presenceStudent,
   };
 };

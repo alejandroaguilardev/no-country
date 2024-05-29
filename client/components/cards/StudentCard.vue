@@ -8,16 +8,31 @@ defineProps<{
   data: StudentType;
 }>();
 
-const { retiredStudent } = teacherService();
+const { retiredStudent, presenceStudent } = teacherService();
 
-const handleRetired = async (studentId: number) => {
+const handleRetired = async (studentId: number, studentFullName: string) => {
   const formData = new FormData();
-  formData.append("status", "1");
+  formData.append("status", "0");
 
   await retiredStudent(formData, studentId);
 
   toast("Event has been created", {
-    description: "Sunday, December 03, 2023 at 9:00 AM",
+    description: `Estudiante ${studentFullName} marcado como retirado.`,
+    action: {
+      label: "Undo",
+      onClick: () => console.log("Undo"),
+    },
+  });
+};
+
+const handlePresence = async (studentId: number, studentFullName: string) => {
+  const formData = new FormData();
+  formData.append("presence", "0");
+
+  await presenceStudent(formData, studentId);
+
+  toast("Event has been created", {
+    description: `Estudiante ${studentFullName} marcado como ausente.`,
     action: {
       label: "Undo",
       onClick: () => console.log("Undo"),
@@ -92,12 +107,14 @@ const handleRetired = async (studentId: number) => {
       <div class="grid grid-cols-2 items-center gap-3">
         <Button
           class="rounded-md px-4 py-1 text-lg font-medium uppercase shadow-xl"
+          @click="handlePresence(data.id, `${data.name} + ${data.last_name}`)"
         >
           No asistió
         </Button>
         <Button
+          :disabled="data.retired.presence === 0"
           class="rounded-md px-4 py-1 text-lg font-medium uppercase shadow-xl"
-          @click="handleRetired(data.id)"
+          @click="handleRetired(data.id, `${data.name} + ${data.last_name}`)"
         >
           Retirado
         </Button>

@@ -14,7 +14,7 @@ export const badgeVariants = cva(
         outline: "text-foreground",
         withdrawn: "bg-[#5F6368] border-transparent",
         no_withdrawn: "bg-[#1D1B20]/30 border-transparent",
-        no_attend: "bg-[#5F6368] border-transparent",
+        ausent: "bg-[#5F6368] border-transparent",
       },
     },
     defaultVariants: {
