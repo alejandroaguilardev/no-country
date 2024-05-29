@@ -15,9 +15,7 @@ class TutorRepository
 
         $query->limit($criteria->limit)
             ->offset($criteria->offset);
-
         $results = $query->get();
-        $total = $query->count();
 
         return [
             "rows" => $results->toArray(),

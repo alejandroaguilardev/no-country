@@ -14,10 +14,14 @@ class Student extends Model
         'name',
         'last_name',
         'document_number',
+    ];
+
+    protected $hidden = [
         'course_id',
         'tutor_id',
         'authorized_id',
-
+        'created_at',
+        'updated_at',
     ];
 
     public function course(): BelongsTo

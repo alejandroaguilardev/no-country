@@ -16,11 +16,13 @@ class Teacher extends Model
         'phone',
         'email',
         'password',
-        'course_id',
     ];
 
     protected $hidden = [
+        'course_id',
         'password',
+        'created_at',
+        'updated_at',
     ];
 
     public function course(): BelongsTo

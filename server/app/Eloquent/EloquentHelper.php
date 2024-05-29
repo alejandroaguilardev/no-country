@@ -5,41 +5,22 @@ namespace App\Eloquent;
 use App\Domain\Criteria\Filters;
 use App\Domain\Criteria\GlobalFields;
 use App\Domain\Criteria\Orders;
-use App\Domain\Errors\ErrorDomain;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 final class EloquentHelper
 {
-
-    public static function validateField(Model $model, Filters $value)
-    {
-        $fillableFields = $model->getFillable();
-
-        foreach ($value->filters as $filter) {
-            $fieldExists = in_array($filter["field"], $fillableFields);
-            if (!$fieldExists) {
-                throw new ErrorDomain('El campo ' . $filter["field"] . ' en los filtros no existe en el modelo Authorized', 400);
-            }
-        }
-    }
-
     public static function where(Builder $query, Filters $value)
     {
         foreach ($value->filters as $filter) {
-            $query->where($filter["field"], "LIKE", $filter["value"] . '%');
-        }
-        return $query;
-    }
+            $condition = is_numeric($filter["value"]) ? ["=", ""] : ["LIKE", "%"];
 
-    public static function validateOrders(Model $model, Orders $value)
-    {
-        $fillableFields = $model->getFillable();
-
-        foreach ($value->orders as $order) {
-            $fieldExists = in_array($order["orderBy"], $fillableFields);
-            if (!$fieldExists) {
-                throw new ErrorDomain('El campo ' . $order["orderBy"] . ' en los filtros no existe en el modelo Authorized', 400);
+            if (stripos($filter["field"], '.')) {
+                [$relation, $field] = explode('.', $filter["field"]);
+                $query->whereHas($relation, function ($relationQuery) use ($field, $filter, $condition) {
+                    $relationQuery->where($field, $condition[0], $filter["value"] . $condition[1]);
+                });
+            } else {
+                $query->where($filter["field"], $condition[0], $filter["value"] . $condition[1]);
             }
         }
     }
@@ -50,18 +31,6 @@ final class EloquentHelper
             $query->orderBy($order["orderBy"], $order["orderType"]);
         }
         return $query;
-    }
-
-    public static function validateGlobalsFields(Model $model, GlobalFields $value)
-    {
-        $fillableFields = $model->getFillable();
-
-        foreach ($value->fields as $field) {
-            $fieldExists = in_array($field, $fillableFields);
-            if (!$fieldExists) {
-                throw new ErrorDomain('El campo ' . $field . ' en los GlobalFields no existe en el modelo Authorized', 400);
-            }
-        }
     }
 
     public static function whereAny(Builder $query, GlobalFields $globalFields, string $globalFilter)
