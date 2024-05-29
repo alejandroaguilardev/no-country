@@ -20,7 +20,16 @@ export const useAdminStudentsStore = defineStore("adminStudentsStore", () => {
     return res.data;
   }
 
+  async function getStudentsByTutor(id: number) {
+    const res = await axios.get<ResponseApi<StudentApi>>(API_URL, {
+      params: { filters: [{ field: "tutor.id", value: id }] },
+    });
+
+    return res.data;
+  }
+
   return {
     getStudents,
+    getStudentsByTutor,
   };
 });
