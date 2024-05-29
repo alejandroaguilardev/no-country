@@ -20,8 +20,6 @@ export const columns: ColumnDef<StudentTableDTO>[] = [
   },
   {
     accessorKey: "course",
-    header: () => h("div", { class: "text-center" }, "Curso"),
-    cell: ({ row }) =>
-      h("div", { class: "text-center" }, row.getValue("course")),
+    header: "Curso",
   },
 ];
