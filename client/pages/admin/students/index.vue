@@ -51,7 +51,9 @@
               </SelectContent>
             </Select>
           </template>
-          <Button type="submit" @click="filter">Filtrar</Button>
+          <Button type="submit" :disabled="!filterInput" @click="filter">
+            Filtrar
+          </Button>
         </div>
       </div>
       <Table :columns="columns" :data="data" />
