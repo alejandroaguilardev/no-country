@@ -15,19 +15,23 @@ class Teacher extends Model
         'last_name',
         'phone',
         'email',
-        'password',
     ];
 
     protected $hidden = [
         'course_id',
-        'password',
         'created_at',
         'updated_at',
+        'user_id',
     ];
 
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
 }
