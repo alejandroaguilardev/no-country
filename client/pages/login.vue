@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import * as z from "zod";
+import { useRouter } from "vue-router";
 
 import { LoaderCircle } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
@@ -51,8 +53,8 @@ const onSubmit = handleSubmit(async (values) => {
       class="flex flex-col items-center gap-5 rounded-3xl bg-white p-10 text-3xl font-normal"
       @submit="onSubmit"
     >
-      <img :src="schoolInfo.logo" />
-      <h1 class="hidden text-center uppercase sm:block">
+      <img :src="schoolInfo.logo" alt="Logo School" />
+      <h1 class="uppercase hidden sm:block text-center">
         Registro de datos de autorización
       </h1>
       <section class="flex flex-col gap-4">
