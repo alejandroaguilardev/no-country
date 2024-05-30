@@ -10,10 +10,11 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+    protected $minutes_expired_time = 10080;
     public function __construct(
         private readonly UserRepository $repository
     ) {}
-    
+
     public function login(AuthLoginRequest $request)
     {
         try {
@@ -44,27 +45,32 @@ class AuthController extends Controller
         return response()->json($this->respondWithToken(JWTAuth::refresh()));
     }
 
-
-    protected function respondWithToken( $token)
+    protected function respondWithToken($token)
     {
-        $expiresIn = JWTAuth::factory()->getTTL() * 60;
+        $expiresIn = JWTAuth::factory()->getTTL() * $this->minutes_expired_time;
         $user = $this->user();
         return [
             'token' => $token,
-            'token_type' => 'bearer',
             'expires_in' => $expiresIn,
-            'profile'=> $user["profile"],
-            'role' => $user["role"],
+            'user' => $user,
         ];
     }
 
-    private function user()  {
+    private function user()
+    {
         $user = auth()->user();
         $profile = $this->repository->getRecord($user->email);
         $profile = $profile->teacher;
-        if($profile->tutor) {
+        if ($profile->tutor) {
             $profile = $profile->tutor;
         }
-        return ["profile"=>$profile, "role"=> $user->role];
+        return [
+            "id" => $profile->id,
+            "name" => $profile->name,
+            "last_name" => $profile->last_name,
+            "phone" => $profile->phone,
+            "email" => $profile->email,
+            "role" => $user->role["name"],
+        ];
     }
 }
