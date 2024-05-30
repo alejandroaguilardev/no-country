@@ -24,7 +24,6 @@ class TutorFactory extends Factory
             'document_number' => $this->faker->unique()->numerify('##########'),
             'phone' => $this->faker->phoneNumber,
             'email' => $this->faker->unique()->safeEmail,
-            'password' => Hash::make('password'), // Hashear la contraseña
             'photo' => 'user.png',
         ];
     }

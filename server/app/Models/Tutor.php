@@ -17,14 +17,13 @@ class Tutor extends Model
         'document_number',
         'phone',
         'email',
-        'password',
         'photo',
     ];
 
     protected $hidden = [
-        'password',
         'created_at',
         'updated_at',
+        'user_id',
     ];
 
     public function students(): HasMany
