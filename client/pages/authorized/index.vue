@@ -363,9 +363,9 @@ const onEventFilePicked = (event: any) => {
       </FormStep>
 
       <!-- Step 3 -->
-      <FormStep>
-        <!-- <Field v-slot="{ componentField, value }" name="datetime" type="date"> -->
-        <div class="grid gap-8 max-w-[425px] mb-20 mx-auto">
+      <!-- <FormStep> -->
+      <!-- <Field v-slot="{ componentField, value }" name="datetime" type="date"> QUEDA COMENTADA-->
+      <!-- <div class="grid gap-8 max-w-[425px] mb-20 mx-auto">
           <Popover>
             <div class="grid lg:grid-cols-[0.6fr_1fr] gap-6 items-center">
               <label class="label">Fecha de inicio</label>
@@ -420,10 +420,10 @@ const onEventFilePicked = (event: any) => {
               <Calendar v-model="value" mode="datetime" initial-focus />
             </PopoverContent>
           </Popover>
-        </div>
+        </div> -->
 
-        <!-- </Field> -->
-      </FormStep>
+      <!-- </Field> QUEDA COMENTADA-->
+      <!-- </FormStep> -->
     </FormWizard>
   </NuxtLayout>
 </template>
