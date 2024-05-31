@@ -4,9 +4,11 @@ namespace Database\Seeders;
 
 use App\Models\Course;
 use App\Models\Retired;
+use App\Models\Role;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Tutor;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -14,35 +16,64 @@ class DatabaseSeeder extends Seeder
 {
     private $totalStudents = 420;
 
-    private $courses = [
+    private $default_courses = [
         '1A', '1B', '1C', '2A', '2B', '2C',
         '3A', '3B', '3C', '4A', '4B', '4C',
         '5A', '5B', '5C', '6A', '6B', '6C',
         '7A', '7B', '7C',
     ];
+
+    private $default_roles = ["admin", "teacher", "tutor"];
+
     private $courses_id = [];
+    private $roles_id = [];
 
     public function run(): void
     {
-        foreach ($this->courses as $courseDescription) {
-            $course = Course::factory()->create(['description' => $courseDescription]);
-            Teacher::factory()->create(['course_id' => $course->id]);
+        $this->roles();
+
+        foreach ($this->default_courses as $default_course) {
+            $course = Course::factory()->create(['description' => $default_course]);
+            
+            $user = User::factory()->create(["password"=>"12345678", "role_id"=>$this->roles_id[1]]);
+
+            Teacher::factory()->create(['email'=>$user->email,'course_id' => $course->id, 'user_id'=> $user->id]);
+
             $this->courses_id[] = $course->id;
         }
 
-        Tutor::factory()->count($this->totalStudents)->create()->each(function ($tutor) {
+        User::factory()->count($this->totalStudents)->create(["password"=>"12345678", "role_id"=>$this->roles_id[2]])->each(function ($user) {
+            $tutor = Tutor::factory()->create(['email'=>$user->email,'user_id'=> $user->id]);
+
             $student=Student::factory()->create([
                 'course_id' => $this->courseRandom(), 
                 'tutor_id' => $tutor->id, 
                 'authorized_id' => $tutor->id]);
 
-        Retired::create([
-            'student_id' => $student->id,
-            'date' => Carbon::now(), // Fecha actual
-            'status' => false, // No retirado
-            'presence' => true, // Asistió
-        ]);
-      });
+            Retired::create([
+                'student_id' => $student->id,
+                'date' => Carbon::now(), 
+                'status' => false, 
+                'presence' => true, 
+            ]);
+        });
+
+
+      $this->admin();
+    }
+
+
+
+    private function roles() {
+        foreach ($this->default_roles as $default_rol) {
+            $role = Role::factory()->create(['name' => $default_rol]);
+            $this->roles_id[] = $role->id;
+        }
+    }
+
+    
+    private function admin() {
+       User::factory()->create(["email"=>"admin@example.com","password"=>"12345678", "role_id"=>$this->roles_id[0]]);
     }
 
     private function courseRandom()
