@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date("date");
             $table->boolean("status");
             $table->boolean("presence");
+            $table->boolean("leaveAlone");
         });
     }
 
