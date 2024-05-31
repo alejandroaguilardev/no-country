@@ -19,8 +19,8 @@ console.log("students lists=>", students);
         <DialogTrigger as-child>
           <div class="grid grid-cols-[1fr_110px] items-center gap-2.5 p-0">
             <Badge
-              variant="default"
-              class="justify-start truncate md:justify-center inline-block md:inline py-1.5 bg-[#1D1B20]/30 text-xl text-foreground shadow-lg"
+              variant="light_blue"
+              class="justify-start truncate md:justify-center inline-block md:inline py-1.5 text-xl text-foreground shadow-lg"
             >
               {{ student.name }}
               {{ student.last_name }}
