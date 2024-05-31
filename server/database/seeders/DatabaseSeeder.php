@@ -55,6 +55,7 @@ class DatabaseSeeder extends Seeder
                 'date' => Carbon::now(), 
                 'status' => false, 
                 'presence' => true, 
+                'leaveAlone'=> false
             ]);
         });
 
