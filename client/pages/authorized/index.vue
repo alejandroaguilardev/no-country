@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import * as z from "zod";
-<<<<<<< HEAD
 // import { ErrorMessage, Field } from "vee-validate";
-=======
-import { ErrorMessage, Field } from "vee-validate";
->>>>>>> origin/dev
 import { ref } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import {
   DateFormatter,
   type DateValue,
-<<<<<<< HEAD
   // getLocalTimeZone,
 } from "@internationalized/date";
 import { authorizedService } from "@/services";
@@ -39,30 +34,6 @@ getCargasApoderado();
 // import { Calendar } from "@/components/ui/calendar";
 
 // import { cn } from "@/lib/utils";
-=======
-  getLocalTimeZone,
-} from "@internationalized/date";
-
-import { AlarmClock, CalendarX2Icon } from "lucide-vue-next";
-import { FormStep, FormWizard } from "@/components/ui/steps";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-
-import { cn } from "@/lib/utils";
->>>>>>> origin/dev
 
 // import { Check, ChevronsUpDown } from "lucide-vue-next";
 
@@ -142,7 +113,6 @@ const emit = defineEmits(["imageloaded"]);
 
 const onSubmit = (formData: FormData) => {
   console.log(JSON.stringify(formData, null, 2));
-<<<<<<< HEAD
   datosAuthorizedForWithdrawal(formData);
 };
 
@@ -155,13 +125,6 @@ const onSubmit = (formData: FormData) => {
 //   console.log("que es esto", payload);
 //   return payload;
 // }
-=======
-};
-
-const handleDisableSelect = () => {
-  disabledStudentsSelect.value = !disabledStudentsSelect.value;
-};
->>>>>>> origin/dev
 
 const onEventFilePicked = (event: any) => {
   const files = event.target.files;
@@ -413,15 +376,9 @@ const onEventFilePicked = (event: any) => {
       </FormStep>
 
       <!-- Step 3 -->
-<<<<<<< HEAD
       <!-- <FormStep> -->
       <!-- <Field v-slot="{ componentField, value }" name="datetime" type="date"> QUEDA COMENTADA-->
       <!-- <div class="grid gap-8 max-w-[425px] mb-20 mx-auto">
-=======
-      <FormStep>
-        <!-- <Field v-slot="{ componentField, value }" name="datetime" type="date"> -->
-        <div class="grid gap-8 max-w-[425px] mb-20 mx-auto">
->>>>>>> origin/dev
           <Popover>
             <div class="grid lg:grid-cols-[0.6fr_1fr] gap-6 items-center">
               <label class="label">Fecha de inicio</label>
@@ -476,17 +433,10 @@ const onEventFilePicked = (event: any) => {
               <Calendar v-model="value" mode="datetime" initial-focus />
             </PopoverContent>
           </Popover>
-<<<<<<< HEAD
         </div> -->
 
       <!-- </Field> QUEDA COMENTADA-->
       <!-- </FormStep> -->
-=======
-        </div>
-
-        <!-- </Field> -->
-      </FormStep>
->>>>>>> origin/dev
     </FormWizard>
   </NuxtLayout>
 </template>

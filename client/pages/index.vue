@@ -1,12 +1,7 @@
 <script setup lang="ts">
-<<<<<<< HEAD
-import { Button } from "@/components/ui/button";
-import { useRouter } from "vue-router";
-=======
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store/useAuthStore";
 import { RoleEnum } from "@/types/models";
->>>>>>> origin/dev
 
 onMounted(() => {
   const { push } = useRouter();
