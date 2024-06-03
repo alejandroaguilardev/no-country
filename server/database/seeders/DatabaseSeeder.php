@@ -10,7 +10,7 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    private $total_tutors = 1;
+    private $total_tutors = 420;
     private $default_random_students = 3;
 
     private $default_users = [
