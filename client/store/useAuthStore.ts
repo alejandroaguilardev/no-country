@@ -68,7 +68,7 @@ export const useAuthStore = defineStore("auth", () => {
   // Methods
   async function login(req: LoginReq, savePassword: boolean) {
     const { data } = await axios
-      .post<LoginRes>(config.public.baseApiUrl + "/auth/login", req)
+      .post<LoginRes>(config.public.baseApiUrl + "/api/auth/login", req)
       .catch((err) => {
         throw new Error(err.response.data.error);
       });
@@ -95,7 +95,7 @@ export const useAuthStore = defineStore("auth", () => {
     if (!canRefreshToken()) return;
 
     const { data } = await axios.get<LoginRes>(
-      config.public.baseApiUrl + "/auth/refresh",
+      config.public.baseApiUrl + "/api/auth/refresh",
       { headers: { Authorization: token.value } },
     );
 
