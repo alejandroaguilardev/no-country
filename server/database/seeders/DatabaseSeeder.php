@@ -2,19 +2,28 @@
 
 namespace Database\Seeders;
 
-use App\Models\Course;
-use App\Models\Retired;
-use App\Models\Role;
-use App\Models\Student;
-use App\Models\Teacher;
-use App\Models\Tutor;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+
+// TODO package.json colocar script de inicio
+// TODO documentar apis
 
 class DatabaseSeeder extends Seeder
 {
-    private $totalStudents = 420;
+    private $total_tutors = 1;
+    private $default_random_students = 3;
+
+    private $default_users = [
+        "teacher"=>["email"=>"teacher@example.com", "password" => "12345678"], 
+        "tutor"=>["email"=>"tutor@example.com", "password" => "12345678"], 
+        "admin"=>["email"=>"admin@example.com", "password" => "12345678"], 
+    ];
+
+    private $default_roles = [
+        "admin"=>["id"=>1,"name"=>"admin"], 
+        "teacher"=>["id"=>2,"name"=>"teacher"], 
+        "tutor"=>["id"=>3,"name"=>"tutor"], 
+    ];
 
     private $default_courses = [
         '1A', '1B', '1C', '2A', '2B', '2C',
@@ -23,63 +32,29 @@ class DatabaseSeeder extends Seeder
         '7A', '7B', '7C',
     ];
 
-    private $default_roles = ["admin", "teacher", "tutor"];
 
-    private $courses_id = [];
-    private $roles_id = [];
 
     public function run(): void
     {
-        $this->roles();
+        app()->instance('total_tutors', $this->total_tutors);
+        app()->instance('default_random_students', $this->default_random_students);
+        app()->instance('default_roles', $this->default_roles);
+        app()->instance('default_users', $this->default_users);
+        app()->instance('default_courses', $this->default_courses);
 
-        foreach ($this->default_courses as $default_course) {
-            $course = Course::factory()->create(['description' => $default_course]);
-            
-            $user = User::factory()->create(["password"=>"12345678", "role_id"=>$this->roles_id[1]]);
+        $this->call(RoleSeeder::class);
+        $this->call(CourseSeeder::class);
+        $this->call(TeacherSeeder::class);
+        $this->call(TutorSeeder::class);
+        $this->call(StudentSeeder::class);
 
-            Teacher::factory()->create(['email'=>$user->email,'course_id' => $course->id, 'user_id'=> $user->id]);
-
-            $this->courses_id[] = $course->id;
-        }
-
-        User::factory()->count($this->totalStudents)->create(["password"=>"12345678", "role_id"=>$this->roles_id[2]])->each(function ($user) {
-            $tutor = Tutor::factory()->create(['email'=>$user->email,'user_id'=> $user->id]);
-
-            $student=Student::factory()->create([
-                'course_id' => $this->courseRandom(), 
-                'tutor_id' => $tutor->id, 
-                'authorized_id' => $tutor->id]);
-
-            Retired::create([
-                'student_id' => $student->id,
-                'date' => Carbon::now(), 
-                'status' => false, 
-                'presence' => true, 
-                'leaveAlone'=> false
-            ]);
-        });
-
-
-      $this->admin();
+        $this->createAdmin();
     }
 
-
-
-    private function roles() {
-        foreach ($this->default_roles as $default_rol) {
-            $role = Role::factory()->create(['name' => $default_rol]);
-            $this->roles_id[] = $role->id;
-        }
-    }
-
-    
-    private function admin() {
-       User::factory()->create(["email"=>"admin@example.com","password"=>"12345678", "role_id"=>$this->roles_id[0]]);
-    }
-
-    private function courseRandom()
-    {
-        $randomKey = array_rand($this->courses_id);
-        return $this->courses_id[$randomKey];
+    protected function createAdmin() {
+        $default_roles = app('default_roles');
+        User::factory()->create(["email"=>"admin@example.com","password"=>"12345678", "role_id"=>$default_roles["admin"]["id"]]);
     }
 }
+
+
