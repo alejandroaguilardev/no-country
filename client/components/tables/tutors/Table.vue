@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="TData, TValue">
+<script setup lang="ts" generic="TValue">
 import type { ColumnDef } from "@tanstack/vue-table";
 import { FlexRender, getCoreRowModel, useVueTable } from "@tanstack/vue-table";
 
@@ -13,10 +13,17 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
+import type { TutorTableDTO } from "@/dto/tutorTableDTO";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const props = defineProps<{
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  columns: ColumnDef<TutorTableDTO, TValue>[];
+  data: TutorTableDTO[];
+  loading: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: "on:show-students", tutor: TutorTableDTO): void;
 }>();
 
 const table = useVueTable({
@@ -28,6 +35,11 @@ const table = useVueTable({
   },
   getCoreRowModel: getCoreRowModel(),
 });
+
+function onShowStudents(tutor: TutorTableDTO) {
+  if (tutor.students.length > 0) return;
+  emit("on:show-students", tutor);
+}
 </script>
 
 <template>
@@ -49,7 +61,29 @@ const table = useVueTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        <template v-if="table.getRowModel().rows?.length">
+        <template v-if="loading">
+          <TableRow v-for="index in 10" :key="index">
+            <TableCell>
+              <Skeleton class="h-4 my-2 w-16 bg-slate-300" />
+            </TableCell>
+            <TableCell>
+              <Skeleton class="h-4 my-2 w-38 bg-slate-300" />
+            </TableCell>
+            <TableCell>
+              <Skeleton class="h-4 my-2 w-38 bg-slate-300" />
+            </TableCell>
+            <TableCell>
+              <Skeleton class="h-4 my-2 w-38 bg-slate-300" />
+            </TableCell>
+            <TableCell>
+              <Skeleton class="h-4 my-2 w-38 bg-slate-300" />
+            </TableCell>
+            <TableCell>
+              <Skeleton class="h-4 my-2 w-38 bg-slate-300" />
+            </TableCell>
+          </TableRow>
+        </template>
+        <template v-else-if="table.getRowModel().rows?.length">
           <Collapsible
             v-for="row in table.getRowModel().rows"
             :key="row.id"
@@ -67,11 +101,14 @@ const table = useVueTable({
               </TableCell>
               <TableCell class="text-center">
                 <CollapsibleTrigger>
-                  <Button>Ver</Button>
+                  <Button @click="onShowStudents(row.original)">Ver</Button>
                 </CollapsibleTrigger>
               </TableCell>
             </TableRow>
-            <StudentsList :students="row.original.students" />
+            <StudentsList
+              :students="row.original.students"
+              :loading="row.original.loadingStudents"
+            />
           </Collapsible>
         </template>
         <template v-else>

@@ -1,0 +1,14 @@
+import type { StudentApi } from "./studentApi";
+
+export interface TutorApi {
+  id: number;
+  name: string;
+  last_name: string;
+  document_number: string;
+  email: string;
+  phone: string;
+  photo: string;
+  students: StudentApi[];
+  created_at: string;
+  updated_at: string;
+}
