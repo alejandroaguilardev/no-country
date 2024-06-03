@@ -2,65 +2,14 @@
 import { StudentCard } from "@/components/cards";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { StudentStatusEnum, type StudentType } from "@/types/models";
+import { getStudentStatusText, getStudentStatusVariant } from "@/lib/utils";
+import { teacherService } from "@/services";
 
-const students: StudentType[] = [
-  {
-    id: 1,
-    studentName: "PEPITA MARTÍNEZ",
-    studentPhoto: "student1",
-    studentContact: "222 222 222",
-    studentGrade: "2B",
-    studentStatus: StudentStatusEnum.NO_WITHDRAWN,
-    authorizedName: "JUANITO MOYA",
-    authorizedContact: "+54 9 3513786543",
-    tutorContact: "+54 9 3515987234",
-  },
-  {
-    id: 2,
-    studentName: "PEPITO RODRIGUEZ",
-    studentPhoto: "student2",
-    studentContact: "333 333 333",
-    studentGrade: "2B",
-    studentStatus: StudentStatusEnum.NO_WITHDRAWN,
-    authorizedName: "PEDRO MAPACHO",
-    authorizedContact: "666 666 666",
-    tutorContact: "+54 9 3515987234",
-  },
-  {
-    id: 3,
-    studentName: "SANDRA MORÁN",
-    studentPhoto: "student2",
-    studentContact: "333 333 333",
-    studentGrade: "2B",
-    studentStatus: StudentStatusEnum.WITHDRAWN,
-    authorizedName: "JULITO RODRIGUEZ",
-    authorizedContact: "666 666 666",
-    tutorContact: "+54 9 3515987234",
-  },
-  {
-    id: 3,
-    studentName: "JULIO VANEGAS",
-    studentPhoto: "student2",
-    studentContact: "333 333 333",
-    studentGrade: "2B",
-    studentStatus: StudentStatusEnum.NO_ATTEND,
-    authorizedName: "JULITO RODRIGUEZ",
-    authorizedContact: "666 666 666",
-    tutorContact: "+54 9 3515987234",
-  },
-  {
-    id: 4,
-    studentName: "JUAN BIANCHI",
-    studentPhoto: "student2",
-    studentGrade: "2B",
-    studentContact: "333 333 333",
-    studentStatus: StudentStatusEnum.WITHDRAWN,
-    authorizedName: "JULITO RODRIGUEZ",
-    authorizedContact: "666 666 666",
-    tutorContact: "+54 9 3515987234",
-  },
-];
+const { getAllStudents } = teacherService();
+
+const students = await getAllStudents();
+
+console.log("students lists=>", students);
 </script>
 
 <template>
@@ -68,28 +17,41 @@ const students: StudentType[] = [
     <div class="grid gap-4 py-7 max-w-[500px] mx-auto">
       <Dialog v-for="(student, index) in students" :key="index">
         <DialogTrigger as-child>
-          <div
-            class="line-clamp-1 grid grid-cols-[1fr_110px] items-center gap-2.5 p-0"
-          >
+          <div class="grid grid-cols-[1fr_110px] items-center gap-2.5 p-0">
             <Badge
-              variant="default"
-              class="h-[42px] bg-[#1D1B20]/30 text-xl text-foreground shadow-lg"
+              variant="light_blue"
+              class="justify-start truncate md:justify-center inline-block md:inline py-1.5 text-xl text-foreground shadow-lg"
             >
-              {{ student.studentName }}
+              {{ student.name }}
+              {{ student.last_name }}
             </Badge>
             <Badge
-              class="w-full justify-self-end bg-[#1D1B20]/30 text-base text-foreground"
+              :variant="
+                getStudentStatusVariant(
+                  student.retired.presence,
+                  student.retired.status,
+                )
+              "
+              class="w-full justify-self-end text-base text-foreground"
             >
-              {{ student.studentStatus }}
+              {{
+                getStudentStatusText(
+                  student.retired.presence,
+                  student.retired.status,
+                )
+              }}
             </Badge>
           </div>
         </DialogTrigger>
         <DialogContent>
-          <div class="overflow-y-auto">
-            <StudentCard :data="student" />
-          </div>
+          <StudentCard :data="student" />
         </DialogContent>
       </Dialog>
     </div>
   </NuxtLayout>
+  <div
+    class="sticky bottom-0 py-5 px-4 bg-background border border-border shadow-lg"
+  >
+    <Button class="w-full">Editar</Button>
+  </div>
 </template>

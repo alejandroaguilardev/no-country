@@ -22,7 +22,6 @@ class TeacherFactory extends Factory
             'last_name' => $this->faker->lastName,
             'phone' => $this->faker->phoneNumber,
             'email' => $this->faker->unique()->safeEmail,
-            'password' => Hash::make('password'),
             'course_id' => null,
         ];
     }
