@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
-import type { User } from "../types/models/user";
+import type { UserType } from "../types/models/user";
 import type { LoginRes } from "../types/queries/LoginQuery";
 
 export const useAuthStore = defineStore("auth", () => {
@@ -10,7 +10,7 @@ export const useAuthStore = defineStore("auth", () => {
   const API_URL = useRuntimeConfig().public.baseApiUrl + ENDPOINT;
   // Declaring states for user store
   const token = ref<string>("");
-  const user = ref<User | null>(null);
+  const user = ref<UserType | null>(null);
 
   // Initial store w/app
   const userSaved = localStorage.getItem("user");
