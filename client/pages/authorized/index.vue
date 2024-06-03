@@ -1,33 +1,37 @@
 <script setup lang="ts">
 import * as z from "zod";
-import { ErrorMessage, Field } from "vee-validate";
+// import { ErrorMessage, Field } from "vee-validate";
 import { ref } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import {
   DateFormatter,
   type DateValue,
-  getLocalTimeZone,
+  // getLocalTimeZone,
 } from "@internationalized/date";
+import { authorizedService } from "@/services";
 
-import { AlarmClock, CalendarX2Icon } from "lucide-vue-next";
-import { FormStep, FormWizard } from "@/components/ui/steps";
+// import { AlarmClock, CalendarX2Icon } from "lucide-vue-next";
+// import { FormStep, FormWizard } from "@/components/ui/steps";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 
-import { cn } from "@/lib/utils";
+const { getCargasApoderado } = authorizedService();
+getCargasApoderado();
+// import {
+//   Select,
+//   SelectContent,
+//   SelectGroup,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from "@/components/ui/popover";
+// import { Calendar } from "@/components/ui/calendar";
+
+// import { cn } from "@/lib/utils";
 
 // import { Check, ChevronsUpDown } from "lucide-vue-next";
 

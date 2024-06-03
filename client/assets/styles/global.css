@@ -22,12 +22,11 @@
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
 
-    --blue: 216 100% 50%;
-    --blue-foreground: 0 0% 100%;
-    --blue-active: 219 83% 14%;
-    --blue-disabled: 264 8% 12%;
+    --green: 176 100% 19%;
+    --green-foreground: 0 0% 100%;
 
-    --green: 160 84% 39%;
+    --dark-blue: 216 36% 38%;
+    --dark-blue-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
