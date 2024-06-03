@@ -13,6 +13,10 @@ const props = defineProps<
 >();
 
 const delegatedProps = computed(() => {
+<<<<<<< HEAD
+=======
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+>>>>>>> origin/dev
   const { class: _, ...delegated } = props;
 
   return delegated;

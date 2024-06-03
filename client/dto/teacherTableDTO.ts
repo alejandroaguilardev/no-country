@@ -7,7 +7,7 @@ export class TeacherTableDTO {
     public lastName: string,
     public email: string,
     public phone: string,
-    public course: string
+    public course: string,
   ) {}
 
   static fromApiModel(teacher: TeacherApi) {
