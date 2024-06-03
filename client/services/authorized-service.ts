@@ -5,24 +5,22 @@ export const authorizedService = () => {
 
   const baseApiUrl = runtimeConfig.public.baseApiUrl;
 
-  const getCargasApoderado = async (): Promise<StudentType[]> => {
+  const getCargasApoderado = async () => {
     try {
-      const data = await useFetch(`${baseApiUrl}/api/authorizeds`);
+      const data = await fetch(`${baseApiUrl}/api/authorizeds`, {
+        method: "GET",
+      });
       console.log("get Cargas", data);
-      return data;
     } catch (error) {
       console.error("Error :", error);
     }
   };
-  const datosAuthorizedForWithdrawal = async (
-    formData: any,
-    idTutor: number,
-  ) => {
+  const datosAuthorizedForWithdrawal = async (formData: any) => {
     try {
       formData.status = formData.get("status") || "0";
 
-      await fetch(`${baseApiUrl}/api/retireds/${idTutor}`, {
-        method: "PATCH",
+      await fetch(`${baseApiUrl}/api/update-authorized`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },

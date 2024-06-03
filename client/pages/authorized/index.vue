@@ -14,8 +14,10 @@ import { authorizedService } from "@/services";
 // import { FormStep, FormWizard } from "@/components/ui/steps";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const { getCargasApoderado } = authorizedService();
+const { getCargasApoderado, datosAuthorizedForWithdrawal } =
+  authorizedService();
 getCargasApoderado();
+
 // import {
 //   Select,
 //   SelectContent,
@@ -111,11 +113,18 @@ const emit = defineEmits(["imageloaded"]);
 
 const onSubmit = (formData: FormData) => {
   console.log(JSON.stringify(formData, null, 2));
+  datosAuthorizedForWithdrawal(formData);
 };
 
-const handleDisableSelect = () => {
-  disabledStudentsSelect.value = !disabledStudentsSelect.value;
-};
+// const handleDisableSelect = () => {
+//   disabledStudentsSelect.value = !disabledStudentsSelect.value;
+// };
+
+// function datosAuthorizedForWithdrawal(data) {
+//   const payload = { data };
+//   console.log("que es esto", payload);
+//   return payload;
+// }
 
 const onEventFilePicked = (event: any) => {
   const files = event.target.files;
