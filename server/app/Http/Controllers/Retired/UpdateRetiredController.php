@@ -21,9 +21,10 @@ class UpdateRetiredController extends Controller
     {
         $data = $request->validated();
         $this->repository->updateStatus($data);
+        $data['presence']=true;
 
         return response()->json([
-            'message' => 'El estado del alumno se ha actualizado'
+            'message' => $data
         ], 200);
     }
     
@@ -31,12 +32,11 @@ class UpdateRetiredController extends Controller
     public function markAsAbsent(AusentRequest $request)
     {
         $data = $request->validated();
-
-        // Actualiza el estado del alumno
         $this->repository->updatePresence($data);
+        $data['status']=false;
 
         return response()->json([
-            'message' => 'El estado del alumno se ha actualizado'
+            'message' => $data
         ], 200);
     }
 }
