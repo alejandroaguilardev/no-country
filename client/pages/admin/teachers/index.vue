@@ -6,7 +6,7 @@
         @on:filter="onFilter($event)"
         @on:remove="onRemoveFilters($event)"
       />
-      <Table :columns="columns" :data="data" :loading="loading"/>
+      <Table :columns="columns" :data="data" :loading="loading" />
       <Pagination
         v-model:page="page"
         :total="total"

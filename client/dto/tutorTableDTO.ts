@@ -11,7 +11,7 @@ export class TutorTableDTO {
     public phone: string,
     public students: StudentTableDTO[],
     public loadingStudents: boolean = false,
-    public showStudents: boolean = false
+    public showStudents: boolean = false,
   ) {}
 
   static fromApiModel(tutor: TutorApi) {
