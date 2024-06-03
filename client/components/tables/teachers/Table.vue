@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="TData, TValue">
+<script setup lang="ts" generic="TValue">
 import type { ColumnDef } from "@tanstack/vue-table";
 import { FlexRender, getCoreRowModel, useVueTable } from "@tanstack/vue-table";
 
@@ -10,10 +10,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { TeacherTableDTO } from "@/dto/teacherTableDTO";
 
 const props = defineProps<{
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  columns: ColumnDef<TeacherTableDTO, TValue>[];
+  data: TeacherTableDTO[];
+  loading: boolean;
 }>();
 
 const table = useVueTable({
@@ -45,7 +48,29 @@ const table = useVueTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        <template v-if="table.getRowModel().rows?.length">
+        <template v-if="loading">
+          <TableRow v-for="index in 10" :key="index">
+            <TableCell>
+              <Skeleton class="h-4 w-16 bg-slate-300" />
+            </TableCell>
+            <TableCell>
+              <Skeleton class="h-4 w-38 bg-slate-300" />
+            </TableCell>
+            <TableCell>
+              <Skeleton class="h-4 w-38 bg-slate-300" />
+            </TableCell>
+            <TableCell>
+              <Skeleton class="h-4 w-38 bg-slate-300" />
+            </TableCell>
+            <TableCell>
+              <Skeleton class="h-4 w-38 bg-slate-300" />
+            </TableCell>
+            <TableCell>
+              <Skeleton class="h-4 w-38 bg-slate-300" />
+            </TableCell>
+          </TableRow>
+        </template>
+        <template v-else-if="table.getRowModel().rows?.length">
           <TableRow
             v-for="row in table.getRowModel().rows"
             :key="row.id"

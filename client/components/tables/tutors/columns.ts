@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/vue-table";
-import type { Tutor } from "./interfaces/tutor";
+import type { TutorTableDTO } from "@/dto/tutorTableDTO";
 
-export const columns: ColumnDef<Tutor>[] = [
+export const columns: ColumnDef<TutorTableDTO>[] = [
   {
     accessorKey: "id",
     header: "ID",
