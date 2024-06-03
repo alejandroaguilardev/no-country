@@ -2,15 +2,15 @@ import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
-import type { User } from "../types/models/user";
+import type { UserType } from "../types/models/user";
 import type { LoginRes } from "../types/queries/LoginQuery";
 
-const API_URL = process.env.API_URL;
-
 export const useAuthStore = defineStore("auth", () => {
+  const ENDPOINT = "/auth/login";
+  const API_URL = useRuntimeConfig().public.baseApiUrl + ENDPOINT;
   // Declaring states for user store
   const token = ref<string>("");
-  const user = ref<User | null>(null);
+  const user = ref<UserType | null>(null);
 
   // Initial store w/app
   const userSaved = localStorage.getItem("user");
@@ -47,10 +47,9 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function setNewToken() {
-    const { data } = await axios.get<{ newToken: string }>(
-      API_URL + "/auth/get-new-token",
-      { headers: { Authorization: token.value } },
-    );
+    const { data } = await axios.get<{ newToken: string }>(API_URL, {
+      headers: { Authorization: token.value },
+    });
     token.value = data.newToken;
     localStorage.setItem("token", data.newToken);
   }

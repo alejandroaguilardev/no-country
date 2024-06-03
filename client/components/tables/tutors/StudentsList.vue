@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import type { Student } from "./interfaces/student";
 import { CollapsibleContent } from "@/components/ui/collapsible";
+import Skeleton from "@/components/ui/skeleton/Skeleton.vue";
 import { TableCell, TableRow } from "@/components/ui/table";
+import type { StudentTableDTO } from "@/dto/studentTableDTO";
 
 defineProps<{
-  students: Student[];
+  students: StudentTableDTO[];
+  loading: boolean;
 }>();
 </script>
 
@@ -12,7 +14,14 @@ defineProps<{
   <tr class="shadow-inner">
     <td colspan="8">
       <CollapsibleContent class="bg-slate-100">
-        <template v-if="students.length > 0">
+        <template v-if="loading">
+          <TableRow>
+            <TableCell v-for="index in 4" :key="index">
+              <Skeleton class="h-4 w-28 bg-slate-300" />
+            </TableCell>
+          </TableRow>
+        </template>
+        <template v-else-if="students.length > 0">
           <TableRow v-for="(student, index) of students" :key="index">
             <TableCell>
               <span class="text-muted-foreground mr-1">Nombre:</span>
@@ -25,10 +34,6 @@ defineProps<{
             <TableCell>
               <span class="text-muted-foreground mr-1">DNI:</span>
               {{ student.dni }}
-            </TableCell>
-            <TableCell>
-              <span class="text-muted-foreground mr-1">Edad:</span>
-              {{ student.age }}
             </TableCell>
             <TableCell>
               <span class="text-muted-foreground mr-1">Curso:</span>
