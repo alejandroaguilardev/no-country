@@ -12,6 +12,8 @@ use App\Http\Controllers\Storage\ImageSearchController;
 use App\Http\Controllers\Students\SearchCourseStudentController;
 use App\Http\Controllers\Students\SearchStudentController;
 use App\Http\Controllers\Teachers\SearchTeacherController;
+use App\Http\Controllers\Tutors\SearchAuthorizedTutorController;
+use App\Http\Controllers\Tutors\SearchStudentTutorController;
 use App\Http\Controllers\Tutors\SearchTutorController;
 use App\Http\Middleware\EnsureTokenIsValid;
 use App\Http\Middleware\TeacherEnsureTokenIsValid;
@@ -20,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware([TutorEnsureTokenIsValid::class])->group(function () {
     Route::post('/authorizeds', UpdateAuthorizedController::class);
+    Route::get('/tutors/students', SearchStudentTutorController::class);
+    Route::get('/tutors/authorizeds', SearchAuthorizedTutorController::class);
 });
 Route::post('/authorizeds/leave-alone', LeaveAloneAuthorizedController::class);
 Route::middleware([TeacherEnsureTokenIsValid::class])->group(function () {
