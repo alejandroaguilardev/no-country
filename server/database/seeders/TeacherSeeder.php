@@ -19,11 +19,11 @@ class TeacherSeeder extends Seeder
         $courses_id = app('courses_id');
 
         $user = User::factory()->create(["role_id"=> $default_roles["teacher"]["id"], "email"=> $default_users["teacher"]["email"], "password"=>$default_users["teacher"]["password"]]);
-        Teacher::factory()->create(['email'=>$user->email,'course_id' => $courses_id[0], 'user_id'=> $user->id]); 
+        Teacher::factory()->create(['email'=>$user->email, 'user_id'=> $user->id]); 
 
         for ($i = 0; $i < count($courses_id); $i++) {
             $user = User::factory()->create(["role_id"=>$default_roles["teacher"]["id"]]);
-            Teacher::factory()->create(['email'=>$user->email,'course_id' => $courses_id[$i], 'user_id'=> $user->id]);
+            Teacher::factory()->create(['email'=>$user->email, 'user_id'=> $user->id]);
         }
     }
 }

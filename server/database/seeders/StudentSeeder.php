@@ -18,7 +18,7 @@ class StudentSeeder extends Seeder
         $default_random_students = app('default_random_students');
 
         foreach ($tutors_id as $tutor_id) {
-            for ($i=0; $i < $this->randomStudents($default_random_students); $i++) { 
+            for ($i=0; $i < $this->randomStudents($tutor_id, $default_random_students); $i++) { 
                 $authorized = Authorized::factory()->create([
                     'tutor_id' => $tutor_id, 
                 ]);
@@ -34,12 +34,16 @@ class StudentSeeder extends Seeder
                     'date' => Carbon::now(), 
                     'status' => false, 
                     'presence' => true,
-                    'leaveAlone'=> false
+                    'leave_alone'=> false
                 ]);
             }
         }        
     }
-    private function randomStudents($count) {
+
+    private function randomStudents($tutor_id, $count) {
+        if($tutor_id===1){
+            return 3;
+        }
         return rand(1, $count);
     }
 }

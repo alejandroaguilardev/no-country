@@ -16,11 +16,10 @@ class UpdateAuthorizedController extends Controller
     public function __invoke(UpdateAuthorizedRequest $request)
     {
         $data = $request->validated();
-        $authorized = $this->repository->updateRecord($data['tutor_id'], $data);
+        $this->repository->updateRecord($data);
 
         return response()->json([
-            'message' => 'Autorizado guardado correctamente',
-            'autorizado' => $authorized
+            'message' => 'Autorizado guardado correctamente'
         ], 200);
     } 
 }

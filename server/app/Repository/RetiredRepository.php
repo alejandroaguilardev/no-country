@@ -11,7 +11,7 @@ class RetiredRepository
 {
     public function getRecords(Criteria $criteria)
     {
-        $query = EloquentQuery::queryConverter(new Retired(), Retired::with('student.course', 'student.tutor', 'student.authorized'), $criteria);
+        $query = EloquentQuery::queryConverter(Retired::with('student.course', 'student.tutor', 'student.authorized'), $criteria);
         $total = $query->count();
 
         $query->limit($criteria->limit)
@@ -50,5 +50,17 @@ class RetiredRepository
         ]);
 
         return $retired;
+    }
+
+    public function updateLeaveAlone(array $data)
+    {
+        foreach ($data['student_id'] as $id){
+            $retired = Retired::findOrFail($id);
+            $retired->update([
+                'leave_alone'=>$data['leave_alone'],
+                'student_id'=>$id
+            ]);
+        }
+        return true;
     }
 }

@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Tutor;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-
-// TODO package.json colocar script de inicio
-// TODO documentar apis
 
 class DatabaseSeeder extends Seeder
 {
@@ -32,8 +30,6 @@ class DatabaseSeeder extends Seeder
         '7A', '7B', '7C',
     ];
 
-
-
     public function run(): void
     {
         app()->instance('total_tutors', $this->total_tutors);
@@ -53,7 +49,8 @@ class DatabaseSeeder extends Seeder
 
     protected function createAdmin() {
         $default_roles = app('default_roles');
-        User::factory()->create(["email"=>"admin@example.com","password"=>"12345678", "role_id"=>$default_roles["admin"]["id"]]);
+        $user = User::factory()->create(["email"=>"admin@example.com","password"=>"12345678", "role_id"=>$default_roles["admin"]["id"]]);
+        Tutor::factory()->create(['email'=>$user->email,'user_id'=> $user->id]);
     }
 }
 

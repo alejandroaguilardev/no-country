@@ -26,7 +26,7 @@ const formSchema = toTypedSchema(
     password: z
       .string({ required_error: "Contraseña Requerida" })
       .min(3, { message: "Mínimo 3 caracteres" }),
-    rememberPassword: z.boolean().default(false).optional(),
+    rememberPassword: z.boolean().default(true).optional(),
   }),
 );
 
