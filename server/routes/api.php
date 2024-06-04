@@ -22,10 +22,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware([TutorEnsureTokenIsValid::class])->group(function () {
     Route::post('/authorizeds', UpdateAuthorizedController::class);
+    Route::post('/authorizeds/leave-alone', LeaveAloneAuthorizedController::class);
     Route::get('/tutors/students', SearchStudentTutorController::class);
     Route::get('/tutors/authorizeds', SearchAuthorizedTutorController::class);
 });
-Route::post('/authorizeds/leave-alone', LeaveAloneAuthorizedController::class);
+
 Route::middleware([TeacherEnsureTokenIsValid::class])->group(function () {
     Route::patch('/ausent/{student_id}', [UpdateRetiredController::class, "markAsAbsent"]);
     Route::patch('/retireds/{student_id}', [UpdateRetiredController::class, "markAsRetired"]);
