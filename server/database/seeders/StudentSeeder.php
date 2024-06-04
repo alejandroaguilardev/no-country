@@ -39,6 +39,7 @@ class StudentSeeder extends Seeder
             }
         }        
     }
+
     private function randomStudents($count) {
         return rand(1, $count);
     }

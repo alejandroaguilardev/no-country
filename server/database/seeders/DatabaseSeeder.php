@@ -6,13 +6,12 @@ use App\Models\Tutor;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
-// TODO package.json colocar script de inicio
 // TODO Endpoint de students para obtener los estudiantes de un curso
 // TODO {{url}}/api/courses mostrar también la info del apoderado en la info
 
 class DatabaseSeeder extends Seeder
 {
-    private $total_tutors = 420;
+    private $total_tutors = 1;
     private $default_random_students = 3;
 
     private $default_users = [
@@ -33,8 +32,6 @@ class DatabaseSeeder extends Seeder
         '5A', '5B', '5C', '6A', '6B', '6C',
         '7A', '7B', '7C',
     ];
-
-
 
     public function run(): void
     {
