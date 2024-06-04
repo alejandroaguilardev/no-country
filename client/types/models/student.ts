@@ -7,11 +7,13 @@ export enum StudentStatusEnum {
   WITHDRAWN = "withdrawn",
   NO_WITHDRAWN = "no_withdrawn",
   PRESENCE = "ausent",
+  LEAVE_ALONE = "leave_alone",
 }
 
 export type RetiredType = {
   presence: 1 | 0;
   status: 1 | 0;
+  leave_alone: 1 | 0;
 };
 
 export type StudentType = {
@@ -24,12 +26,7 @@ export type StudentType = {
   course_id: number;
   tutor_id: number;
   authorized_id: number;
-  course: {
-    id: string;
-    created_at: string;
-    updated_at: string;
-    description: string;
-  };
+  course: CourseType;
   tutor: TutorType;
   authorized: AuthorizedType;
   retired: RetiredType;

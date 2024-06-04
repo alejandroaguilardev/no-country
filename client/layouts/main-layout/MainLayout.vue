@@ -5,8 +5,8 @@ import { Primitive, type PrimitiveProps } from "radix-vue";
 
 import { type MainLayoutVariants, mainLayoutVariants } from ".";
 import { cn } from "@/lib/utils";
-// import { type UserType } from "@/types/models";
-// import { useAuthStore } from "@/store/useAuthStore";
+import { type UserType } from "@/types/models";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface Props extends PrimitiveProps {
   size?: MainLayoutVariants["size"];
@@ -21,20 +21,20 @@ const props = withDefaults(defineProps<Props>(), {
   isRequired: true,
 });
 
-// const { push } = useRouter();
+const { push } = useRouter();
 
-// const authRequired = (user: UserType | null) => {
-//   if (user && !props.isRequired) {
-//     push("/");
-//   }
-//   if (!user && props.isRequired) {
-//     push("/login");
-//   }
-// };
-// onMounted(() => {
-//   const { user } = useAuthStore();
-//   authRequired(user);
-// });
+const authRequired = (user: UserType | null) => {
+  if (user && !props.isRequired) {
+    push("/");
+  }
+  if (!user && props.isRequired) {
+    push("/login");
+  }
+};
+onMounted(() => {
+  const { user } = useAuthStore();
+  authRequired(user);
+});
 </script>
 
 <template>
