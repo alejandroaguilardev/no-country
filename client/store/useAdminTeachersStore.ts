@@ -1,19 +1,19 @@
-import axios from "axios";
 import { defineStore } from "pinia";
 import type { ResponseApi } from "@/types/api/responseApi";
 import type { FilterApi } from "@/types/api/filters/filterApi";
 import type { TeacherApi } from "@/types/api/teacherApi";
+import { httpCommon } from "@/http-common";
 
 export const useAdminTeachersStore = defineStore("adminTeachersStore", () => {
   const ENDPOINT = "/api/teachers";
-  const API_URL = useRuntimeConfig().public.baseApiUrl + ENDPOINT;
+  const { api } = httpCommon();
 
   async function getTeachers(
     offset: number = 0,
     limit: number = 10,
     filters: FilterApi[] = [],
   ) {
-    const res = await axios.get<ResponseApi<TeacherApi>>(API_URL, {
+    const res = await api.get<ResponseApi<TeacherApi>>(ENDPOINT, {
       params: { offset, limit, filters },
     });
 
