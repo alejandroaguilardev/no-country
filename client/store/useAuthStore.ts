@@ -68,7 +68,7 @@ export const useAuthStore = defineStore("auth", () => {
   // Methods
   async function login(req: LoginReq, savePassword: boolean) {
     const { data } = await axios
-      .post<LoginRes>(config.public.baseApiUrl + "/auth/login", req)
+      .post<LoginRes>(config.public.baseApiUrl + "/api/auth/login", req)
       .catch((err) => {
         throw new Error(err.response.data.error);
       });

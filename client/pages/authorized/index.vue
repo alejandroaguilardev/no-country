@@ -6,28 +6,30 @@ import { toTypedSchema } from "@vee-validate/zod";
 import {
   DateFormatter,
   type DateValue,
-  getLocalTimeZone,
+  // getLocalTimeZone,
 } from "@internationalized/date";
+import { authorizedService } from "@/services";
 
-import { AlarmClock, CalendarX2Icon } from "lucide-vue-next";
-import { FormStep, FormWizard } from "@/components/ui/steps";
+// import { AlarmClock, CalendarX2Icon } from "lucide-vue-next";
+// import { FormStep, FormWizard } from "@/components/ui/steps";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 
-import { cn } from "@/lib/utils";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectGroup,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from "@/components/ui/popover";
+// import { Calendar } from "@/components/ui/calendar";
+
+// import { cn } from "@/lib/utils";
 
 // import { Check, ChevronsUpDown } from "lucide-vue-next";
 
@@ -105,13 +107,35 @@ const value = ref<DateValue>();
 
 const emit = defineEmits(["imageloaded"]);
 
-const onSubmit = (formData: FormData) => {
-  console.log(JSON.stringify(formData, null, 2));
-};
+const { getCargasApoderado, datosAuthorizedForWithdrawal } =
+  authorizedService();
+
+const tutor = getCargasApoderado();
+console.log("tutor", tutor);
 
 const handleDisableSelect = () => {
   disabledStudentsSelect.value = !disabledStudentsSelect.value;
 };
+
+// function datosAuthorizedForWithdrawal(formData) {
+//   const payload = { formData };
+//   console.log("que es esto", payload);
+//   return payload;
+// }
+// const handlePresence = async (studentId: number, studentFullName: string) => {
+//   const formData = new FormData();
+//   formData.append("presence", "0");
+
+//   await presenceStudent(formData, studentId);
+
+//   toast("Event has been created", {
+//     description: `Estudiante ${studentFullName} marcado como ausente.`,
+//     action: {
+//       label: "Undo",
+//       onClick: () => console.log("Undo"),
+//     },
+//   });
+// };
 
 const onEventFilePicked = (event: any) => {
   const files = event.target.files;
@@ -128,6 +152,18 @@ const onEventFilePicked = (event: any) => {
     emit("imageloaded", imageUrl.value);
   });
   fileReader.readAsDataURL(files[0]);
+};
+const onSubmit = (formData: FormData, fileReader) => {
+  console.log("onSubmitautorized", JSON.stringify(formData));
+  console.log("files", files);
+  const payload = {
+    lastname: "alejandro",
+    documentnumber: 432682374,
+    phone: "3421243322",
+    photo: files,
+    tutor_id: "1",
+  };
+  datosAuthorizedForWithdrawal(payload);
 };
 </script>
 
@@ -363,9 +399,9 @@ const onEventFilePicked = (event: any) => {
       </FormStep>
 
       <!-- Step 3 -->
-      <FormStep>
-        <!-- <Field v-slot="{ componentField, value }" name="datetime" type="date"> -->
-        <div class="grid gap-8 max-w-[425px] mb-20 mx-auto">
+      <!-- <FormStep> -->
+      <!-- <Field v-slot="{ componentField, value }" name="datetime" type="date"> QUEDA COMENTADA-->
+      <!-- <div class="grid gap-8 max-w-[425px] mb-20 mx-auto">
           <Popover>
             <div class="grid lg:grid-cols-[0.6fr_1fr] gap-6 items-center">
               <label class="label">Fecha de inicio</label>
@@ -420,10 +456,10 @@ const onEventFilePicked = (event: any) => {
               <Calendar v-model="value" mode="datetime" initial-focus />
             </PopoverContent>
           </Popover>
-        </div>
+        </div> -->
 
-        <!-- </Field> -->
-      </FormStep>
+      <!-- </Field> QUEDA COMENTADA-->
+      <!-- </FormStep> -->
     </FormWizard>
   </NuxtLayout>
 </template>
