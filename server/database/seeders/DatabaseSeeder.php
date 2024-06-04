@@ -6,9 +6,6 @@ use App\Models\Tutor;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
-// TODO Endpoint de students para obtener los estudiantes de un curso
-// TODO {{url}}/api/courses mostrar también la info del apoderado en la info
-
 class DatabaseSeeder extends Seeder
 {
     private $total_tutors = 420;

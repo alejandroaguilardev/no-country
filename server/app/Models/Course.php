@@ -18,6 +18,7 @@ class Course extends Model
         'updated_at',
     ];
 
+
     public function students(): HasMany
     {
         return $this->hasMany(Student::class);

@@ -10,7 +10,7 @@ final class AuthorizedRepository
 {
     public function getRecords(Criteria $criteria)
     {
-        $query = EloquentQuery::queryConverter(new Authorized(), Authorized::with('students'), $criteria);
+        $query = EloquentQuery::queryConverter( Authorized::with('students'), $criteria);
         $total = $query->count();
 
         $query->limit($criteria->limit)
