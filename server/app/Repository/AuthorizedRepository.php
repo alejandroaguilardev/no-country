@@ -23,13 +23,13 @@ final class AuthorizedRepository
         ];
     }
 
-    public function updateRecord(int $id, array $data)
+    public function updateRecord(array $data)
     {
-        $authorized = Authorized::findOrFail($id);
-
-        $authorized->update($data);
-
-        return $authorized;
-
+        foreach ($data['student_id'] as $id){
+            $authorized = Authorized::findOrFail($id);
+            $authorized->update(['name'=>$data['name'], 'last_name'=>$data['last_name'], 'document_number'=>$data[ 'document_number'],
+            'phone'=>$data['phone'],'photo'=>$data['photo'],'tutor_id'=>$data['tutor_id'],'student_id'=>$id]);
+        }
+        return true;
     }
 }

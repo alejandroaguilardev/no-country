@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Authorizeds\LeaveAloneAuthorizedController;
 use App\Http\Controllers\Authorizeds\SearchAuthorizedController;
 use App\Http\Controllers\Authorizeds\UpdateAuthorizedController;
 use App\Http\Controllers\Courses\SearchCourseController;
@@ -16,11 +17,11 @@ use App\Http\Middleware\TeacherEnsureTokenIsValid;
 use App\Http\Middleware\TutorEnsureTokenIsValid;
 use Illuminate\Support\Facades\Route;
 
-
+Route::post('/authorizeds', UpdateAuthorizedController::class);
 Route::middleware([TutorEnsureTokenIsValid::class])->group(function () {
-    Route::post('/authorizeds', UpdateAuthorizedController::class);
+    // Route::post('/authorizeds', UpdateAuthorizedController::class);
 });
-
+// Route::post('/authorizeds', LeaveAloneAuthorizedController::class);
 Route::middleware([TeacherEnsureTokenIsValid::class])->group(function () {
     Route::patch('/ausent/{student_id}', [UpdateRetiredController::class, "markAsAbsent"]);
     Route::patch('/retireds/{student_id}', [UpdateRetiredController::class, "markAsRetired"]);
