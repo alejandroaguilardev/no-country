@@ -22,17 +22,13 @@ class LeaveAloneAuthorizedRequest extends FormRequest
     {
         
         return [
-            'student_id' => 'required|integer|exists:students,id',
-            'leaveAlone' => 'required|boolean'
+            'student_id' => 'array',
+            'student_id.*' => 'required|integer|exists:students,id',
+            'leave_alone' => 'required|boolean'
         ];
     }
 
-    // protected function prepareForValidation()
-    // {
-    //     $this->merge([
-    //         'student_id' => $this->route('student_id'),
-    //     ]);
-    // }
+
 
     public function failedValidation(Validator $validator)
     {

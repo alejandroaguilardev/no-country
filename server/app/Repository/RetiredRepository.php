@@ -54,13 +54,13 @@ class RetiredRepository
 
     public function updateLeaveAlone(array $data)
     {
-        $retired = Retired::where('student_id', $data['student_id'])->firstOrFail();
-
-        // Actualiza el estado, presencia y fecha
-        $retired->update([
-            'leaveAlone' =>$data['leaveAlone']
-        ]);
-
-        return $retired;
+        foreach ($data['student_id'] as $id){
+            $retired = Retired::findOrFail($id);
+            $retired->update([
+                'leave_alone'=>$data['leave_alone'],
+                'student_id'=>$id
+            ]);
+        }
+        return true;
     }
 }

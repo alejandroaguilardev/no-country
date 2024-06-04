@@ -19,7 +19,7 @@ class LeaveAloneAuthorizedController extends Controller
         $this->repository->updateLeaveAlone($data);
 
         return response()->json([
-            'message' => $data
+            'message' => 'Preferencia de retiro guardada correctamente'
         ], 200);
     } 
 }

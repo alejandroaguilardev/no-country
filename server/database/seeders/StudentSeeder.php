@@ -34,7 +34,7 @@ class StudentSeeder extends Seeder
                     'date' => Carbon::now(), 
                     'status' => false, 
                     'presence' => true,
-                    'leaveAlone'=> false
+                    'leave_alone'=> false
                 ]);
             }
         }        

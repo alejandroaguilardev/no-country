@@ -17,11 +17,10 @@ use App\Http\Middleware\TeacherEnsureTokenIsValid;
 use App\Http\Middleware\TutorEnsureTokenIsValid;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/authorizeds', UpdateAuthorizedController::class);
 Route::middleware([TutorEnsureTokenIsValid::class])->group(function () {
-    // Route::post('/authorizeds', UpdateAuthorizedController::class);
+    Route::post('/authorizeds', UpdateAuthorizedController::class);
 });
-// Route::post('/authorizeds', LeaveAloneAuthorizedController::class);
+Route::post('/authorizeds/leave-alone', LeaveAloneAuthorizedController::class);
 Route::middleware([TeacherEnsureTokenIsValid::class])->group(function () {
     Route::patch('/ausent/{student_id}', [UpdateRetiredController::class, "markAsAbsent"]);
     Route::patch('/retireds/{student_id}', [UpdateRetiredController::class, "markAsRetired"]);
