@@ -22,16 +22,4 @@ class TutorRepository
             "count" => $total,
         ];
     }
-
-    public function getStudentsRecord(int $id)
-    {
-        $tutor = Tutor::with('students' )->where('id', $id)->first();
-        return $tutor->students;
-    }
-
-    public function getAuthorizedsRecord(int $id)
-    {
-        $tutor = Tutor::with('authorizeds' )->where('id', $id)->first();
-        return $tutor->authorizeds;
-    }
 }

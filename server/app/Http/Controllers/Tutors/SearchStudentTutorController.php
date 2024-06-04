@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Tutors;
 
 use App\Domain\Errors\CatchException;
 use App\Http\Controllers\Controller;
-use App\Repository\TutorRepository;
+use App\Repository\UserRepository;
 
 class SearchStudentTutorController extends Controller
 {
     public function __construct(
-        private readonly TutorRepository $repository
+        private readonly UserRepository $repository
     ) {}
 
     public function __invoke()
