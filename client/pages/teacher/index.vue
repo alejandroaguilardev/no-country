@@ -1,57 +1,28 @@
 <script setup lang="ts">
-import { StudentCard } from "@/components/cards";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { getStudentStatusText, getStudentStatusVariant } from "@/lib/utils";
-import { teacherService } from "@/services";
+import { Button } from "@/components/ui/button";
+// import { getStudentStatusText, getStudentStatusVariant } from "@/lib/utils";
+// import { courseService } from "@/services";
 
-const { getAllStudents } = teacherService();
+// const { getAllCourses } = courseService();
 
-const students = await getAllStudents();
+// const courses = await getAllCourses();
 
-console.log("students lists=>", students);
+// console.log("courses lists=>", courses);
 </script>
 
 <template>
   <NuxtLayout name="teacher-layout">
-    <div class="grid gap-4 py-7 max-w-[500px] mx-auto">
-      <Dialog v-for="(student, index) in students" :key="index">
-        <DialogTrigger as-child>
-          <div class="grid grid-cols-[1fr_110px] items-center gap-2.5 p-0">
-            <Badge
-              variant="light_blue"
-              class="justify-start truncate md:justify-center inline-block md:inline py-1.5 text-xl text-foreground shadow-lg"
-            >
-              {{ student.name }}
-              {{ student.last_name }}
-            </Badge>
-            <Badge
-              :variant="
-                getStudentStatusVariant(
-                  student.retired.presence,
-                  student.retired.status,
-                )
-              "
-              class="w-full justify-self-end text-base text-foreground"
-            >
-              {{
-                getStudentStatusText(
-                  student.retired.presence,
-                  student.retired.status,
-                )
-              }}
-            </Badge>
-          </div>
-        </DialogTrigger>
-        <DialogContent>
-          <StudentCard :data="student" />
-        </DialogContent>
-      </Dialog>
-    </div>
+    <ul class="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <li class="grid">
+        <Button as-child variant="dark_blue" size="lg" classs="w-full">
+          <NuxtLink :to="{ path: `/teacher/1` }">1° A</NuxtLink>
+        </Button>
+      </li>
+      <li class="grid">
+        <Button as-child variant="dark_blue" size="lg" classs="w-full">
+          <NuxtLink :to="{ path: `/teacher/2` }">1° B</NuxtLink>
+        </Button>
+      </li>
+    </ul>
   </NuxtLayout>
-  <div
-    class="sticky bottom-0 py-5 px-4 bg-background border border-border shadow-lg"
-  >
-    <Button class="w-full">Editar</Button>
-  </div>
 </template>

@@ -4,6 +4,13 @@ import { Badge } from "@/components/ui/badge";
 import { teacherService } from "@/services";
 import type { StudentType } from "@/types/models/student";
 
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+
 defineProps<{
   data: StudentType;
 }>();
@@ -42,7 +49,84 @@ const handlePresence = async (studentId: number, studentFullName: string) => {
 </script>
 
 <template>
-  <div class="grid aspect-square p-1 gap-4">
+  <div class="grid aspect-square px-16 gap-4">
+    <div class="grid gap-5 text-center">
+      <Badge
+        variant="light_blue"
+        class="text-lg font-medium uppercase h-10 w-fit mx-auto px-6 shaddow-xl rounded-lg"
+      >
+        Pepita Martinez
+      </Badge>
+    </div>
+    <div class="grid gap-3 mb-5">
+      <p class="text-center text-xl font-medium">Lo retira:</p>
+      <figure class="relative mx-auto h-[200px] w-[200px]">
+        <img
+          src="@/assets/images/student-2.png"
+          class="h-full w-full rounded-full object-cover"
+          decoding="async"
+          loading="lazy"
+        />
+      </figure>
+      <div class="grid">
+        <p class="text-xl font-bold mx-auto uppercase">Juanito Montoya</p>
+      </div>
+    </div>
+    <div class="grid gap-7">
+      <div class="grid grid-cols-2 items-center gap-3">
+        <DialogClose as-child>
+          <Button
+            variant="destructive"
+            class="rounded-md px-4 py-1 text-lg font-medium uppercase shadow-xl"
+          >
+            No asistió
+          </Button>
+        </DialogClose>
+
+        <DialogClose as-child>
+          <Button
+            variant="green"
+            class="rounded-md px-4 py-1 text-lg font-medium uppercase shadow-xl"
+          >
+            Retirado
+          </Button>
+        </DialogClose>
+      </div>
+      <Drawer>
+        <DrawerTrigger as-child>
+          <Button
+            size="xs"
+            variant="dark_blue"
+            class="w-fit font-normal mx-auto rounded-md text-base px-5"
+          >
+            Contacto
+          </Button>
+        </DrawerTrigger>
+        <DrawerContent class="">
+          <div class="mx-auto pt-6 pb-4 space-y-2 w-full">
+            <div class="text-2xl pb-0 space-y-2 text-center">
+              <p class="bg-[#C3DBC5]">Contacto autorizado:</p>
+              <p class="font-medium">+54 9 3513786543</p>
+            </div>
+            <div class="text-2xl pb-0 space-y-2 text-center">
+              <p class="bg-[#C3DBC5]">Contacto apoderado:</p>
+              <p class="font-medium">+54 9 3513786543</p>
+            </div>
+          </div>
+        </DrawerContent>
+      </Drawer>
+
+      <DialogClose as-child>
+        <Button
+          variant="link"
+          class="mx-auto shadow-none block w-fit italic underline"
+        >
+          Ver lista completa
+        </Button>
+      </DialogClose>
+    </div>
+  </div>
+  <!-- <div class="grid aspect-square p-1 gap-4">
     <div class="grid gap-5 text-center">
       <div
         v-if="data.name"
@@ -125,5 +209,5 @@ const handlePresence = async (studentId: number, studentFullName: string) => {
         </Button>
       </DialogClose>
     </div>
-  </div>
+  </div> -->
 </template>

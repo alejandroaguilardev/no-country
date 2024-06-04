@@ -24,7 +24,12 @@ export type StudentType = {
   course_id: number;
   tutor_id: number;
   authorized_id: number;
-  course: CourseType;
+  course: {
+    id: string;
+    created_at: string;
+    updated_at: string;
+    description: string;
+  };
   tutor: TutorType;
   authorized: AuthorizedType;
   retired: RetiredType;
