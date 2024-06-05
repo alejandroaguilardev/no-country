@@ -10,12 +10,17 @@ const { logout } = useAuthStore();
 
 const courseList: Ref<CourseType[]> = ref([]);
 const loading: Ref<boolean> = ref(true);
-
+const error: Ref<boolean> = ref(false);
 const fetchCourses = async () => {
-  loading.value = true;
-  const students = await store.getCourses();
-  courseList.value = students;
-  loading.value = false;
+  try {
+    loading.value = true;
+    const students = await store.getCourses();
+    courseList.value = students;
+    loading.value = false;
+  } catch (err) {
+    console.log("err=>", err);
+    error.value = true;
+  }
 };
 
 onMounted(async () => {
@@ -25,7 +30,7 @@ onMounted(async () => {
 
 <template>
   <NuxtLayout name="teacher-layout">
-    <ul class="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+    <ul v-if="!error" class="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
       <template v-if="!loading">
         <li v-for="(course, index) in courseList" :key="index" class="grid">
           <Button as-child variant="dark_blue" size="lg" classs="w-full">
@@ -41,6 +46,11 @@ onMounted(async () => {
         </li>
       </template>
     </ul>
+    <div v-else>
+      <h1 class="text-xl text-destructive text-center">
+        Ah ocurrido un error, intentelo más tarde
+      </h1>
+    </div>
   </NuxtLayout>
   <div
     class="fixed w-full bottom-0 py-5 grid px-4 bg-background border border-border shadow-lg"

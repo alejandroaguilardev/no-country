@@ -31,8 +31,8 @@ const handleRetired = async (studentId: number, studentFullName: string) => {
 
   await store.retiredStudent(formData, studentId);
 
-  toast("Event has been created", {
-    description: `Estudiante ${studentFullName} marcado como retirado.`,
+  toast("Se actualizó la lista", {
+    description: `Se marcó a ${studentFullName} como retirado.`,
     action: {
       label: "Undo",
       onClick: () => console.log("Undo"),
@@ -42,12 +42,13 @@ const handleRetired = async (studentId: number, studentFullName: string) => {
 
 const handlePresence = async (studentId: number, studentFullName: string) => {
   const formData = new FormData();
-  formData.append("presence", "0");
+
+  formData.append("presence", "1");
 
   await store.presenceStudent(formData, studentId);
 
   toast("Se actualizó la lista", {
-    description: `Estudiante ${studentFullName} marcado como ausente.`,
+    description: `Se marcó a ${studentFullName} como ausente`,
     action: {
       label: "Cerrar",
       onClick: () => console.log("Undo"),
