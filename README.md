@@ -16,7 +16,7 @@ El Student Withdrawal Manager es un sistema web diseñado para optimizar el proc
 
 1. Ejecutar el comando `docker-compose up -d` para inicializar los contenedores de Docker.
 
-2. Ejecutar el script `pnpm install:all` para instalar las dependencias del proyecto.
+2. Ejecutar el script `pnpm install:windows` para instalar las dependencias del proyecto en windows. en linux  `pnpm install:linux`  .
 
 3. Ejecutar el script `pnpm load:data` para cargar los datos de ejemplo.
 

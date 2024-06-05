@@ -18,8 +18,6 @@ return new class extends Migration
             $table->string("last_name");
             $table->string("phone");
             $table->string("email")->unique();
-            $table->unsignedBigInteger("course_id");
-            $table->foreign("course_id")->references("id")->on("courses");
             $table->unsignedBigInteger("user_id");
             $table->foreign("user_id")->references("id")->on("users");
 

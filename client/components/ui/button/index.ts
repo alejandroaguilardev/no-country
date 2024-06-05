@@ -9,8 +9,7 @@ export const buttonVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
         blue: "bg-blue text-blue-foreground hover:bg-blue/75 focus:bg-blue-active disabled:bg-blue-disabled",
-        green:
-          "bg-transparent border border-green text-green hover:bg-blue/75 focus:bg-blue-active disabled:bg-blue-disabled",
+        green: "bg-green border border-green text-green-foreground ",
         dark_blue: "bg-dark_blue text-dark_blue-foreground",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",

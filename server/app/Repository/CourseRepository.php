@@ -10,7 +10,7 @@ final class CourseRepository
 {
     public function getRecords(Criteria $criteria)
     {
-        $query = EloquentQuery::queryConverter(new Course(), Course::with('teachers', 'students'), $criteria);
+        $query = EloquentQuery::queryConverter(Course::with('students', 'students.tutor', 'students.authorized'), $criteria);
         $total = $query->count();
 
         $query->limit($criteria->limit)
