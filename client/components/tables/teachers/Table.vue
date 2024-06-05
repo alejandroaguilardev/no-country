@@ -72,7 +72,7 @@ const table = useVueTable({
             </TableCell>
           </TableRow>
         </template>
-        <template v-else-if="table.getRowModel().rows?.length">
+        <template v-else-if="table.getRowModel().rows?.length && !failed">
           <TableRow
             v-for="row in table.getRowModel().rows"
             :key="row.id"

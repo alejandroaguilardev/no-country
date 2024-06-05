@@ -85,7 +85,7 @@ function onShowStudents(tutor: TutorTableDTO) {
             </TableCell>
           </TableRow>
         </template>
-        <template v-else-if="table.getRowModel().rows?.length">
+        <template v-else-if="table.getRowModel().rows?.length && !failed">
           <Collapsible
             v-for="row in table.getRowModel().rows"
             :key="row.id"

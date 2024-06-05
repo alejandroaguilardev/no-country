@@ -37,7 +37,7 @@ const limit: Ref<number> = ref(10);
 const activeFilters: Ref<FilterApi[]> = ref([]);
 const page: Ref<number> = ref(1);
 const loading: Ref<boolean> = ref(true);
-const failed: Ref<boolean> = ref(true);
+const failed: Ref<boolean> = ref(false);
 
 function onFilter(filters: FilterApi[]) {
   fetchTeachers(0, limit.value, filters);
