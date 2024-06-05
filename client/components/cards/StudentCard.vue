@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import { toast } from "vue-sonner";
+
 import { Badge } from "@/components/ui/badge";
 
 import type { StudentType } from "@/types/models/student";
 
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { useRetiredStore } from "@/store/useRetiredStore";
+import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 // TODO:
 // Al abrir el modal mostrar la posicion del estudiante en el carousel para que no se repita
+
+// En el index de teacher debe mostrarse la lista actualizada
 // Actualizar la lista de estudiantes al usar handleRetired y handlePresence
 // Condicional para mandar al formData 0 ó 1 al presionar editar.
 // Form data no se envia correctamente
+// Al editar mostrar la lista completa de la clase
+// Añadir mensaje cuando no hay data
 
 defineProps<{
   data: StudentType;
@@ -40,10 +46,10 @@ const handlePresence = async (studentId: number, studentFullName: string) => {
 
   await store.presenceStudent(formData, studentId);
 
-  toast("Event has been created", {
+  toast("Se actualizó la lista", {
     description: `Estudiante ${studentFullName} marcado como ausente.`,
     action: {
-      label: "Undo",
+      label: "Cerrar",
       onClick: () => console.log("Undo"),
     },
   });
@@ -57,8 +63,10 @@ const handlePresence = async (studentId: number, studentFullName: string) => {
         variant="light_blue"
         class="text-lg font-medium h-10 w-fit mx-auto px-6 shaddow-xl rounded-lg"
       >
-        {{ data.name }}
-        {{ data.last_name }}
+        <DialogTitle class="text-inherit font-medium">
+          {{ data.name }}
+          {{ data.last_name }}
+        </DialogTitle>
       </Badge>
     </div>
     <template v-if="data.retired.leave_alone === 0">
@@ -73,10 +81,12 @@ const handlePresence = async (studentId: number, studentFullName: string) => {
           />
         </figure>
         <div class="grid">
-          <p class="text-2xl font-semibold mx-auto">
+          <DialogDescription
+            class="text-2xl text-foreground font-semibold mx-auto"
+          >
             {{ data.authorized.name }}
             {{ data.authorized.last_name }}
-          </p>
+          </DialogDescription>
         </div>
       </div>
     </template>

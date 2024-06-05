@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useCourseStore } from "@/store/useCourseStore";
 import type { CourseType } from "@/types/models";
 
 const store = useCourseStore();
+const { logout } = useAuthStore();
 
 const courseList: Ref<CourseType[]> = ref([]);
 const loading: Ref<boolean> = ref(true);
@@ -40,4 +42,15 @@ onMounted(async () => {
       </template>
     </ul>
   </NuxtLayout>
+  <div
+    class="fixed w-full bottom-0 py-5 grid px-4 bg-background border border-border shadow-lg"
+  >
+    <Button
+      class="mx-auto text-lg font-normal"
+      variant="green"
+      @click="logout()"
+    >
+      Cerrar Sesión
+    </Button>
+  </div>
 </template>

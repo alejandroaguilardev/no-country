@@ -15,7 +15,6 @@ export const getStudentStatusText = (
   status: number,
   leaveAlone: number,
 ) => {
-  console.log("leaveAlone=>", leaveAlone);
   if (presence === 1) {
     if (leaveAlone === 0) {
       if (status === 1) {
