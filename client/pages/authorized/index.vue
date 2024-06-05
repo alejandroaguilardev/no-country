@@ -80,7 +80,9 @@ const validationSchema = [
       dni: z.string({ required_error: "DNI es requerido" }),
       // TODO: añadir phone code input
       // phoneCode: z.string({ required_error: "Código es requerido" }),
-      phoneNumber: z.string({ required_error: "Teléfono es requerido" }),
+      phoneNumber: z
+        .string({ required_error: "Teléfono es requerido" })
+        .min(8, { message: "Mínimo 3 caracteres" }),
     }),
   ),
   toTypedSchema(
@@ -114,36 +116,15 @@ const { getCargasApoderado, datosAuthorizedForWithdrawal, cargaImagen } =
   authorizedService();
 
 const tutor = await getCargasApoderado();
-console.log("tutor", tutor);
 
 const handleDisableSelect = () => {
   disabledStudentsSelect.value = !disabledStudentsSelect.value;
 };
-
-// function datosAuthorizedForWithdrawal(formData) {
-//   const payload = { formData };
-//   console.log("que es esto", payload);
-//   return payload;
-// }
-// const handlePresence = async (studentId: number, studentFullName: string) => {
-//   const formData = new FormData();
-//   formData.append("presence", "0");
-
-//   await presenceStudent(formData, studentId);
-
-//   toast("Event has been created", {
-//     description: `Estudiante ${studentFullName} marcado como ausente.`,
-//     action: {
-//       label: "Undo",
-//       onClick: () => console.log("Undo"),
-//     },
-//   });
-// };
-
+const namePhoto = ref();
 const onEventFilePicked = (event: any) => {
   const files = event.target.files;
   const image = files[0];
-  console.log(image);
+  namePhoto.value = files;
   const filename = files[0].name;
   if (filename.lastIndexOf(".") <= 0) {
     return alert("Por favor adicione um arquivo válido");
@@ -151,21 +132,19 @@ const onEventFilePicked = (event: any) => {
   const fileReader = new FileReader();
   fileReader.addEventListener("load", () => {
     imageUrl.value = fileReader.result;
-    console.log("setimageUrl", imageUrl.value);
     emit("imageloaded", imageUrl.value);
   });
   fileReader.readAsDataURL(files[0]);
 };
 const onSubmit = (validationScheme) => {
-  console.log("validationScheme", validationScheme);
   const payload = {
     name: validationScheme.studentFullName,
     last_name: validationScheme.fullName,
     document_number: validationScheme.dni,
     phone: validationScheme.phoneNumber,
-    photo: imageUrl.value,
+    photo: namePhoto.value[0].name,
     tutor_id: "1",
-    student_id: tutor,
+    student_id: [tutor[0].id],
   };
   datosAuthorizedForWithdrawal(JSON.stringify(payload));
 
@@ -176,9 +155,8 @@ const onSubmit = (validationScheme) => {
       onClick: () => console.log("Undo"),
     },
   });
-  console.log("onSubmitautorized", JSON.stringify(payload));
 
-  cargaImagen(imageUrl.value);
+  cargaImagen(namePhoto.value[0]);
   const { push } = useRouter();
   push("/login");
 };

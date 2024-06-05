@@ -1,5 +1,5 @@
 import type { UserType } from "../types/models/user";
-
+import api from "../utils/authAxios";
 export const authorizedService = () => {
   const runtimeConfig = useRuntimeConfig();
 
@@ -26,21 +26,7 @@ export const authorizedService = () => {
       console.error("Error :", error);
     }
   };
-  const cargaImagen = async (formData: any) => {
-    try {
-      // formData.status = formData.get("status") || "0";
 
-      await fetch(`${baseApiUrl}/api/updad-image`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
   const datosAuthorizedForWithdrawal = async (payload) => {
     console.log("payload function", payload);
     try {
@@ -50,10 +36,22 @@ export const authorizedService = () => {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${tokenSaved}`,
         },
-        body: JSON.stringify(payload),
+        body: payload,
       });
     } catch (error) {
       console.log("error en datosAuthorizedForWithdrawal", error);
+    }
+  };
+  const cargaImagen = async (image: any) => {
+    const formdata = new FormData();
+    try {
+      formdata.append("image", image);
+
+      await api.post(`/api/upload-image`, formdata, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    } catch (error) {
+      console.log("error", error);
     }
   };
   return {
