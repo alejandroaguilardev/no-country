@@ -8,6 +8,7 @@ import {
   type DateValue,
   // getLocalTimeZone,
 } from "@internationalized/date";
+import { toast } from "vue-sonner";
 import { authorizedService } from "@/services";
 
 // import { AlarmClock, CalendarX2Icon } from "lucide-vue-next";
@@ -72,6 +73,14 @@ const validationSchema = [
 
           return ACCEPTED_FILE_TYPES.includes(file.type);
         }, "Sólo se admiten los formatos .jpg y .png"),
+      // TODO: Crear un array para almacenar todos los id cuando se selecione el checkbox de studentLeavesAlone https://zod.dev/?id=nonempty
+      studentFullName: z.string({ required_error: "Este campo es requerido" }),
+      studentLeavesAlone: z.boolean().default(false).optional(),
+      fullName: z.string({ required_error: "Nombre y Apellido es requerido" }),
+      dni: z.string({ required_error: "DNI es requerido" }),
+      // TODO: añadir phone code input
+      // phoneCode: z.string({ required_error: "Código es requerido" }),
+      phoneNumber: z.string({ required_error: "Teléfono es requerido" }),
     }),
   ),
   toTypedSchema(
@@ -83,12 +92,6 @@ const validationSchema = [
     }),
   ),
 ];
-
-const students = [
-  { label: "Sara Rodríguez", value: "1" },
-  { label: "Juanito Rodríguez", value: "2" },
-  { label: "Pepito Rodríguez", value: "3" },
-] as const;
 
 // const countryCodes = [
 //   { label: "Chile", value: "+56" },
@@ -107,10 +110,10 @@ const value = ref<DateValue>();
 
 const emit = defineEmits(["imageloaded"]);
 
-const { getCargasApoderado, datosAuthorizedForWithdrawal } =
+const { getCargasApoderado, datosAuthorizedForWithdrawal, cargaImagen } =
   authorizedService();
 
-const tutor = getCargasApoderado();
+const tutor = await getCargasApoderado();
 console.log("tutor", tutor);
 
 const handleDisableSelect = () => {
@@ -153,17 +156,32 @@ const onEventFilePicked = (event: any) => {
   });
   fileReader.readAsDataURL(files[0]);
 };
-const onSubmit = (formData: FormData, fileReader) => {
-  console.log("onSubmitautorized", JSON.stringify(formData));
-  console.log("files", files);
+const onSubmit = (validationScheme) => {
+  console.log("validationScheme", validationScheme);
   const payload = {
-    lastname: "alejandro",
-    documentnumber: 432682374,
-    phone: "3421243322",
-    photo: files,
+    name: validationScheme.studentFullName,
+    last_name: validationScheme.fullName,
+    document_number: validationScheme.dni,
+    phone: validationScheme.phoneNumber,
+    photo: imageUrl.value,
     tutor_id: "1",
+    student_id: tutor,
   };
+  datosAuthorizedForWithdrawal(JSON.stringify(payload));
+
+  toast("Registro Exitoso", {
+    description: `Autorizado ${payload.name} registrado correctamente.`,
+    action: {
+      label: "Undo",
+      onClick: () => console.log("Undo"),
+    },
+  });
+  console.log("onSubmitautorized", JSON.stringify(payload));
+
   datosAuthorizedForWithdrawal(payload);
+  cargaImagen(imageUrl.value);
+  const { push } = useRouter();
+  push("/login");
 };
 </script>
 
@@ -196,12 +214,12 @@ const onSubmit = (formData: FormData, fileReader) => {
 
                   <SelectContent>
                     <SelectGroup
-                      v-for="student in students"
-                      :key="student.value"
+                      v-for="student in tutor"
+                      :key="student.id"
                       class="p-0"
                     >
-                      <SelectItem :value="student.value">
-                        {{ student.label }}
+                      <SelectItem :value="student.name">
+                        {{ student.name }}
                       </SelectItem>
                     </SelectGroup>
                   </SelectContent>
