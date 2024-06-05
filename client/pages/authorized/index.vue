@@ -6,28 +6,31 @@ import { toTypedSchema } from "@vee-validate/zod";
 import {
   DateFormatter,
   type DateValue,
-  getLocalTimeZone,
+  // getLocalTimeZone,
 } from "@internationalized/date";
+import { toast } from "vue-sonner";
+import { authorizedService } from "@/services";
 
-import { AlarmClock, CalendarX2Icon } from "lucide-vue-next";
-import { FormStep, FormWizard } from "@/components/ui/steps";
+// import { AlarmClock, CalendarX2Icon } from "lucide-vue-next";
+// import { FormStep, FormWizard } from "@/components/ui/steps";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 
-import { cn } from "@/lib/utils";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectGroup,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+// import {
+//   Popover,
+//   PopoverContent,
+//   PopoverTrigger,
+// } from "@/components/ui/popover";
+// import { Calendar } from "@/components/ui/calendar";
+
+// import { cn } from "@/lib/utils";
 
 // import { Check, ChevronsUpDown } from "lucide-vue-next";
 
@@ -70,6 +73,16 @@ const validationSchema = [
 
           return ACCEPTED_FILE_TYPES.includes(file.type);
         }, "Sólo se admiten los formatos .jpg y .png"),
+      // TODO: Crear un array para almacenar todos los id cuando se selecione el checkbox de studentLeavesAlone https://zod.dev/?id=nonempty
+      studentFullName: z.string({ required_error: "Este campo es requerido" }),
+      studentLeavesAlone: z.boolean().default(false).optional(),
+      fullName: z.string({ required_error: "Nombre y Apellido es requerido" }),
+      dni: z.string({ required_error: "DNI es requerido" }),
+      // TODO: añadir phone code input
+      // phoneCode: z.string({ required_error: "Código es requerido" }),
+      phoneNumber: z
+        .string({ required_error: "Teléfono es requerido" })
+        .min(8, { message: "Mínimo 3 caracteres" }),
     }),
   ),
   toTypedSchema(
@@ -81,12 +94,6 @@ const validationSchema = [
     }),
   ),
 ];
-
-const students = [
-  { label: "Sara Rodríguez", value: "1" },
-  { label: "Juanito Rodríguez", value: "2" },
-  { label: "Pepito Rodríguez", value: "3" },
-] as const;
 
 // const countryCodes = [
 //   { label: "Chile", value: "+56" },
@@ -105,18 +112,19 @@ const value = ref<DateValue>();
 
 const emit = defineEmits(["imageloaded"]);
 
-const onSubmit = (formData: FormData) => {
-  console.log(JSON.stringify(formData, null, 2));
-};
+const { getCargasApoderado, datosAuthorizedForWithdrawal, cargaImagen } =
+  authorizedService();
+
+const tutor = await getCargasApoderado();
 
 const handleDisableSelect = () => {
   disabledStudentsSelect.value = !disabledStudentsSelect.value;
 };
-
+const namePhoto = ref();
 const onEventFilePicked = (event: any) => {
   const files = event.target.files;
   const image = files[0];
-  console.log(image);
+  namePhoto.value = files;
   const filename = files[0].name;
   if (filename.lastIndexOf(".") <= 0) {
     return alert("Por favor adicione um arquivo válido");
@@ -124,10 +132,34 @@ const onEventFilePicked = (event: any) => {
   const fileReader = new FileReader();
   fileReader.addEventListener("load", () => {
     imageUrl.value = fileReader.result;
-    console.log("setimageUrl", imageUrl.value);
     emit("imageloaded", imageUrl.value);
   });
   fileReader.readAsDataURL(files[0]);
+};
+const onSubmit = (validationScheme) => {
+  const payload = {
+    name: validationScheme.studentFullName,
+    last_name: validationScheme.fullName,
+    document_number: validationScheme.dni,
+    phone: validationScheme.phoneNumber,
+    photo: namePhoto.value[0],
+    tutor_id: "1",
+    student_id: [tutor[0].id],
+  };
+
+  datosAuthorizedForWithdrawal(payload);
+
+  toast("Registro Exitoso", {
+    description: `Autorizado ${payload.name} registrado correctamente.`,
+    action: {
+      label: "Undo",
+      onClick: () => console.log("Undo"),
+    },
+  });
+
+  // cargaImagen(namePhoto.value[0]);
+  const { push } = useRouter();
+  push("/login");
 };
 </script>
 
@@ -160,12 +192,12 @@ const onEventFilePicked = (event: any) => {
 
                   <SelectContent>
                     <SelectGroup
-                      v-for="student in students"
-                      :key="student.value"
+                      v-for="student in tutor"
+                      :key="student.id"
                       class="p-0"
                     >
-                      <SelectItem :value="student.value">
-                        {{ student.label }}
+                      <SelectItem :value="student.name">
+                        {{ student.name }}
                       </SelectItem>
                     </SelectGroup>
                   </SelectContent>
@@ -363,9 +395,9 @@ const onEventFilePicked = (event: any) => {
       </FormStep>
 
       <!-- Step 3 -->
-      <FormStep>
-        <!-- <Field v-slot="{ componentField, value }" name="datetime" type="date"> -->
-        <div class="grid gap-8 max-w-[425px] mb-20 mx-auto">
+      <!-- <FormStep> -->
+      <!-- <Field v-slot="{ componentField, value }" name="datetime" type="date"> QUEDA COMENTADA-->
+      <!-- <div class="grid gap-8 max-w-[425px] mb-20 mx-auto">
           <Popover>
             <div class="grid lg:grid-cols-[0.6fr_1fr] gap-6 items-center">
               <label class="label">Fecha de inicio</label>
@@ -420,10 +452,10 @@ const onEventFilePicked = (event: any) => {
               <Calendar v-model="value" mode="datetime" initial-focus />
             </PopoverContent>
           </Popover>
-        </div>
+        </div> -->
 
-        <!-- </Field> -->
-      </FormStep>
+      <!-- </Field> QUEDA COMENTADA-->
+      <!-- </FormStep> -->
     </FormWizard>
   </NuxtLayout>
 </template>
