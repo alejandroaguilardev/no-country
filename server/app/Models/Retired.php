@@ -13,7 +13,7 @@ class Retired extends Model
         'date',
         'status',
         'presence',
-        'leavesAlone'
+        'leave_alone'
     ];
     protected $hidden = [
         'id',

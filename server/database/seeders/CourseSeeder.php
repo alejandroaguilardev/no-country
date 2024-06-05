@@ -9,6 +9,7 @@ class CourseSeeder extends Seeder
 {
  
     private $courses_id = [];
+    private static $course_id_assign=[];
 
     public function run(): void
     {
@@ -21,7 +22,13 @@ class CourseSeeder extends Seeder
     }
 
     public static function courseRandom($courses_id)
-    {
+    {   
+        foreach ($courses_id as $course_id) {
+            if(!in_array($course_id, self::$course_id_assign)) {
+                $randomKey = array_rand($courses_id);
+                return $courses_id[$randomKey];
+            }
+        }
         $randomKey = array_rand($courses_id);
         return $courses_id[$randomKey];
     }
