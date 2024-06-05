@@ -39,14 +39,18 @@ export const useAuthStore = defineStore("auth", () => {
   const rememberPassword = ref<boolean>(false);
 
   // Initial store w/app
-  const userSaved = localStorage.getItem("user");
-  const tokenSaved = localStorage.getItem("token");
+  const userSaved =
+    localStorage.getItem("user") || sessionStorage.getItem("user");
+  const tokenSaved =
+    localStorage.getItem("token") || sessionStorage.getItem("token");
 
   if (userSaved && tokenSaved) {
     user.value = JSON.parse(userSaved);
     token.value = tokenSaved;
-    rememberPassword.value = true;
-    refreshToken();
+    if (localStorage.getItem("user")) {
+      rememberPassword.value = true;
+      refreshToken();
+    }
   }
 
   // Store watcher to update in localStorage when the store is updated
@@ -56,6 +60,9 @@ export const useAuthStore = defineStore("auth", () => {
       if (rememberPassword.value) {
         localStorage.setItem("user", userVal ? JSON.stringify(userVal) : "");
         localStorage.setItem("token", token.value);
+      } else {
+        sessionStorage.setItem("user", userVal ? JSON.stringify(userVal) : "");
+        sessionStorage.setItem("token", token.value);
       }
     },
     { deep: true },
@@ -87,6 +94,10 @@ export const useAuthStore = defineStore("auth", () => {
     token.value = "";
     user.value = null;
     rememberPassword.value = false;
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("expirationDateJWT");
+    localStorage.removeItem("lastRefreshDate");
     router.push("/login");
   }
 
@@ -95,7 +106,7 @@ export const useAuthStore = defineStore("auth", () => {
     if (!canRefreshToken()) return;
 
     const { data } = await axios.get<LoginRes>(
-      config.public.baseApiUrl + "/auth/refresh",
+      config.public.baseApiUrl + "/api/auth/refresh",
       { headers: { Authorization: token.value } },
     );
 

@@ -6,6 +6,7 @@ use App\Domain\Errors\CatchException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\AuthLoginRequest;
 use App\Repository\UserRepository;
+use PHPUnit\Framework\Constraint\IsEmpty;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -60,8 +61,10 @@ class AuthController extends Controller
     {
         $user = auth()->user();
         $profile = $this->repository->getRecord($user->email);
-        $profile = $profile->teacher;
-        if ($profile->tutor) {
+        if (isset($profile->teacher)) {
+            $profile = $profile->teacher;
+        }
+        if (isset($profile->tutor)) {
             $profile = $profile->tutor;
         }
         return [

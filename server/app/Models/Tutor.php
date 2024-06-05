@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\DB;
 
 class Tutor extends Model
 {
@@ -36,21 +36,9 @@ class Tutor extends Model
         return $this->hasMany(Authorized::class);
     }
 
-    protected static function boot()
+    public function user(): BelongsTo
     {
-        parent::boot();
-
-        static::created(function ($tutor) {
-            DB::table('authorizeds')->insert([
-                'name' => $tutor->name,
-                'last_name' => $tutor->last_name,
-                'document_number' => $tutor->document_number,
-                'phone' => $tutor->phone,
-                'photo' => $tutor->photo,
-                'tutor_id' => $tutor->id,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        });
+        return $this->belongsTo(User::class);
     }
+
 }

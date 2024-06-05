@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Authorizeds\LeaveAloneAuthorizedController;
 use App\Http\Controllers\Authorizeds\SearchAuthorizedController;
 use App\Http\Controllers\Authorizeds\UpdateAuthorizedController;
 use App\Http\Controllers\Courses\SearchCourseController;
@@ -8,17 +9,22 @@ use App\Http\Controllers\Retired\SearchRetiredController;
 use App\Http\Controllers\Retired\UpdateRetiredController;
 use App\Http\Controllers\Storage\ImageSaveController;
 use App\Http\Controllers\Storage\ImageSearchController;
+use App\Http\Controllers\Students\SearchCourseStudentController;
 use App\Http\Controllers\Students\SearchStudentController;
 use App\Http\Controllers\Teachers\SearchTeacherController;
+use App\Http\Controllers\Tutors\SearchAuthorizedTutorController;
+use App\Http\Controllers\Tutors\SearchStudentTutorController;
 use App\Http\Controllers\Tutors\SearchTutorController;
 use App\Http\Middleware\EnsureTokenIsValid;
 use App\Http\Middleware\TeacherEnsureTokenIsValid;
 use App\Http\Middleware\TutorEnsureTokenIsValid;
 use Illuminate\Support\Facades\Route;
 
-
 Route::middleware([TutorEnsureTokenIsValid::class])->group(function () {
     Route::post('/authorizeds', UpdateAuthorizedController::class);
+    Route::post('/authorizeds/leave-alone', LeaveAloneAuthorizedController::class);
+    Route::get('/tutors/students', SearchStudentTutorController::class);
+    Route::get('/tutors/authorizeds', SearchAuthorizedTutorController::class);
 });
 
 Route::middleware([TeacherEnsureTokenIsValid::class])->group(function () {
@@ -28,6 +34,7 @@ Route::middleware([TeacherEnsureTokenIsValid::class])->group(function () {
     Route::get('/authorizeds', SearchAuthorizedController::class);
     Route::get('/courses', SearchCourseController::class);
     Route::get('/students', SearchStudentController::class);
+    Route::get('/students/course/{id}', SearchCourseStudentController::class);
     Route::get('/teachers', SearchTeacherController::class);
     Route::get('/tutors', SearchTutorController::class);
 });

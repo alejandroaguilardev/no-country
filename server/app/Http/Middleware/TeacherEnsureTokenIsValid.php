@@ -21,17 +21,18 @@ class TeacherEnsureTokenIsValid
 
     public function handle(Request $request, Closure $next): Response
     {
+        $authorizedRoles = array_keys($this->roles);  
         try {
             $user = JWTAuth::parseToken()->authenticate();
             if (!in_array($user->role_id, array_values($this->roles))) {
-                return response()->json(['error' => 'No autorizado'], 401);
+                return response()->json(['error' => 'No estás autorizado autorizado debes ser un ' . implode(', ', $authorizedRoles)], 401);
             }
         }catch (TokenExpiredException $e) {
             return response()->json(['error' => 'Token Expirado'], 401);
         } catch (TokenInvalidException $e) {
             return response()->json(['error' => 'Token Invalidado'], 401);
         } catch (\Throwable $e) {
-            return response()->json(['error' => 'No autorizado'], 401);
+                return response()->json(['error' => 'No estás autorizado autorizado debes ser un ' . implode(', ', $authorizedRoles) ], 401);
         }
 
         return $next($request);

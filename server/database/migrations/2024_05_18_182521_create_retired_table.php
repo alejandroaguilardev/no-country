@@ -16,10 +16,10 @@ return new class extends Migration
             $table->timestamps();
             $table->unsignedBigInteger("student_id");
             $table->foreign("student_id")->references("id")->on("students");
-            $table->date("date");
+            $table->dateTime("date");
             $table->boolean("status");
             $table->boolean("presence");
-            $table->boolean("leaveAlone");
+            $table->boolean("leave_alone");
         });
     }
 

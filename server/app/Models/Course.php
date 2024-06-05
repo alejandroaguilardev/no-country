@@ -18,10 +18,6 @@ class Course extends Model
         'updated_at',
     ];
 
-    public function teachers(): HasMany
-    {
-        return $this->hasMany(Teacher::class);
-    }
 
     public function students(): HasMany
     {
