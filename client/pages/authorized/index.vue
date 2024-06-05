@@ -178,7 +178,6 @@ const onSubmit = (validationScheme) => {
   });
   console.log("onSubmitautorized", JSON.stringify(payload));
 
-  datosAuthorizedForWithdrawal(payload);
   cargaImagen(imageUrl.value);
   const { push } = useRouter();
   push("/login");
