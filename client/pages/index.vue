@@ -14,7 +14,7 @@ onMounted(() => {
       push("/teacher");
       break;
     case RoleEnum.AUTHORIZED:
-      push("/authorized/register");
+      push("/authorized");
       break;
   }
 });
