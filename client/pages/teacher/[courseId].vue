@@ -99,11 +99,20 @@ onMounted(async () => {
           <DialogContent
             class="h-screen max-w-full md:max-w-lg grid place-content-center md:h-fit p-6 rounded-none md:rounded-2xl"
           >
-            <Carousel class="relative w-full max-w-md mx-auto">
+            <Carousel
+              class="relative w-full max-w-md mx-auto"
+              :opts="{
+                startIndex: index,
+                loop: false,
+              }"
+            >
               <CarouselContent>
-                <CarouselItem v-for="(_, i) in 20" :key="i">
+                <CarouselItem
+                  v-for="(carouselItem, index2) in studentList"
+                  :key="index2"
+                >
                   <div class="p-1">
-                    <StudentCard :data="student" />
+                    <StudentCard :data="carouselItem" />
                   </div>
                 </CarouselItem>
               </CarouselContent>
@@ -130,7 +139,7 @@ onMounted(async () => {
   >
     <Button
       v-if="!openEdit"
-      class="w-[150px] mx-auto text-xl font-normal"
+      class="mx-auto text-lg px-9 font-normal"
       variant="green"
       @click="handleOpenEdit"
     >
@@ -138,7 +147,7 @@ onMounted(async () => {
     </Button>
     <Button
       v-if="openEdit"
-      class="w-fit mx-auto px-9 text-xl font-normal"
+      class="mx-auto px-9 text-lg font-normal"
       variant="destructive"
       @click="handleCloseEdit"
     >
