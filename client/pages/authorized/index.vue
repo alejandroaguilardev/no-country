@@ -142,11 +142,12 @@ const onSubmit = (validationScheme) => {
     last_name: validationScheme.fullName,
     document_number: validationScheme.dni,
     phone: validationScheme.phoneNumber,
-    photo: namePhoto.value[0].name,
+    photo: namePhoto.value[0],
     tutor_id: "1",
     student_id: [tutor[0].id],
   };
-  datosAuthorizedForWithdrawal(JSON.stringify(payload));
+
+  datosAuthorizedForWithdrawal(payload);
 
   toast("Registro Exitoso", {
     description: `Autorizado ${payload.name} registrado correctamente.`,
@@ -156,7 +157,7 @@ const onSubmit = (validationScheme) => {
     },
   });
 
-  cargaImagen(namePhoto.value[0]);
+  // cargaImagen(namePhoto.value[0]);
   const { push } = useRouter();
   push("/login");
 };

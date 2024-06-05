@@ -27,16 +27,26 @@ export const authorizedService = () => {
     }
   };
 
-  const datosAuthorizedForWithdrawal = async (payload) => {
+  const datosAuthorizedForWithdrawal = async (payload: any) => {
     console.log("payload function", payload);
+    const formdata = new FormData();
+    formdata.append("name", payload.name);
+    formdata.append("last_name", payload.last_name);
+    formdata.append("document_number", payload.document_number);
+    formdata.append("phone", payload.phone);
+    formdata.append("photo", payload.photo);
+    formdata.append("tutor_id", payload.tutor_id);
+
+    [1].forEach((value, index) => {
+      formdata.append(`student_id[${index}]`, value.toString());
+    });
+    console.log("este funciona!!!", formdata);
     try {
-      await fetch(`${baseApiUrl}/api/authorizeds`, {
-        method: "POST",
+      await api.post(`/api/authorizeds`, formdata, {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
           "Authorization": `Bearer ${tokenSaved}`,
         },
-        body: payload,
       });
     } catch (error) {
       console.log("error en datosAuthorizedForWithdrawal", error);
