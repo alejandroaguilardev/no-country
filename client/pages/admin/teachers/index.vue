@@ -12,11 +12,7 @@
         :loading="loading"
         :failed="failed"
       />
-      <Pagination
-        v-model:page="page"
-        :total="total"
-        @update:page="onChangePage"
-      />
+      <Pagination v-model:page="page" :total="total" />
     </div>
   </NuxtLayout>
 </template>
@@ -72,6 +68,10 @@ async function onChangePage(page: number) {
   const offset = (page - 1) * limit.value;
   await fetchTeachers(offset, limit.value, activeFilters.value);
 }
+
+watch(page, (v) => {
+  onChangePage(v);
+});
 
 onMounted(async () => {
   await fetchTeachers(0, limit.value, activeFilters.value);
