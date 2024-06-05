@@ -2,11 +2,10 @@ import { defineStore } from "pinia";
 import type { ResponseApi } from "@/types/api/responseApi";
 import type { StudentApi } from "@/types/api/studentApi";
 import type { FilterApi } from "@/types/api/filters/filterApi";
-import { httpCommon } from "@/http-common";
+import api from "@/utils/authAxios";
 
 export const useAdminStudentsStore = defineStore("adminStudentsStore", () => {
   const ENDPOINT = "/api/students";
-  const { api } = httpCommon();
 
   async function getStudents(
     offset: number = 0,
