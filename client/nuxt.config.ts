@@ -7,7 +7,16 @@ export default defineNuxtConfig({
     "shadcn-nuxt",
     "@nuxtjs/color-mode",
     "@pinia/nuxt",
+    [
+      "@nuxtjs/google-fonts",
+      {
+        families: {
+          Poppins: [400, 500, 600, 700, 800],
+        },
+      },
+    ],
   ],
+
   colorMode: {
     classSuffix: "",
   },

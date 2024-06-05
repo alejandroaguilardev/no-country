@@ -14,9 +14,11 @@ export const badgeVariants = cva(
         blue: "bg-[#3E5A85] text-white",
         light_blue: "bg-[#A5C1EC] text-foreground",
         outline: "text-foreground",
-        withdrawn: "bg-[#5F6368] border-transparent",
+        withdrawn:
+          "bg-light_blue border-transparent text-light_blue-foreground",
         no_withdrawn: "bg-[#1D1B20]/30 border-transparent",
         ausent: "bg-[#5F6368] border-transparent",
+        leave_alone: "bg-[#5F6368] border-transparent",
       },
     },
     defaultVariants: {

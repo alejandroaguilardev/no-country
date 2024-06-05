@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 import type { ResponseApi } from "@/types/api/responseApi";
 import type { StudentApi } from "@/types/api/studentApi";
 import type { FilterApi } from "@/types/api/filters/filterApi";
+import type { StudentType } from "@/types/models";
+import api from "@/utils/authAxios";
 
 export const useAdminStudentsStore = defineStore("adminStudentsStore", () => {
   const ENDPOINT = "/api/students";
@@ -28,8 +30,15 @@ export const useAdminStudentsStore = defineStore("adminStudentsStore", () => {
     return res.data;
   }
 
+  async function getStudentsByCourse(id: number) {
+    const res = await api.get<StudentType[]>(`${API_URL}/course/${id}`);
+
+    return res.data;
+  }
+
   return {
     getStudents,
     getStudentsByTutor,
+    getStudentsByCourse,
   };
 });
