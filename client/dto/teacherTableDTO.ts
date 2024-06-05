@@ -21,7 +21,7 @@ export class TeacherTableDTO {
     );
   }
 
-  static manyFromApiModel(students: TeacherApi[]) {
-    return students.map((t: TeacherApi) => TeacherTableDTO.fromApiModel(t));
+  static manyFromApiModel(teachers: TeacherApi[]) {
+    return teachers.map((t: TeacherApi) => TeacherTableDTO.fromApiModel(t));
   }
 }
