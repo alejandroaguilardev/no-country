@@ -10,6 +10,7 @@
         :columns="columns"
         :data="data"
         :loading="loading"
+        :failed="failed"
         @on:show-students="onShowStudents"
       />
       <Pagination
@@ -22,6 +23,7 @@
 </template>
 
 <script setup lang="ts">
+import { toast } from "vue-sonner";
 import Pagination from "@/components/tables/Pagination.vue";
 import { columns, Table } from "@/components/tables/tutors";
 import Filters from "@/components/tables/tutors/Filters.vue";
@@ -39,6 +41,7 @@ const limit: Ref<number> = ref(10);
 const activeFilters: Ref<FilterApi[]> = ref([]);
 const page: Ref<number> = ref(1);
 const loading: Ref<boolean> = ref(true);
+const failed: Ref<boolean> = ref(false);
 
 function onFilter(filters: FilterApi[]) {
   fetchStudents(0, limit.value, filters);
@@ -65,10 +68,16 @@ async function fetchStudents(
   filters: FilterApi[],
 ) {
   loading.value = true;
-  const { rows, count } = await store.getTutors(offset, limit, filters);
-  data.value = TutorTableDTO.manyFromApiModel(rows);
-  total.value = count;
-  loading.value = false;
+  try {
+    const { rows, count } = await store.getTutors(offset, limit, filters);
+    data.value = TutorTableDTO.manyFromApiModel(rows);
+    total.value = count;
+  } catch (error) {
+    toast.error("Ocurrio un error al cargar los apoderados");
+    failed.value = true;
+  } finally {
+    loading.value = false;
+  }
 }
 
 async function onChangePage(page: number) {

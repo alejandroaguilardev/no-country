@@ -6,7 +6,12 @@
         @on:filter="onFilter($event)"
         @on:remove="onRemoveFilters($event)"
       />
-      <Table :columns="columns" :data="data" :loading="loading" />
+      <Table
+        :columns="columns"
+        :data="data"
+        :loading="loading"
+        :failed="failed"
+      />
       <Pagination
         v-model:page="page"
         :total="total"
@@ -17,6 +22,7 @@
 </template>
 
 <script setup lang="ts">
+import { toast } from "vue-sonner";
 import { columns, Table } from "@/components/tables/students";
 import { useAdminStudentsStore } from "@/store/useAdminStudentsStore";
 import { StudentTableDTO } from "@/dto/studentTableDTO";
@@ -31,6 +37,7 @@ const limit: Ref<number> = ref(10);
 const activeFilters: Ref<FilterApi[]> = ref([]);
 const page: Ref<number> = ref(1);
 const loading: Ref<boolean> = ref(true);
+const failed: Ref<boolean> = ref(false);
 
 function onFilter(filters: FilterApi[]) {
   fetchStudents(0, limit.value, filters);
@@ -50,10 +57,16 @@ async function fetchStudents(
   filters: FilterApi[],
 ) {
   loading.value = true;
-  const { rows, count } = await store.getStudents(offset, limit, filters);
-  data.value = StudentTableDTO.manyFromApiModel(rows);
-  total.value = count;
-  loading.value = false;
+  try {
+    const { rows, count } = await store.getStudents(offset, limit, filters);
+    data.value = StudentTableDTO.manyFromApiModel(rows);
+    total.value = count;
+  } catch (error) {
+    failed.value = true;
+    toast.error("Ocurrió un error al cargar los estudiantes");
+  } finally {
+    loading.value = false;
+  }
 }
 
 async function onChangePage(page: number) {

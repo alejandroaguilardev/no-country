@@ -12,11 +12,13 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { StudentTableDTO } from "@/dto/studentTableDTO";
+import WithoutContent from "@/components/tables/WithoutContent.vue";
 
 const props = defineProps<{
   columns: ColumnDef<StudentTableDTO, TValue>[];
   data: StudentTableDTO[];
   loading: boolean;
+  failed: boolean;
 }>();
 
 const table = useVueTable({
@@ -82,15 +84,7 @@ const table = useVueTable({
           </TableRow>
         </template>
         <template v-else>
-          <TableRow>
-            <td
-              :colspan="columns.length"
-              :rowspan="10"
-              class="h-96 text-center"
-            >
-              Sin resultados.
-            </td>
-          </TableRow>
+          <WithoutContent :failed="failed" :columns="columns.length" />
         </template>
       </TableBody>
     </Table>
