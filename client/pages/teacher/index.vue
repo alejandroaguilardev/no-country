@@ -1,57 +1,56 @@
 <script setup lang="ts">
-import { StudentCard } from "@/components/cards";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { getStudentStatusText, getStudentStatusVariant } from "@/lib/utils";
-import { teacherService } from "@/services";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useCourseStore } from "@/store/useCourseStore";
+import type { CourseType } from "@/types/models";
 
-const { getAllStudents } = teacherService();
+const store = useCourseStore();
+const { logout } = useAuthStore();
 
-const students = await getAllStudents();
+const courseList: Ref<CourseType[]> = ref([]);
+const loading: Ref<boolean> = ref(true);
 
-console.log("students lists=>", students);
+const fetchCourses = async () => {
+  loading.value = true;
+  const students = await store.getCourses();
+  courseList.value = students;
+  loading.value = false;
+};
+
+onMounted(async () => {
+  await fetchCourses();
+});
 </script>
 
 <template>
   <NuxtLayout name="teacher-layout">
-    <div class="grid gap-4 py-7 max-w-[500px] mx-auto">
-      <Dialog v-for="(student, index) in students" :key="index">
-        <DialogTrigger as-child>
-          <div class="grid grid-cols-[1fr_110px] items-center gap-2.5 p-0">
-            <Badge
-              variant="light_blue"
-              class="justify-start truncate md:justify-center inline-block md:inline py-1.5 text-xl text-foreground shadow-lg"
-            >
-              {{ student.name }}
-              {{ student.last_name }}
-            </Badge>
-            <Badge
-              :variant="
-                getStudentStatusVariant(
-                  student.retired.presence,
-                  student.retired.status,
-                )
-              "
-              class="w-full justify-self-end text-base text-foreground"
-            >
-              {{
-                getStudentStatusText(
-                  student.retired.presence,
-                  student.retired.status,
-                )
-              }}
-            </Badge>
-          </div>
-        </DialogTrigger>
-        <DialogContent>
-          <StudentCard :data="student" />
-        </DialogContent>
-      </Dialog>
-    </div>
+    <ul class="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+      <template v-if="!loading">
+        <li v-for="(course, index) in courseList" :key="index" class="grid">
+          <Button as-child variant="dark_blue" size="lg" classs="w-full">
+            <NuxtLink :to="{ path: `/teacher/${course.id}` }">
+              {{ course.description }}
+            </NuxtLink>
+          </Button>
+        </li>
+      </template>
+      <template v-else>
+        <li v-for="index in 20" :key="index">
+          <Skeleton class="h-11 w-full rounded-md" />
+        </li>
+      </template>
+    </ul>
   </NuxtLayout>
   <div
-    class="sticky bottom-0 py-5 px-4 bg-background border border-border shadow-lg"
+    class="fixed w-full bottom-0 py-5 grid px-4 bg-background border border-border shadow-lg"
   >
-    <Button class="w-full">Editar</Button>
+    <Button
+      class="mx-auto text-lg font-normal"
+      variant="green"
+      @click="logout()"
+    >
+      Cerrar Sesión
+    </Button>
   </div>
 </template>
