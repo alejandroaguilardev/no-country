@@ -16,6 +16,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["Poppins"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -32,6 +35,10 @@ module.exports = {
           foreground: "hsl(var(--blue-foreground))",
           active: "hsl(var(--blue-active))",
           disabled: "hsl(var(--blue-disabled))",
+        },
+        light_blue: {
+          DEFAULT: "hsl(var(--light-blue))",
+          foreground: "hsl(var(--light-blue-foreground))",
         },
         green: {
           DEFAULT: "hsl(var(--green))",

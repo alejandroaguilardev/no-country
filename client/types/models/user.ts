@@ -5,10 +5,10 @@ export const enum RoleEnum {
 }
 
 export type UserType = {
-  id: number;
-  name: string;
-  last_name: string;
-  phone: string;
-  email: string;
-  role: RoleEnum;
+  id?: number;
+  name?: string;
+  last_name?: string;
+  phone?: string;
+  email?: string;
+  role?: RoleEnum;
 };
