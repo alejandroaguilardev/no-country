@@ -22,7 +22,9 @@ const studentList: Ref<StudentType[]> = ref([]);
 const loading: Ref<boolean> = ref(true);
 const showAllStudents: Ref<boolean> = ref(false);
 const filteredStudentList: Ref<StudentType[]> = computed(() =>
-  studentList.value.filter((student) => student.retired.status === 0),
+  showAllStudents.value
+    ? studentList.value
+    : studentList.value.filter((student) => student.retired.status === 0),
 );
 
 const fetchStudents = async () => {
@@ -38,6 +40,10 @@ const handleOpenEdit = () => {
 
 const handleCloseEdit = () => {
   showAllStudents.value = false;
+};
+
+const updateStudentStatus = (index: number, status: 1) => {
+  studentList.value[index].retired.status = status;
 };
 
 watch(showAllStudents, () => {
@@ -68,6 +74,7 @@ onMounted(async () => {
               >
                 {{ student.name }}
                 {{ student.last_name }}
+                {{ student.retired.status }}
               </Button>
             </DialogTrigger>
 
@@ -118,7 +125,10 @@ onMounted(async () => {
                   :key="index2"
                 >
                   <div class="p-1">
-                    <StudentCard :data="carouselItem" />
+                    <StudentCard
+                      :data="carouselItem"
+                      @on:retired="updateStudentStatus(index2, $event)"
+                    />
                   </div>
                 </CarouselItem>
               </CarouselContent>

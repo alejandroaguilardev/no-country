@@ -23,13 +23,18 @@ defineProps<{
   data: StudentType;
 }>();
 
+const emit = defineEmits<{
+  (e: "on:retired", status: 1): void;
+}>();
+
 const store = useRetiredStore();
 
 const handleRetired = async (studentId: number, studentFullName: string) => {
   const formData = new FormData();
-  formData.append("status", "0");
+  formData.append("status", "1");
 
   await store.retiredStudent(formData, studentId);
+  emit("on:retired", 1);
 
   toast("Se actualizó la lista", {
     description: `Se marcó a ${studentFullName} como retirado.`,
@@ -42,7 +47,6 @@ const handleRetired = async (studentId: number, studentFullName: string) => {
 
 const handlePresence = async (studentId: number, studentFullName: string) => {
   const formData = new FormData();
-
   formData.append("presence", "1");
 
   await store.presenceStudent(formData, studentId);
