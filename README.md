@@ -38,9 +38,9 @@ Además, en caso de que alguien diferente a las personas previamente designadas 
 Escuelas
 
 ## Tecnologías Utilizadas
-- Front End: Nuxt, Vuejs, Pinia, Typescript
-- Back End: PHP, Laravel, MySQL
-- UX UI: Figma, Illustrator, Photoshop
+- Front End: Nuxt, Vuejs, Pinia, Typescript.
+- Back End: PHP, Laravel, MySQL, Postman.
+- UX UI: Figma, Illustrator, Photoshop.
 
 ## Colaboradores
 
@@ -156,7 +156,7 @@ Escuelas
 
 ## Enlaces del Proyecto
 - [Plataforma Safe-Kids](https://safe-kids.vercel.app/)
-- [Github](https://github.com/alejandroaguilardev/no-country/tree/dev)
+- [Github](https://github.com/alejandroaguilardev/no-country/)
 - [Jira](https://xoch-scrum.atlassian.net/jira/software/projects/C1MPV/boards/12/backlog?atlOrigin=eyJpIjoiMTU1Y2Y2MmYyM2UxNDEwZGFjZjliY2Q1MDFhZTdlNDciLCJwIjoiaiJ9)
 - [Confluence](https://xoch-scrum.atlassian.net/wiki/spaces/c18102mphp/overview?homepageId=1999064)
 - [Discord](https://discord.com/channels/1248329529102041232/1248329529584517161)
