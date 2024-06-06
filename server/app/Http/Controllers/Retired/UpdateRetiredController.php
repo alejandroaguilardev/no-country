@@ -20,9 +20,10 @@ class UpdateRetiredController extends Controller
     public function markAsRetired( RetiredRequest $request)
     {
         $data = $request->validated();
-        $this->repository->updateStatus($data);
+        //consultar el id del teacher e invocar del repositorio
         $data['presence']=true;
-
+        $this->repository->updateStatus($data);
+        
         return response()->json([
             'message' => $data
         ], 200);

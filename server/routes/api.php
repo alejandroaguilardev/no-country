@@ -5,6 +5,7 @@ use App\Http\Controllers\Authorizeds\LeaveAloneAuthorizedController;
 use App\Http\Controllers\Authorizeds\SearchAuthorizedController;
 use App\Http\Controllers\Authorizeds\UpdateAuthorizedController;
 use App\Http\Controllers\Courses\SearchCourseController;
+use App\Http\Controllers\HistoricalRetireds\HistoricalRetiredController;
 use App\Http\Controllers\Retired\SearchRetiredController;
 use App\Http\Controllers\Retired\UpdateRetiredController;
 use App\Http\Controllers\Storage\ImageSaveController;
@@ -15,10 +16,15 @@ use App\Http\Controllers\Teachers\SearchTeacherController;
 use App\Http\Controllers\Tutors\SearchAuthorizedTutorController;
 use App\Http\Controllers\Tutors\SearchStudentTutorController;
 use App\Http\Controllers\Tutors\SearchTutorController;
+use App\Http\Middleware\AdminEnsureTokenIsValid;
 use App\Http\Middleware\EnsureTokenIsValid;
 use App\Http\Middleware\TeacherEnsureTokenIsValid;
 use App\Http\Middleware\TutorEnsureTokenIsValid;
 use Illuminate\Support\Facades\Route;
+
+Route::middleware([AdminEnsureTokenIsValid::class])->group(function () {
+    Route::get('/historicalretired', HistoricalRetiredController::class);
+});
 
 Route::middleware([TutorEnsureTokenIsValid::class])->group(function () {
     Route::post('/authorizeds', UpdateAuthorizedController::class);
