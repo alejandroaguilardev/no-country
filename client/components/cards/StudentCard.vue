@@ -25,6 +25,7 @@ defineProps<{
 
 const emit = defineEmits<{
   (e: "on:retired", status: 1): void;
+  (e: "on:absent", presence: 0): void;
 }>();
 
 const store = useRetiredStore();
@@ -47,9 +48,10 @@ const handleRetired = async (studentId: number, studentFullName: string) => {
 
 const handlePresence = async (studentId: number, studentFullName: string) => {
   const formData = new FormData();
-  formData.append("presence", "1");
+  formData.append("presence", "0");
 
   await store.presenceStudent(formData, studentId);
+  emit("on:absent", 0);
 
   toast("Se actualizó la lista", {
     description: `Se marcó a ${studentFullName} como ausente`,
