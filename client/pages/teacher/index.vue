@@ -1,4 +1,14 @@
 <script setup lang="ts">
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -55,12 +65,23 @@ onMounted(async () => {
   <div
     class="fixed w-full bottom-0 py-5 grid px-4 bg-background border border-border shadow-lg"
   >
-    <Button
-      class="mx-auto text-lg font-normal"
-      variant="green"
-      @click="logout()"
-    >
-      Cerrar Sesión
-    </Button>
+    <AlertDialog>
+      <AlertDialogTrigger as-child>
+        <Button class="mx-auto text-lg font-normal" variant="green">
+          Cerrar Sesión
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>¿Desea cerrar sesión?</AlertDialogTitle>
+        </AlertDialogHeader>
+        <AlertDialogFooter class="flex items-center gap-5 justify-center">
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction variant="destructive" @click="logout()">
+            Cerrar Sesión
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </div>
 </template>

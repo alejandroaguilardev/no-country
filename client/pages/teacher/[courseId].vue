@@ -88,7 +88,7 @@ onMounted(async () => {
             class="justify-start text-center truncate md:justify-center inline-block md:inline py-1.5 text-xl shadow-lg"
             @click="openDialog(index)"
           >
-            <pre class="inline">{{ student.id }}</pre>
+            <!-- <pre class="inline">{{ student.id }}</pre> -->
             {{ student.name }}
             {{ student.last_name }}
           </Button>
