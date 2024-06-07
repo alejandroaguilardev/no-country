@@ -9,16 +9,6 @@ import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { useRetiredStore } from "@/store/useRetiredStore";
 import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
-// TODO:
-// Al abrir el modal mostrar la posicion del estudiante en el carousel para que no se repita
-
-// En el index de teacher debe mostrarse la lista actualizada
-// Actualizar la lista de estudiantes al usar handleRetired y handlePresence
-// Condicional para mandar al formData 0 ó 1 al presionar editar.
-// Form data no se envia correctamente
-// Al editar mostrar la lista completa de la clase
-// Añadir mensaje cuando no hay data
-
 defineProps<{
   data: StudentType;
 }>();
@@ -45,7 +35,7 @@ const handleRetired = async (
 
   await store.retiredStudent(formData, studentId);
   emit("retired", status === 1 ? 0 : 1);
-  emit("close-modal");
+  handleCloseDialog();
 
   toast("Se actualizó la lista", {
     description: `Se marcó a ${studentFullName} como retirado.`,
@@ -71,7 +61,7 @@ const handlePresence = async (
 
   await store.presenceStudent(formData, studentId);
   emit("absent", presence === 1 ? 0 : 1);
-  emit("close-modal");
+  handleCloseDialog();
 
   toast("Se actualizó la lista", {
     description: `Se marcó a ${studentFullName} como ausente`,
@@ -80,6 +70,10 @@ const handlePresence = async (
       onClick: () => console.log("Cerrar"),
     },
   });
+};
+
+const handleCloseDialog = () => {
+  emit("close-modal");
 };
 </script>
 
@@ -183,6 +177,7 @@ const handlePresence = async (
       <Button
         variant="link"
         class="mx-auto shadow-none block w-fit italic underline"
+        @click="handleCloseDialog()"
       >
         Ver lista completa
       </Button>

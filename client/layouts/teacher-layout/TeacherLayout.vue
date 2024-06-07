@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
       </Button>
     </NuxtLayout>
   </header>
-  <NuxtLayout name="main-layout" as="main" class="py-5">
+  <NuxtLayout name="main-layout" as="main" class="py-5 pb-24">
     <slot />
   </NuxtLayout>
 </template>

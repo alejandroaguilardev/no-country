@@ -13,7 +13,8 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useAdminStudentsStore } from "@/store/useAdminStudentsStore";
 import type { StudentType } from "@/types/models";
 import { Skeleton } from "@/components/ui/skeleton";
-import EditIcon from "@/components/icons/EditIcon.vue";
+import { EditIcon } from "@/components/icons";
+import { getStudentStatusText, getStudentStatusVariant } from "@/lib/utils";
 
 const route = useRoute();
 const store = useAdminStudentsStore();
@@ -23,6 +24,7 @@ const studentList: Ref<StudentType[]> = ref([]);
 const loading: Ref<boolean> = ref(true);
 const editMode: Ref<boolean> = ref(false);
 const dialog: Ref<boolean> = ref(false);
+const alertDialog: Ref<boolean> = ref(false);
 const targetStudentIndex: Ref<number> = ref(0);
 const filteredStudentList: Ref<StudentType[]> = computed(() =>
   editMode.value
@@ -71,6 +73,10 @@ const openDialog = (index: number) => {
 
 onMounted(async () => {
   await fetchStudents();
+
+  if (isCourseRetired.value && !editMode.value) {
+    alertDialog.value = true;
+  }
 });
 </script>
 
@@ -81,7 +87,7 @@ onMounted(async () => {
         <div
           v-for="(student, index) in filteredStudentList"
           :key="index"
-          class="grid grid-cols-[1fr_110px] items-center gap-2.5 p-0"
+          class="grid grid-cols-[1fr_120px] items-center gap-2.5 p-0"
         >
           <Button
             variant="dark_blue"
@@ -101,8 +107,29 @@ onMounted(async () => {
             Por retirar
           </Badge>
 
-          <div v-if="editMode" class="px-6 grid place-content-center h-full">
-            <EditIcon />
+          <div
+            v-if="editMode"
+            class="grid grid-cols-[1fr_auto] items-center gap-1 h-full"
+          >
+            <Badge
+              :variant="
+                getStudentStatusVariant(
+                  student.retired.presence,
+                  student.retired.status,
+                  student.retired.leave_alone,
+                )
+              "
+              class="w-full text-center justify-self-end my-auto text-sm font-normal"
+            >
+              {{
+                getStudentStatusText(
+                  student.retired.presence,
+                  student.retired.status,
+                  student.retired.leave_alone,
+                )
+              }}
+            </Badge>
+            <EditIcon class="w-5" />
           </div>
         </div>
         <Dialog v-model:open="dialog">
@@ -138,7 +165,20 @@ onMounted(async () => {
         </Dialog>
 
         <div v-if="isCourseRetired && !editMode">
-          <p class="text-center">¡Excelente! El curso completo fue retirado</p>
+          <AlertDialog v-model:open="alertDialog">
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle class="text-start"
+                  >¡Excelente! El curso completo fue retirado</AlertDialogTitle
+                >
+              </AlertDialogHeader>
+              <AlertDialogFooter class="justify-end">
+                <AlertDialogAction as-child>
+                  <NuxtLink to="/teacher">Volver al inicio</NuxtLink>
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </template>
       <template v-else>
