@@ -26,6 +26,7 @@ defineProps<{
 const emit = defineEmits<{
   (e: "retired", status: 1): void;
   (e: "absent", presence: 0): void;
+  (e: "close-modal"): void;
 }>();
 
 const store = useRetiredStore();
@@ -36,6 +37,7 @@ const handleRetired = async (studentId: number, studentFullName: string) => {
 
   await store.retiredStudent(formData, studentId);
   emit("retired", 1);
+  emit("close-modal");
 
   toast("Se actualizó la lista", {
     description: `Se marcó a ${studentFullName} como retirado.`,
@@ -52,6 +54,7 @@ const handlePresence = async (studentId: number, studentFullName: string) => {
 
   await store.presenceStudent(formData, studentId);
   emit("absent", 0);
+  emit("close-modal");
 
   toast("Se actualizó la lista", {
     description: `Se marcó a ${studentFullName} como ausente`,
@@ -60,6 +63,7 @@ const handlePresence = async (studentId: number, studentFullName: string) => {
       onClick: () => console.log("Undo"),
     },
   });
+  emit("absent", 0);
 };
 </script>
 
@@ -108,25 +112,21 @@ const handlePresence = async (studentId: number, studentFullName: string) => {
     </template>
     <div class="grid gap-7">
       <div class="grid grid-cols-2 items-center gap-3">
-        <DialogClose as-child>
-          <Button
-            variant="destructive"
-            class="rounded-md px-4 py-1 text-lg font-medium uppercase shadow-xl"
-            @click="handlePresence(data.id, data.name + ' ' + data.last_name)"
-          >
-            No asistió
-          </Button>
-        </DialogClose>
+        <Button
+          variant="destructive"
+          class="rounded-md px-4 py-1 text-lg font-medium uppercase shadow-xl"
+          @click="handlePresence(data.id, data.name + ' ' + data.last_name)"
+        >
+          No asistió
+        </Button>
 
-        <DialogClose as-child>
-          <Button
-            variant="green"
-            class="rounded-md px-4 py-1 text-lg font-medium uppercase shadow-xl"
-            @click="handleRetired(data.id, data.name + ' ' + data.last_name)"
-          >
-            Retirado
-          </Button>
-        </DialogClose>
+        <Button
+          variant="green"
+          class="rounded-md px-4 py-1 text-lg font-medium uppercase shadow-xl"
+          @click="handleRetired(data.id, data.name + ' ' + data.last_name)"
+        >
+          Retirado
+        </Button>
       </div>
       <Drawer>
         <DrawerTrigger as-child>
@@ -152,14 +152,12 @@ const handlePresence = async (studentId: number, studentFullName: string) => {
         </DrawerContent>
       </Drawer>
 
-      <DialogClose as-child>
-        <Button
-          variant="link"
-          class="mx-auto shadow-none block w-fit italic underline"
-        >
-          Ver lista completa
-        </Button>
-      </DialogClose>
+      <Button
+        variant="link"
+        class="mx-auto shadow-none block w-fit italic underline"
+      >
+        Ver lista completa
+      </Button>
     </div>
   </div>
 </template>

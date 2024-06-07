@@ -126,6 +126,7 @@ onMounted(async () => {
                       :data="student"
                       @retired="updateStudentStatus(student, $event)"
                       @absent="updateStudentPresence(student, $event)"
+                      @close-modal="dialog = false"
                     />
                   </div>
                 </CarouselItem>
