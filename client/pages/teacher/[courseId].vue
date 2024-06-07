@@ -124,8 +124,8 @@ onMounted(async () => {
                   <div class="p-1">
                     <StudentCard
                       :data="student"
-                      @on:retired="updateStudentStatus(student, $event)"
-                      @on:absent="updateStudentPresence(student, $event)"
+                      @retired="updateStudentStatus(student, $event)"
+                      @absent="updateStudentPresence(student, $event)"
                     />
                   </div>
                 </CarouselItem>
