@@ -64,7 +64,7 @@ export const useAuthStore = defineStore("auth", () => {
   const config = useRuntimeConfig();
 
   // Methods
-  async function login(req: LoginReq, _savePassword: boolean) {
+  async function login(req: LoginReq, savePassword: boolean) {
     const { data } = await axios
       .post<LoginRes>(config.public.baseApiUrl + "/api/auth/login", req)
       .catch((err) => {
@@ -75,13 +75,23 @@ export const useAuthStore = defineStore("auth", () => {
     setLastRefreshDate();
     token.value = data.token;
     user.value = data.user;
+    if (savePassword) {
+      localStorage.setItem("saveAccount", JSON.stringify(req));
+    } else {
+      localStorage.removeItem("saveAccount");
+    }
+
     router.push("/");
   }
 
   function logout() {
     token.value = "";
     user.value = null;
+    const backup = localStorage.getItem("saveAccount");
     localStorage.clear();
+    if (backup) {
+      localStorage.setItem("saveAccount", backup);
+    }
     router.push("/login");
   }
 
