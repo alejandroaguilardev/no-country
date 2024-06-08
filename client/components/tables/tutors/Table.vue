@@ -15,11 +15,13 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { TutorTableDTO } from "@/dto/tutorTableDTO";
 import { Skeleton } from "@/components/ui/skeleton";
+import WithoutContent from "@/components/tables/WithoutContent.vue";
 
 const props = defineProps<{
   columns: ColumnDef<TutorTableDTO, TValue>[];
   data: TutorTableDTO[];
   loading: boolean;
+  failed: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -83,7 +85,7 @@ function onShowStudents(tutor: TutorTableDTO) {
             </TableCell>
           </TableRow>
         </template>
-        <template v-else-if="table.getRowModel().rows?.length">
+        <template v-else-if="table.getRowModel().rows?.length && !failed">
           <Collapsible
             v-for="row in table.getRowModel().rows"
             :key="row.id"
@@ -112,11 +114,7 @@ function onShowStudents(tutor: TutorTableDTO) {
           </Collapsible>
         </template>
         <template v-else>
-          <TableRow>
-            <TableCell :col-span="columns.length" class="h-24 text-center">
-              Sin resultados.
-            </TableCell>
-          </TableRow>
+          <WithoutContent :failed="failed" :columns="columns.length" />
         </template>
       </TableBody>
     </Table>

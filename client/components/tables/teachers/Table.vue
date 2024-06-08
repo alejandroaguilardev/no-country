@@ -12,11 +12,13 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { TeacherTableDTO } from "@/dto/teacherTableDTO";
+import WithoutContent from "@/components/tables/WithoutContent.vue";
 
 const props = defineProps<{
   columns: ColumnDef<TeacherTableDTO, TValue>[];
   data: TeacherTableDTO[];
   loading: boolean;
+  failed: boolean;
 }>();
 
 const table = useVueTable({
@@ -70,7 +72,7 @@ const table = useVueTable({
             </TableCell>
           </TableRow>
         </template>
-        <template v-else-if="table.getRowModel().rows?.length">
+        <template v-else-if="table.getRowModel().rows?.length && !failed">
           <TableRow
             v-for="row in table.getRowModel().rows"
             :key="row.id"
@@ -85,11 +87,7 @@ const table = useVueTable({
           </TableRow>
         </template>
         <template v-else>
-          <TableRow>
-            <TableCell :col-span="columns.length" class="h-24 text-center">
-              Sin resultados.
-            </TableCell>
-          </TableRow>
+          <WithoutContent :failed="failed" :columns="columns.length" />
         </template>
       </TableBody>
     </Table>

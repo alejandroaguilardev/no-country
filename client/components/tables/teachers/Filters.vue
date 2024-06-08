@@ -19,35 +19,14 @@
           </SelectGroup>
         </SelectContent>
       </Select>
-      <template v-if="selectedFilter != TeacherFiltersEnum.COURSE">
-        <Input
-          v-model="filterInput"
-          class="w-56"
-          type="text"
-          placeholder="Ingrese un valor a buscar"
-          label="Nombre"
-          @keydown.enter="filter"
-        />
-      </template>
-      <template v-else>
-        <Select v-model="filterInput">
-          <SelectTrigger class="w-56">
-            <SelectValue placeholder="Seleccionar curso" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Cursos</SelectLabel>
-              <SelectItem
-                v-for="course in COURSES"
-                :key="course"
-                :value="course"
-              >
-                {{ course }}
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </template>
+      <Input
+        v-model="filterInput"
+        class="w-56"
+        type="text"
+        placeholder="Ingrese un valor a buscar"
+        label="Nombre"
+        @keydown.enter="filter"
+      />
       <Button type="submit" :disabled="!filterInput" @click="filter">
         Filtrar
       </Button>
@@ -60,7 +39,6 @@
 
 <script setup lang="ts">
 import { Input } from "@/components/ui/input";
-import { COURSES } from "@/statics/courses";
 import {
   Select,
   SelectContent,
@@ -94,10 +72,6 @@ const filterOptions: FilterOption<TeacherFiltersFields>[] = [
   {
     value: TeacherFiltersEnum.LAST_NAME,
     label: "Apellido",
-  },
-  {
-    value: TeacherFiltersEnum.COURSE,
-    label: "Curso",
   },
 ];
 
