@@ -14,6 +14,7 @@ export class TutorTableDTO {
     public students: StudentTableDTO[],
     public loadingStudents: boolean = false,
     public showStudents: boolean = false,
+    public collapseControl: boolean = false,
   ) {}
 
   static fromApiModel(tutor: TutorApi) {

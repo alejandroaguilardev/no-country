@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="TValue">
 import type { ColumnDef } from "@tanstack/vue-table";
 import { FlexRender, getCoreRowModel, useVueTable } from "@tanstack/vue-table";
-
 import AuthorizedsList from "../AuthorizedsList.vue";
 import AuthorizedPhotoDialog from "../AuthorizedPhotoDialog.vue";
 import {
@@ -20,6 +19,7 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from "@/components/ui/collapsible";
+import CollapsibleArrow from "@/components/tables/CollapsibleArrow.vue";
 
 const props = defineProps<{
   columns: ColumnDef<StudentTableDTO, TValue>[];
@@ -62,7 +62,7 @@ function onShowAuthorizedPhoto(photo: string) {
               :props="header.getContext()"
             />
           </TableHead>
-          <TableHead class="text-center"> Autorizados </TableHead>
+          <TableHead class="text-center"> Autorizado </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -101,9 +101,11 @@ function onShowAuthorizedPhoto(photo: string) {
                   :props="cell.getContext()"
                 />
               </TableCell>
-              <TableCell class="text-center">
+              <TableCell class="relative">
                 <CollapsibleTrigger>
-                  <Button>Ver</Button>
+                  <CollapsibleArrow
+                    v-model:open="row.original.collapseControl"
+                  />
                 </CollapsibleTrigger>
               </TableCell>
             </TableRow>

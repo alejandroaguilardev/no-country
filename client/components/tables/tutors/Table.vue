@@ -11,13 +11,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { TutorTableDTO } from "@/dto/tutorTableDTO";
 import { Skeleton } from "@/components/ui/skeleton";
 import WithoutContent from "@/components/tables/WithoutContent.vue";
 import AuthorizedPhotoDialog from "@/components/tables/AuthorizedPhotoDialog.vue";
 import AuthorizedsList from "@/components/tables/AuthorizedsList.vue";
+import CollapsibleArrow from "@/components/tables/CollapsibleArrow.vue";
 
 const props = defineProps<{
   columns: ColumnDef<TutorTableDTO, TValue>[];
@@ -111,9 +111,12 @@ function onShowStudents(tutor: TutorTableDTO) {
                   :props="cell.getContext()"
                 />
               </TableCell>
-              <TableCell class="text-center">
+              <TableCell class="relative">
                 <CollapsibleTrigger>
-                  <Button @click="onShowStudents(row.original)">Ver</Button>
+                  <CollapsibleArrow
+                    v-model:open="row.original.collapseControl"
+                    @click="onShowStudents(row.original)"
+                  />
                 </CollapsibleTrigger>
               </TableCell>
             </TableRow>

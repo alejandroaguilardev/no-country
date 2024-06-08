@@ -9,6 +9,7 @@ export class StudentTableDTO {
     public dni: string,
     public course: string,
     public authorized: AuthorizedTableDTO,
+    public collapseControl: boolean = false,
   ) {}
 
   static fromApiModel(student: StudentApi) {
