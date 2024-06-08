@@ -16,6 +16,8 @@ import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { TutorTableDTO } from "@/dto/tutorTableDTO";
 import { Skeleton } from "@/components/ui/skeleton";
 import WithoutContent from "@/components/tables/WithoutContent.vue";
+import AuthorizedPhotoDialog from "@/components/tables/AuthorizedPhotoDialog.vue";
+import AuthorizedsList from "@/components/tables/AuthorizedsList.vue";
 
 const props = defineProps<{
   columns: ColumnDef<TutorTableDTO, TValue>[];
@@ -38,6 +40,14 @@ const table = useVueTable({
   getCoreRowModel: getCoreRowModel(),
 });
 
+const authorizedPhotoDialog: Ref<boolean> = ref(false);
+const authorizedPhoto: Ref<string> = ref("");
+
+function onShowAuthorizedPhoto(photo: string) {
+  authorizedPhotoDialog.value = true;
+  authorizedPhoto.value = photo;
+}
+
 function onShowStudents(tutor: TutorTableDTO) {
   if (tutor.students.length > 0) return;
   emit("on:show-students", tutor);
@@ -59,7 +69,7 @@ function onShowStudents(tutor: TutorTableDTO) {
               :props="header.getContext()"
             />
           </TableHead>
-          <TableHead class="text-center"> Estudiantes </TableHead>
+          <TableHead class="text-center"> Cargas </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -107,10 +117,23 @@ function onShowStudents(tutor: TutorTableDTO) {
                 </CollapsibleTrigger>
               </TableCell>
             </TableRow>
-            <StudentsList
-              :students="row.original.students"
-              :loading="row.original.loadingStudents"
-            />
+            <tr class="shadow-inner">
+              <td colspan="8">
+                <CollapsibleContent class="bg-slate-100">
+                  <h4 class="text-lg ml-4 my-4">Estudiantes</h4>
+                  <StudentsList
+                    :students="row.original.students"
+                    :loading="row.original.loadingStudents"
+                  />
+                  <h4 class="text-lg ml-4 my-4">Autorizados</h4>
+                  <AuthorizedsList
+                    :authorizeds="row.original.authorizeds"
+                    :loading="row.original.loadingStudents"
+                    @on:show-photo="onShowAuthorizedPhoto"
+                  />
+                </CollapsibleContent>
+              </td>
+            </tr>
           </Collapsible>
         </template>
         <template v-else>
@@ -119,4 +142,8 @@ function onShowStudents(tutor: TutorTableDTO) {
       </TableBody>
     </Table>
   </div>
+  <AuthorizedPhotoDialog
+    v-model:visibility="authorizedPhotoDialog"
+    :photo="authorizedPhoto"
+  />
 </template>

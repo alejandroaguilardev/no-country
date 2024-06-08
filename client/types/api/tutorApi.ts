@@ -1,3 +1,4 @@
+import type { AuthorizedApi } from "./authorizedApi";
 import type { StudentApi } from "./studentApi";
 
 export interface TutorApi {
@@ -9,6 +10,7 @@ export interface TutorApi {
   phone: string;
   photo: string;
   students: StudentApi[];
+  authorizeds: AuthorizedApi[];
   created_at: string;
   updated_at: string;
 }
