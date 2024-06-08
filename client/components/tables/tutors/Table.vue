@@ -121,7 +121,7 @@ function onShowStudents(tutor: TutorTableDTO) {
               </TableCell>
             </TableRow>
             <tr class="shadow-inner">
-              <td colspan="8">
+              <td class="p-0" colspan="8">
                 <CollapsibleContent class="bg-slate-100">
                   <h4 class="text-lg ml-4 my-4">Estudiantes</h4>
                   <StudentsList
@@ -150,3 +150,6 @@ function onShowStudents(tutor: TutorTableDTO) {
     :photo="authorizedPhoto"
   />
 </template>
+
+<style scoped>
+</style>
