@@ -23,4 +23,10 @@ class UserRepository
         $user = User::with('tutor', 'tutor.authorizeds' )->where('id', $id)->first();
         return $user->tutor->authorizeds;
     }
+
+    public function getTeacherId(int $id)
+    {
+        $user = User::with('teacher' )->where('id', $id)->first();
+        return $user->teacher->id;
+    }
 }
