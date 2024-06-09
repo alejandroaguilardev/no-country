@@ -69,19 +69,19 @@ function onShowAuthorizedPhoto(photo: string) {
         <template v-if="loading">
           <TableRow v-for="index in 10" :key="index">
             <TableCell>
-              <Skeleton class="h-4 w-16 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
             <TableCell>
-              <Skeleton class="h-4 w-38 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
             <TableCell>
-              <Skeleton class="h-4 w-38 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
             <TableCell>
-              <Skeleton class="h-4 w-38 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
             <TableCell>
-              <Skeleton class="h-4 w-12 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
           </TableRow>
         </template>
