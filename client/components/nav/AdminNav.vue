@@ -1,11 +1,11 @@
 <template>
   <nav
-    class="w-full bg-white shadow-md fixed top-0 left-0 flex items-center px-20 z-50"
+    class="w-lvw bg-white shadow-md fixed top-0 left-0 flex items-center px-28 z-50"
   >
     <ul class="flex gap-2 items-end">
       <li v-for="(item, i) in navItems" :key="i" class="flex box-content">
         <NuxtLink
-          class="p-4 opacity-50 hover:opacity-100 box-content"
+          class="p-4 py-6 opacity-50 hover:opacity-100 box-content"
           :to="item.url"
           >{{ item.label }}</NuxtLink
         >
@@ -80,6 +80,17 @@ onMounted(() => {
 }
 
 .router-link-active {
-  @apply border-b-[4px] border-black opacity-100;
+  @apply opacity-100;
+  position: relative;
+}
+
+.router-link-active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: #000;
 }
 </style>
