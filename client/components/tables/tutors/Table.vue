@@ -150,6 +150,3 @@ function onShowStudents(tutor: TutorTableDTO) {
     :photo="authorizedPhoto"
   />
 </template>
-
-<style scoped>
-</style>
