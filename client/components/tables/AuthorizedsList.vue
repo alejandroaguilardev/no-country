@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Eye } from "lucide-vue-next";
 import Skeleton from "@/components/ui/skeleton/Skeleton.vue";
-import { TableCell, TableRow } from "@/components/ui/table";
+import { TableCell, TableHead, TableRow } from "@/components/ui/table";
 import type { AuthorizedTableDTO } from "@/dto/authorizedTableDTO";
 
 defineProps<{
@@ -23,31 +23,41 @@ const emit = defineEmits<{
     </TableRow>
   </template>
   <template v-else-if="authorizeds.length > 0">
-    <TableRow v-for="(authorized, index) of authorizeds" :key="index">
-      <TableCell>
-        <span class="text-muted-foreground mr-1">Nombre:</span>
-        {{ authorized.firstName }}
-      </TableCell>
-      <TableCell>
-        <span class="text-muted-foreground mr-1">Apellido:</span>
-        {{ authorized.lastName }}
-      </TableCell>
-      <TableCell>
-        <span class="text-muted-foreground mr-1">DNI:</span>
-        {{ authorized.dni }}
-      </TableCell>
-      <TableCell>
-        <span class="text-muted-foreground mr-1">N° Telefono:</span>
-        {{ authorized.phone }}
-      </TableCell>
-      <TableCell class="flex gap-2 items-center">
-        <span class="text-muted-foreground mr-1">Foto:</span>
-        <Eye
-          class="cursor-pointer"
-          :size="22"
-          @click="emit('on:show-photo', authorized.photo)"
-        />
-      </TableCell>
+    <TableRow class="flex">
+      <div class="grid grid-cols-5 w-full">
+        <TableHead class="p-4"> Nombre </TableHead>
+        <TableHead class="p-4"> Apellido </TableHead>
+        <TableHead class="p-4"> N° Documento </TableHead>
+        <TableHead class="p-4"> N° Telefono </TableHead>
+        <TableHead class="p-4"> Foto </TableHead>
+      </div>
+    </TableRow>
+    <TableRow
+      v-for="(authorized, index) of authorizeds"
+      :key="index"
+      class="flex"
+    >
+      <div class="grid grid-cols-5 w-full">
+        <TableCell>
+          {{ authorized.firstName }}
+        </TableCell>
+        <TableCell>
+          {{ authorized.lastName }}
+        </TableCell>
+        <TableCell>
+          {{ authorized.dni }}
+        </TableCell>
+        <TableCell>
+          {{ authorized.phone }}
+        </TableCell>
+        <TableCell class="flex gap-2 items-center">
+          <Eye
+            class="cursor-pointer"
+            :size="22"
+            @click="emit('on:show-photo', authorized.photo)"
+          />
+        </TableCell>
+      </div>
     </TableRow>
   </template>
   <template v-else>
