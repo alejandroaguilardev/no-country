@@ -29,7 +29,7 @@ export const useAdminStudentsStore = defineStore("adminStudentsStore", () => {
   }
 
   async function getStudentsByCourse(id: number) {
-    const res = await api.get<StudentType[]>(`${API_URL}/course/${id}`);
+    const res = await api.get<StudentType[]>(`${ENDPOINT}/course/${id}`);
 
     return res.data;
   }
