@@ -10,7 +10,6 @@ export const authorizedService = () => {
   console.log("user", user.value);
 
   const tokenSaved = localStorage.getItem("token");
-  console.log("token", tokenSaved);
   const getCargasApoderado = async (): Promise<UserType[]> => {
     try {
       const data = await useFetch(`${baseApiUrl}/api/tutors/students`, {
@@ -20,7 +19,6 @@ export const authorizedService = () => {
           "Content-Type": "application/json",
         },
       });
-      console.log("get Cargas", data.data.value);
       return data.data.value || [];
     } catch (error) {
       console.error("Error :", error);
@@ -40,7 +38,6 @@ export const authorizedService = () => {
     [1].forEach((value, index) => {
       formdata.append(`student_id[${index}]`, value.toString());
     });
-    console.log("este funciona!!!", formdata);
     try {
       await api.post(`/api/authorizeds`, formdata, {
         headers: {
@@ -64,9 +61,20 @@ export const authorizedService = () => {
       console.log("error", error);
     }
   };
+  const leaveAlone = async (formdata: any) => {
+    const formdata = new FormData();
+    try {
+      await api.post(`/api/authorizeds/leave-alone`, formdata, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
   return {
     getCargasApoderado,
     datosAuthorizedForWithdrawal,
     cargaImagen,
+    leaveAlone,
   };
 };

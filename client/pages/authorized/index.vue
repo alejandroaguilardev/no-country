@@ -53,12 +53,12 @@ const validationSchema = [
     z.object({
       // TODO: Crear un array para almacenar todos los id cuando se selecione el checkbox de studentLeavesAlone https://zod.dev/?id=nonempty
       studentFullName: z.string({ required_error: "Este campo es requerido" }),
-      studentLeavesAlone: z.boolean().default(false).optional(),
       fullName: z.string({ required_error: "Nombre y Apellido es requerido" }),
       dni: z.string({ required_error: "DNI es requerido" }),
       // TODO: añadir phone code input
       // phoneCode: z.string({ required_error: "Código es requerido" }),
       phoneNumber: z.string({ required_error: "Teléfono es requerido" }),
+      studentLeavesAlone: z.boolean().default(false).optional(),
     }),
   ),
   toTypedSchema(
@@ -75,14 +75,16 @@ const validationSchema = [
         }, "Sólo se admiten los formatos .jpg y .png"),
       // TODO: Crear un array para almacenar todos los id cuando se selecione el checkbox de studentLeavesAlone https://zod.dev/?id=nonempty
       studentFullName: z.string({ required_error: "Este campo es requerido" }),
-      studentLeavesAlone: z.boolean().default(false).optional(),
       fullName: z.string({ required_error: "Nombre y Apellido es requerido" }),
-      dni: z.string({ required_error: "DNI es requerido" }),
+      dni: z
+        .string({ required_error: "DNI es requerido" })
+        .min(8, { message: "Mínimo 8 caracteres" }),
       // TODO: añadir phone code input
       // phoneCode: z.string({ required_error: "Código es requerido" }),
       phoneNumber: z
         .string({ required_error: "Teléfono es requerido" })
-        .min(8, { message: "Mínimo 3 caracteres" }),
+        .min(8, { message: "Mínimo 8 caracteres" }),
+      studentLeavesAlone: z.boolean().default(false).optional(),
     }),
   ),
   toTypedSchema(
@@ -112,7 +114,7 @@ const value = ref<DateValue>();
 
 const emit = defineEmits(["imageloaded"]);
 
-const { getCargasApoderado, datosAuthorizedForWithdrawal, cargaImagen } =
+const { getCargasApoderado, datosAuthorizedForWithdrawal, leaveAlone } =
   authorizedService();
 
 const tutor = await getCargasApoderado();
@@ -136,7 +138,14 @@ const onEventFilePicked = (event: any) => {
   });
   fileReader.readAsDataURL(files[0]);
 };
+
+// FALTA TOMAR EL ID DEL TUTOR Y DEL ESTUDIANTE ELEGIDO
+// FALTA ACTIVAR EL LEAVE ALONE SIN MARCAR OTRO CAMPO
 const onSubmit = (validationScheme) => {
+  console.log("validationnnnn", validationSchema);
+  tutor.forEach((value) => {
+    validationSchema.push(`${value}`);
+  });
   const payload = {
     name: validationScheme.studentFullName,
     last_name: validationScheme.fullName,
@@ -145,21 +154,31 @@ const onSubmit = (validationScheme) => {
     photo: namePhoto.value[0],
     tutor_id: "1",
     student_id: [tutor[0].id],
+    studentLeavesAlone: validationSchema.studentLeavesAlone,
   };
-
+  // if (validationSchema.studentLeaveAlone) {
+  //   const dataLeaveAlone = {
+  //     leave_alone: validationSchema.studentLeavesAlone,
+  //     student_id: [tutor[0].id],
+  //   };
+  //   leaveAlone({payload.studentLeavesAlone, payload.student_id}));
+  // } else {
+  // }
   datosAuthorizedForWithdrawal(payload);
 
   toast("Registro Exitoso", {
     description: `Autorizado ${payload.name} registrado correctamente.`,
     action: {
-      label: "Undo",
+      label: "Cerrar",
       onClick: () => console.log("Undo"),
     },
   });
 
   // cargaImagen(namePhoto.value[0]);
-  const { push } = useRouter();
-  push("/login");
+  setTimeout(function () {
+    const { push } = useRouter();
+    push("/login");
+  }, 2000);
 };
 </script>
 
