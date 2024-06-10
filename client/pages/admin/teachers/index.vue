@@ -1,7 +1,6 @@
 <template>
   <NuxtLayout name="admin-layout">
     <div>
-      <h2 class="my-5 text-3xl">Maestros</h2>
       <Filters
         @on:filter="onFilter($event)"
         @on:remove="onRemoveFilters($event)"
