@@ -12,9 +12,9 @@ class DatabaseSeeder extends Seeder
     private $default_random_students = 3;
 
     private $default_users = [
-        "teacher"=>["email"=>"teacher@example.com", "password" => "12345678"], 
-        "tutor"=>["email"=>"tutor@example.com", "password" => "12345678"], 
-        "admin"=>["email"=>"admin@example.com", "password" => "12345678"], 
+        "teacher"=>["email"=>"teacher@example.com", "password" => "nocountry"], 
+        "tutor"=>["email"=>"tutor@example.com", "password" => "nocountry"], 
+        "admin"=>["email"=>"admin@example.com", "password" => "nocountry"], 
     ];
 
     private $default_roles = [
