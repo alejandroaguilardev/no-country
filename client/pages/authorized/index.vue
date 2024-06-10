@@ -143,9 +143,9 @@ const onEventFilePicked = (event: any) => {
 // FALTA ACTIVAR EL LEAVE ALONE SIN MARCAR OTRO CAMPO
 const onSubmit = (validationScheme) => {
   console.log("validationnnnn", validationSchema);
-  tutor.forEach((value) => {
-    validationSchema.push(`${value}`);
-  });
+  // tutor.forEach((value) => {
+  //   validationSchema.push(`${value}`);
+  // });
   const payload = {
     name: validationScheme.studentFullName,
     last_name: validationScheme.fullName,

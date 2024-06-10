@@ -62,7 +62,6 @@ export const authorizedService = () => {
     }
   };
   const leaveAlone = async (formdata: any) => {
-    const formdata = new FormData();
     try {
       await api.post(`/api/authorizeds/leave-alone`, formdata, {
         headers: { "Content-Type": "multipart/form-data" },
