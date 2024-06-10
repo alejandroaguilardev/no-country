@@ -7,7 +7,6 @@ export class TeacherTableDTO {
     public lastName: string,
     public email: string,
     public phone: string,
-    public course: string,
   ) {}
 
   static fromApiModel(teacher: TeacherApi) {
@@ -17,11 +16,10 @@ export class TeacherTableDTO {
       teacher.last_name,
       teacher.email,
       teacher.phone,
-      teacher.course.description,
     );
   }
 
-  static manyFromApiModel(students: TeacherApi[]) {
-    return students.map((t: TeacherApi) => TeacherTableDTO.fromApiModel(t));
+  static manyFromApiModel(teachers: TeacherApi[]) {
+    return teachers.map((t: TeacherApi) => TeacherTableDTO.fromApiModel(t));
   }
 }

@@ -1,5 +1,6 @@
-import type { TutorApi } from "@/types/api/tutorApi";
 import { StudentTableDTO } from "./studentTableDTO";
+import { AuthorizedTableDTO } from "./authorizedTableDTO";
+import type { TutorApi } from "@/types/api/tutorApi";
 
 export class TutorTableDTO {
   constructor(
@@ -9,9 +10,11 @@ export class TutorTableDTO {
     public dni: string,
     public email: string,
     public phone: string,
+    public authorizeds: AuthorizedTableDTO[],
     public students: StudentTableDTO[],
     public loadingStudents: boolean = false,
     public showStudents: boolean = false,
+    public collapseControl: boolean = false,
   ) {}
 
   static fromApiModel(tutor: TutorApi) {
@@ -23,11 +26,13 @@ export class TutorTableDTO {
       tutor.document_number,
       tutor.email,
       tutor.phone,
+      AuthorizedTableDTO.manyFromApiModel(tutor.authorizeds),
       [],
     );
   }
 
   static manyFromApiModel(tutors: TutorApi[]) {
+    if (!tutors) return [];
     return tutors.map((t: TutorApi) => TutorTableDTO.fromApiModel(t));
   }
 }

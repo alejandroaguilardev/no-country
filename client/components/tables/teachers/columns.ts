@@ -22,8 +22,4 @@ export const columns: ColumnDef<TeacherTableDTO>[] = [
     accessorKey: "phone",
     header: "N° Telefono",
   },
-  {
-    accessorKey: "course",
-    header: "Curso",
-  },
 ];
