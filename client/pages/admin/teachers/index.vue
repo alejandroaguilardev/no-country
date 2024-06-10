@@ -6,17 +6,19 @@
         @on:filter="onFilter($event)"
         @on:remove="onRemoveFilters($event)"
       />
-      <Table :columns="columns" :data="data" :loading="loading" />
-      <Pagination
-        v-model:page="page"
-        :total="total"
-        @update:page="onChangePage"
+      <Table
+        :columns="columns"
+        :data="data"
+        :loading="loading"
+        :failed="failed"
       />
+      <Pagination v-model:page="page" :total="total" />
     </div>
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
+import { toast } from "vue-sonner";
 import { columns, Table } from "@/components/tables/teachers";
 import { TeacherTableDTO } from "@/dto/teacherTableDTO";
 import { useAdminTeachersStore } from "@/store/useAdminTeachersStore";
@@ -31,6 +33,7 @@ const limit: Ref<number> = ref(10);
 const activeFilters: Ref<FilterApi[]> = ref([]);
 const page: Ref<number> = ref(1);
 const loading: Ref<boolean> = ref(true);
+const failed: Ref<boolean> = ref(false);
 
 function onFilter(filters: FilterApi[]) {
   fetchTeachers(0, limit.value, filters);
@@ -50,9 +53,14 @@ async function fetchTeachers(
   filters: FilterApi[],
 ) {
   loading.value = true;
-  const { rows, count } = await store.getTeachers(offset, limit, filters);
-  data.value = TeacherTableDTO.manyFromApiModel(rows);
-  total.value = count;
+  try {
+    const { rows, count } = await store.getTeachers(offset, limit, filters);
+    data.value = TeacherTableDTO.manyFromApiModel(rows);
+    total.value = count;
+  } catch (error) {
+    failed.value = true;
+    toast.error("Ocurrio un error al cargar los maestros");
+  }
   loading.value = false;
 }
 
@@ -60,6 +68,10 @@ async function onChangePage(page: number) {
   const offset = (page - 1) * limit.value;
   await fetchTeachers(offset, limit.value, activeFilters.value);
 }
+
+watch(page, (v) => {
+  onChangePage(v);
+});
 
 onMounted(async () => {
   await fetchTeachers(0, limit.value, activeFilters.value);

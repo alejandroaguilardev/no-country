@@ -26,21 +26,31 @@ const formSchema = toTypedSchema(
     password: z
       .string({ required_error: "Contraseña Requerida" })
       .min(3, { message: "Mínimo 3 caracteres" }),
-    rememberPassword: z.boolean().default(true).optional(),
+    rememberPassword: z.boolean().default(false),
   }),
 );
 
-const { isFieldDirty, handleSubmit, isSubmitting } = useForm({
+const { isFieldDirty, handleSubmit, isSubmitting, setValues } = useForm({
   validationSchema: formSchema,
 });
 
 const onSubmit = handleSubmit(async (req: LoginReq) => {
   const { login } = useAuthStore();
-
   try {
     await login(req, !!req.rememberPassword);
   } catch (err: unknown) {
     toast.error((err as Error).message);
+  }
+});
+onMounted(() => {
+  const preReqRaw: string | null = localStorage.getItem("saveAccount");
+  if (preReqRaw) {
+    const preReq: LoginReq = JSON.parse(preReqRaw);
+    setValues({
+      email: preReq.email,
+      password: preReq.password,
+      rememberPassword: preReq.rememberPassword,
+    });
   }
 });
 </script>

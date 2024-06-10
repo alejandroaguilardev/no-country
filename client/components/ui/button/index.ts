@@ -10,7 +10,7 @@ export const buttonVariants = cva(
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
         blue: "bg-blue text-blue-foreground hover:bg-blue/75 focus:bg-blue-active disabled:bg-blue-disabled",
         green:
-          "bg-transparent border border-green text-green hover:bg-blue/75 focus:bg-blue-active disabled:bg-blue-disabled",
+          "bg-green border border-green text-green-foreground hover:bg-green/90",
         dark_blue: "bg-dark_blue text-dark_blue-foreground",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
@@ -19,6 +19,9 @@ export const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        white: "bg-white px-2 py-1 !h-8 text-foreground rounded-xl",
+        text_white: "text-white bg-transparent shadow-none",
+        text_purple: "text-purple-foreground bg-transparent shadow-none",
       },
       size: {
         default: "h-10 px-4 py-2",

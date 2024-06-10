@@ -27,12 +27,12 @@ class UpdateAuthorizedRequest extends FormRequest
         return [
             'name' => 'required|string|min:2|max:255',
             'last_name' => 'required|string|min:2|max:255',
-            'document_number' => 'required|string|min:8|max:20|unique:authorizeds,document_number',
+            'document_number' => 'required|string|min:8|max:20',
             'phone' => 'required|string|min:10|max:15',
-            'photo' => 'nullable|string|min:3|max:255',
             'tutor_id' => 'required|exists:tutors,id',
             'student_id' => 'array',
-            'student_id.*' => 'required|integer|exists:students,id',
+            'student_id.*' => 'required|integer|exists:students,id', 
+            'photo' => 'required|image|mimes:jpeg,png,gif,webp|max:25600',
         ];
     }
 
@@ -62,16 +62,11 @@ class UpdateAuthorizedRequest extends FormRequest
             'document_number.string' => 'El número de documento debe ser una cadena de texto.',
             'document_number.min' => 'El número de documento debe tener al menos 8 caracteres.',
             'document_number.max' => 'El número de documento no puede tener más de 20 caracteres.',
-            'document_number.unique' => 'El número de documento ya está en uso.',
 
             'phone.required' => 'El teléfono es obligatorio.',
             'phone.string' => 'El teléfono debe ser una cadena de texto.',
             'phone.min' => 'El teléfono debe tener al menos 10 caracteres.',
             'phone.max' => 'El teléfono no puede tener más de 15 caracteres.',
-
-            'photo.string' => 'La foto debe ser una cadena de texto.',
-            'photo.min' => 'La foto debe tener al menos 3 caracteres.',
-            'photo.max' => 'La foto no puede tener más de 255 caracteres.',
 
             'tutor_id.required' => 'El tutor es obligatorio.',
             'tutor_id.exists' => 'El tutor seleccionado no es válido.',

@@ -36,34 +36,25 @@ export const useAuthStore = defineStore("auth", () => {
   const token = ref<string>("");
   const user = ref<UserType | null>(null);
   const userRole = computed(() => user.value?.role);
-  const rememberPassword = ref<boolean>(false);
+  // const rememberPassword = ref<boolean>(false);
 
   // Initial store w/app
-  const userSaved =
-    localStorage.getItem("user") || sessionStorage.getItem("user");
-  const tokenSaved =
-    localStorage.getItem("token") || sessionStorage.getItem("token");
+  const userSaved = localStorage.getItem("user");
+  const tokenSaved = localStorage.getItem("token");
 
   if (userSaved && tokenSaved) {
     user.value = JSON.parse(userSaved);
     token.value = tokenSaved;
-    if (localStorage.getItem("user")) {
-      rememberPassword.value = true;
-      refreshToken();
-    }
+    // rememberPassword.value = true;
+    refreshToken();
   }
 
   // Store watcher to update in localStorage when the store is updated
   watch(
     user,
     (userVal) => {
-      if (rememberPassword.value) {
-        localStorage.setItem("user", userVal ? JSON.stringify(userVal) : "");
-        localStorage.setItem("token", token.value);
-      } else {
-        sessionStorage.setItem("user", userVal ? JSON.stringify(userVal) : "");
-        sessionStorage.setItem("token", token.value);
-      }
+      localStorage.setItem("user", userVal ? JSON.stringify(userVal) : "");
+      localStorage.setItem("token", token.value);
     },
     { deep: true },
   );
@@ -80,24 +71,27 @@ export const useAuthStore = defineStore("auth", () => {
         throw new Error(err.response.data.error);
       });
 
-    rememberPassword.value = savePassword;
-    if (savePassword) {
-      setExpirationTime(data.expires_in);
-      setLastRefreshDate();
-    }
+    setExpirationTime(data.expires_in);
+    setLastRefreshDate();
     token.value = data.token;
     user.value = data.user;
+    if (savePassword) {
+      localStorage.setItem("saveAccount", JSON.stringify(req));
+    } else {
+      localStorage.removeItem("saveAccount");
+    }
+
     router.push("/");
   }
 
   function logout() {
     token.value = "";
     user.value = null;
-    rememberPassword.value = false;
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    localStorage.removeItem("expirationDateJWT");
-    localStorage.removeItem("lastRefreshDate");
+    const backup = localStorage.getItem("saveAccount");
+    localStorage.clear();
+    if (backup) {
+      localStorage.setItem("saveAccount", backup);
+    }
     router.push("/login");
   }
 
