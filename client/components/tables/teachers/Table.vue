@@ -40,7 +40,11 @@ const table = useVueTable({
           v-for="headerGroup in table.getHeaderGroups()"
           :key="headerGroup.id"
         >
-          <TableHead v-for="header in headerGroup.headers" :key="header.id">
+          <TableHead
+            v-for="header in headerGroup.headers"
+            :key="header.id"
+            :class="`w-[${header.getSize()}px]`"
+          >
             <FlexRender
               v-if="!header.isPlaceholder"
               :render="header.column.columnDef.header"
@@ -53,22 +57,19 @@ const table = useVueTable({
         <template v-if="loading">
           <TableRow v-for="index in 10" :key="index">
             <TableCell>
-              <Skeleton class="h-4 w-16 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
             <TableCell>
-              <Skeleton class="h-4 w-38 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
             <TableCell>
-              <Skeleton class="h-4 w-38 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
             <TableCell>
-              <Skeleton class="h-4 w-38 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
             <TableCell>
-              <Skeleton class="h-4 w-38 bg-slate-300" />
-            </TableCell>
-            <TableCell>
-              <Skeleton class="h-4 w-38 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
           </TableRow>
         </template>
