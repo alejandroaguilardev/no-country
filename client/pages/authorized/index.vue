@@ -12,38 +12,10 @@ import { toast } from "vue-sonner";
 import { authorizedService } from "@/services";
 
 // import { AlarmClock, CalendarX2Icon } from "lucide-vue-next";
-// import { FormStep, FormWizard } from "@/components/ui/steps";
+import { FormStep, FormWizard } from "@/components/ui/steps";
 import { Checkbox } from "@/components/ui/checkbox";
-
-// import {
-//   Select,
-//   SelectContent,
-//   SelectGroup,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-// import {
-//   Popover,
-//   PopoverContent,
-//   PopoverTrigger,
-// } from "@/components/ui/popover";
-// import { Calendar } from "@/components/ui/calendar";
-
-// import { cn } from "@/lib/utils";
-
-// import { Check, ChevronsUpDown } from "lucide-vue-next";
-
-// import { Popover, PopoverTrigger } from "@/components/ui/popover";
-// import { cn } from "@/lib/utils";
-// import {
-//   Command,
-//   CommandEmpty,
-//   CommandGroup,
-//   CommandInput,
-//   CommandItem,
-//   CommandList,
-// } from "@/components/ui/command";
+import { useAuthorizedStore } from "@/store/useAuthorizedStore";
+import type { StudentType } from "@/types/models";
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 5MB
 const ACCEPTED_FILE_TYPES = ["image/jpeg", "image/png"];
@@ -52,12 +24,23 @@ const validationSchema = [
   toTypedSchema(
     z.object({
       // TODO: Crear un array para almacenar todos los id cuando se selecione el checkbox de studentLeavesAlone https://zod.dev/?id=nonempty
-      studentFullName: z.string({ required_error: "Este campo es requerido" }),
-      fullName: z.string({ required_error: "Nombre y Apellido es requerido" }),
-      dni: z.string({ required_error: "DNI es requerido" }),
+      studentFullName: z
+        .string({
+          required_error: "Este campo es requerido",
+        })
+        .optional(),
+      selectAllStudents: z.boolean().default(false).optional(),
+      fullName: z
+        .string({ required_error: "Nombre y Apellido es requerido" })
+        .min(2, { message: "Nombre completo debe ser de 2 caracteres" }),
+      dni: z
+        .string({ required_error: "DNI es requerido" })
+        .min(8, { message: "DNI debe ser de 8 caracteres" }),
       // TODO: añadir phone code input
       // phoneCode: z.string({ required_error: "Código es requerido" }),
-      phoneNumber: z.string({ required_error: "Teléfono es requerido" }),
+      phoneNumber: z
+        .string({ required_error: "Teléfono es requerido" })
+        .min(10, { message: "Teléfono debe ser de 10 caracteres" }),
       studentLeavesAlone: z.boolean().default(false).optional(),
     }),
   ),
@@ -69,7 +52,7 @@ const validationSchema = [
           return !file || file.size <= MAX_UPLOAD_SIZE;
         }, "El tamaño del archivo debe ser inferior a 5 MB.")
         .refine((file) => {
-          console.log("file", file);
+          // console.log("file", file);
 
           return ACCEPTED_FILE_TYPES.includes(file.type);
         }, "Sólo se admiten los formatos .jpg y .png"),
@@ -107,17 +90,24 @@ const df = new DateFormatter("es-ES", {
 });
 
 const disabledStudentsSelect = ref(false);
+const disabledInput = ref(false);
 const imageUrl = ref(null);
 const EventfileInput = ref(null);
+const studentsId: Ref<string[]> = ref([]);
 
 const value = ref<DateValue>();
 
 const emit = defineEmits(["imageloaded"]);
 
-const { getCargasApoderado, datosAuthorizedForWithdrawal, leaveAlone } =
-  authorizedService();
+const { datosAuthorizedForWithdrawal } = authorizedService();
 
-const tutor = await getCargasApoderado();
+const store = useAuthorizedStore();
+
+const studentList: Ref<StudentType[]> = ref([]);
+
+const handleDisabledInput = () => {
+  disabledInput.value = !disabledInput.value;
+};
 
 const handleDisableSelect = () => {
   disabledStudentsSelect.value = !disabledStudentsSelect.value;
@@ -141,45 +131,68 @@ const onEventFilePicked = (event: any) => {
 
 // FALTA TOMAR EL ID DEL TUTOR Y DEL ESTUDIANTE ELEGIDO
 // FALTA ACTIVAR EL LEAVE ALONE SIN MARCAR OTRO CAMPO
-const onSubmit = (validationScheme) => {
-  console.log("validationnnnn", validationSchema);
+const onSubmit = (formData: any) => {
+  if (disabledStudentsSelect.value) {
+    studentsId.value = studentList.value.map((student) =>
+      student.id.toString(),
+    );
+
+    formData.studentFullName = studentsId.value;
+
+    console.log("studentsId=>", formData.studentFullName);
+  }
+
+  // console.log("formData=>", formData);
   // tutor.forEach((value) => {
   //   validationSchema.push(`${value}`);
   // });
-  const payload = {
-    name: validationScheme.studentFullName,
-    last_name: validationScheme.fullName,
-    document_number: validationScheme.dni,
-    phone: validationScheme.phoneNumber,
-    photo: namePhoto.value[0],
-    tutor_id: "1",
-    student_id: [tutor[0].id],
-    studentLeavesAlone: validationSchema.studentLeavesAlone,
-  };
-  // if (validationSchema.studentLeaveAlone) {
-  //   const dataLeaveAlone = {
-  //     leave_alone: validationSchema.studentLeavesAlone,
-  //     student_id: [tutor[0].id],
-  //   };
-  //   leaveAlone({payload.studentLeavesAlone, payload.student_id}));
-  // } else {
-  // }
-  datosAuthorizedForWithdrawal(payload);
+  // const payload = {
+  //   name: validationScheme.studentFullName,
+  //   last_name: validationScheme.fullName,
+  //   document_number: validationScheme.dni,
+  //   phone: validationScheme.phoneNumber,
+  //   photo: namePhoto.value[0],
+  //   tutor_id: "1",
+  //   student_id: [tutor[0].id],
+  //   studentLeavesAlone: validationSchema.studentLeavesAlone,
 
-  toast("Registro Exitoso", {
-    description: `Autorizado ${payload.name} registrado correctamente.`,
-    action: {
-      label: "Cerrar",
-      onClick: () => console.log("Undo"),
-    },
-  });
+  // datosAuthorizedForWithdrawal(payload);
 
-  // cargaImagen(namePhoto.value[0]);
-  setTimeout(function () {
-    const { push } = useRouter();
-    push("/login");
-  }, 2000);
+  // toast("Registro Exitoso", {
+  //   description: `Autorizado ${payload.name} registrado correctamente.`,
+  //   action: {
+  //     label: "Cerrar",
+  //     onClick: () => console.log("Undo"),
+  //   },
+  // });
+
+  // // cargaImagen(namePhoto.value[0]);
+  // setTimeout(function () {
+  //   const { push } = useRouter();
+  //   push("/login");
+  // }, 2000);
 };
+
+const fetchTutors = async () => {
+  try {
+    const tutors = await store.getCargasApoderado();
+    studentList.value = tutors;
+  } catch (err) {
+    console.log("err=>", err);
+  }
+};
+
+watch(disabledStudentsSelect, () => {
+  if (disabledStudentsSelect.value) {
+    studentsId.value = studentList.value.map((student) =>
+      student.id.toString(),
+    );
+  }
+});
+
+onMounted(async () => {
+  await fetchTutors();
+});
 </script>
 
 <template>
@@ -211,11 +224,11 @@ const onSubmit = (validationScheme) => {
 
                   <SelectContent>
                     <SelectGroup
-                      v-for="student in tutor"
+                      v-for="student in studentList"
                       :key="student.id"
                       class="p-0"
                     >
-                      <SelectItem :value="student.name">
+                      <SelectItem :value="student.id.toString()">
                         {{ student.name }}
                       </SelectItem>
                     </SelectGroup>
@@ -227,14 +240,27 @@ const onSubmit = (validationScheme) => {
           </Field>
 
           <div class="grid gap-4">
-            <div
-              class="grid grid-cols-[1fr_auto] gap-4 lg:gap-20 items-center w-full justify-between"
+            <Field
+              v-slot="{ value, handleChange }"
+              name="selectAllStudents"
+              type="checkbox"
+              :value="true"
+              :unchecked-value="false"
             >
-              <label for="selectAllStudents" class="label">
-                Seleccionar todos
-              </label>
-              <Checkbox id="selectAllStudents" @click="handleDisableSelect" />
-            </div>
+              <div
+                class="grid grid-cols-[1fr_auto] gap-4 lg:gap-20 items-center w-full justify-between"
+                @click="handleDisableSelect()"
+              >
+                <label for="selectAllStudents" class="label">
+                  Seleccionar todos
+                </label>
+                <Checkbox
+                  id="selectAllStudents"
+                  :checked="value"
+                  @update:checked="handleChange"
+                />
+              </div>
+            </Field>
 
             <Field
               v-slot="{ value, handleChange }"
@@ -245,6 +271,7 @@ const onSubmit = (validationScheme) => {
             >
               <div
                 class="grid grid-cols-[1fr_auto] gap-4 lg:gap-20 items-center w-full justify-between"
+                @click="handleDisabledInput()"
               >
                 <label for="studentLeavesAlone" class="label">
                   El alumno se retira sin acompañante
@@ -265,6 +292,7 @@ const onSubmit = (validationScheme) => {
                 name="fullName"
                 class="input"
                 placeholder="Nombre Completo"
+                :disabled="disabledInput"
               />
               <ErrorMessage name="fullName" class="error-message" />
             </div>
@@ -279,6 +307,7 @@ const onSubmit = (validationScheme) => {
                 name="dni"
                 type="text"
                 placeholder="D.N.I"
+                :disabled="disabledInput"
               />
               <ErrorMessage name="dni" class="error-message" />
             </div>
@@ -287,80 +316,13 @@ const onSubmit = (validationScheme) => {
           <div class="grid lg:grid-cols-[0.6fr_1fr] gap-6 items-center">
             <label for="dni" class="label">Teléfono</label>
             <div class="relative">
-              <!-- <Field id="phoneCode" as="div" name="phoneCode" type="text">
-                <Popover>
-                  <PopoverTrigger as-child>
-                    <div>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        :class="
-                          cn(
-                            'justify-between w-full',
-                            !values.language && 'text-muted-foreground',
-                          )
-                        "
-                      >
-                        {{
-                          values.language
-                            ? countryCodes.find(
-                                (language) =>
-                                  language.value === values.language,
-                              )?.value
-                            : "+0"
-                        }}
-                        <ChevronsUpDown
-                          class="ml-2 h-4 w-4 shrink-0 opacity-50"
-                        />
-                      </Button>
-                    </div>
-                  </PopoverTrigger>
-                  <PopoverContent class="w-[200px] p-0">
-                    <Command>
-                      <CommandInput placeholder="Buscar país..." />
-                      <CommandEmpty>Nothing found.</CommandEmpty>
-                      <CommandList>
-                        <CommandGroup>
-                          <CommandItem
-                            v-for="language in countryCodes"
-                            :key="language.value"
-                            class="gap-2"
-                            :value="language.label"
-                            @select="
-                              () => {
-                                setFieldValue('language', language.value);
-                              }
-                            "
-                          >
-                            <div
-                              class="flex items-center w-full justify-between"
-                            >
-                              <span>{{ language.label }}</span>
-                              <span>{{ language.value }}</span>
-                            </div>
-                            <Check
-                              :class="
-                                cn(
-                                  'ml-auto h-4 w-4',
-                                  language.value === values.language
-                                    ? 'opacity-100'
-                                    : 'opacity-0',
-                                )
-                              "
-                            />
-                          </CommandItem>
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-              </Field> -->
               <Field
                 id="phoneNumber"
                 class="input"
                 name="phoneNumber"
                 type="text"
                 placeholder="555 555-1234"
+                :disabled="disabledInput"
               />
               <ErrorMessage name="phoneNumber" class="error-message" />
             </div>
