@@ -9,7 +9,7 @@ use App\Services\Storage\ImageService;
 
 final class ImageSaveController extends Controller
 {
-    private $path = "public/images/";
+    private $path = "images/";
 
     public function __construct(
         private readonly ImageService $imageService
