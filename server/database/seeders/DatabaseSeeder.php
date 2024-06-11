@@ -48,8 +48,9 @@ class DatabaseSeeder extends Seeder
     }
 
     protected function createAdmin() {
+        $default_users = app('default_users');
         $default_roles = app('default_roles');
-        $user = User::factory()->create(["email"=>"admin@example.com","password"=>"12345678", "role_id"=>$default_roles["admin"]["id"]]);
+        $user = User::factory()->create(["email"=>$default_users["admin"]["email"],"password"=>$default_users["admin"]["password"], "role_id"=>$default_roles["admin"]["id"]]);
         Tutor::factory()->create(['email'=>$user->email,'user_id'=> $user->id]);
     }
 }
