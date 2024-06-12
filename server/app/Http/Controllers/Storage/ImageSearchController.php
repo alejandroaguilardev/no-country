@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Storage;
 
+use App\Domain\Errors\CatchException;
 use App\Http\Controllers\Controller;
 use App\Services\Storage\ImageService;
 
 final class ImageSearchController extends Controller
 {
-    private $path = "public/images/";
+    private $path = "images/";
 
     public function __construct(
         private readonly ImageService $imageService
@@ -20,8 +21,9 @@ final class ImageSearchController extends Controller
 
             return response($image["file"], 200)
                 ->header('Content-Type', $image["type"]);
-        } catch (\Exception $e) {
-            return response()->json(["error" => $e], 500);
+        } catch (\Throwable $e) {
+            $e = new CatchException($e);
+            return response()->json($e->getMessage(), $e->getCode());
         }
     }
 }
