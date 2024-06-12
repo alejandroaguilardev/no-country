@@ -71,7 +71,7 @@ class UpdateRetirements extends Command
                 $authorized->last_name = $tutor->last_name;
                 $authorized->document_number = $tutor->document_number;
                 $authorized->phone = $tutor->phone;
-
+                $authorized->photo = $tutor->photo;
                 $authorized->tutor_id = $tutor->id;
 
                 $authorized->save();
