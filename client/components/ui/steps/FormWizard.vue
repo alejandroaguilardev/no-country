@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useForm } from "vee-validate";
 import { ref, computed, provide, defineEmits } from "vue";
+import { LoaderCircle } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 
 const props = defineProps({
@@ -36,7 +37,7 @@ const currentSchema = computed(() => {
   return props.validationSchema[currentStepIdx.value];
 });
 
-const { values, handleSubmit, isValidating } = useForm({
+const { values, handleSubmit, isSubmitting, isValidating } = useForm({
   // vee-validate will be aware of computed schema changes
   validationSchema: currentSchema,
   // turn this on so each step values won't get removed when you move back or to the next step
@@ -46,7 +47,7 @@ const { values, handleSubmit, isValidating } = useForm({
 // We are using the "submit" handler to progress to next steps
 // and to submit the form if its the last step
 const onSubmit = handleSubmit((values) => {
-  if (!isLastStep.value) {
+  if (!isLastStep.value && !values.studentLeavesAlone) {
     currentStepIdx.value++;
 
     return;
@@ -85,7 +86,27 @@ function goToPrev() {
 
     <slot />
 
-    <div class="w-full flex flex-col md:flex-row gap-4 justify-center">
+    <template v-if="!values.studentLeavesAlone">
+      <div class="w-full flex flex-col md:flex-row gap-4 justify-center">
+        <Button
+          size="lg"
+          variant="blue"
+          class="px-12"
+          type="submit"
+          :disabled="isSubmitting"
+        >
+          <template v-if="isSubmitting">
+            <LoaderCircle class="w-4 h-4 mr-2 animate-spin" />
+            Enviando...
+          </template>
+          <template v-else>
+            {{ isLastStep ? "Finalizar" : "Siguiente" }}
+          </template>
+        </Button>
+      </div>
+    </template>
+
+    <div v-else class="w-full flex flex-col md:flex-row gap-4 justify-center">
       <Button
         v-if="hasPrevious"
         variant="blue"
@@ -101,11 +122,16 @@ function goToPrev() {
         variant="blue"
         class="px-12"
         type="submit"
-        :disabled="isValidating"
-        >{{ isLastStep ? "Finalizar" : "Siguiente" }}</Button
+        :disabled="isSubmitting"
       >
+        <template v-if="isSubmitting">
+          <LoaderCircle class="w-4 h-4 mr-2 animate-spin" />
+          Enviando...
+        </template>
+        <template v-else> Finalizar </template>
+      </Button>
     </div>
 
-    <pre>{{ values }}</pre>
+    <!-- <pre>{{ values }}</pre> -->
   </form>
 </template>
