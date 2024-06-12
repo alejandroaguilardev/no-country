@@ -8,9 +8,8 @@ import {
   type DateValue,
   // getLocalTimeZone,
 } from "@internationalized/date";
-import { toast } from "vue-sonner";
 import { authorizedService } from "@/services";
-
+import { useAuthStore } from "@/store/useAuthStore";
 // import { AlarmClock, CalendarX2Icon } from "lucide-vue-next";
 import { FormStep, FormWizard } from "@/components/ui/steps";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -19,7 +18,9 @@ import type { StudentType } from "@/types/models";
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 5MB
 const ACCEPTED_FILE_TYPES = ["image/jpeg", "image/png"];
+const { user } = useAuthStore();
 
+console.log("user", user);
 const validationSchema = [
   toTypedSchema(
     z.object({
@@ -42,6 +43,7 @@ const validationSchema = [
         .string({ required_error: "Teléfono es requerido" })
         .min(10, { message: "Teléfono debe ser de 10 caracteres" }),
       studentLeavesAlone: z.boolean().default(false).optional(),
+      tutorId: z.string().default(`${user}`).optional(),
     }),
   ),
   toTypedSchema(
@@ -68,6 +70,7 @@ const validationSchema = [
         .string({ required_error: "Teléfono es requerido" })
         .min(8, { message: "Mínimo 8 caracteres" }),
       studentLeavesAlone: z.boolean().default(false).optional(),
+      tutorId: z.string().default(`${user}`).optional(),
     }),
   ),
   toTypedSchema(
@@ -94,6 +97,7 @@ const disabledInput = ref(false);
 const imageUrl = ref(null);
 const EventfileInput = ref(null);
 const studentsId: Ref<string[]> = ref([]);
+const studentsName: Ref<string[]> = ref([]);
 
 const value = ref<DateValue>();
 
@@ -121,6 +125,7 @@ const onEventFilePicked = (event: any) => {
   if (filename.lastIndexOf(".") <= 0) {
     return alert("Por favor adicione um arquivo válido");
   }
+  console.log("imageeen", files);
   const fileReader = new FileReader();
   fileReader.addEventListener("load", () => {
     imageUrl.value = fileReader.result;
@@ -129,48 +134,33 @@ const onEventFilePicked = (event: any) => {
   fileReader.readAsDataURL(files[0]);
 };
 
-// FALTA TOMAR EL ID DEL TUTOR Y DEL ESTUDIANTE ELEGIDO
 // FALTA ACTIVAR EL LEAVE ALONE SIN MARCAR OTRO CAMPO
 const onSubmit = (formData: any) => {
-  if (disabledStudentsSelect.value) {
-    studentsId.value = studentList.value.map((student) =>
-      student.id.toString(),
-    );
-
-    formData.studentFullName = studentsId.value;
-
-    console.log("studentsId=>", formData.studentFullName);
+  console.log("formMMMm", formData);
+  formData.tutorId = user;
+  if (formData.selectAllStudents) {
+    if (disabledStudentsSelect.value) {
+      studentsId.value = studentList.value.map((student) =>
+        student.id.toString(),
+      );
+      formData.studentFullName = studentsId.value;
+      console.log("studentsId=>", formData.studentFullName);
+      datosAuthorizedForWithdrawal(formData);
+    }
+    // }  else if (formData.studentLeavesAlone) {
+    //   formData.fullName = "Se retira sin acompañante";
+    //   formData.dni = "Se retira sin acompañante";
+    //   formData.phoneNumber = "9999999999";
+    // leaveAlone(formData);
   }
 
-  // console.log("formData=>", formData);
-  // tutor.forEach((value) => {
-  //   validationSchema.push(`${value}`);
-  // });
-  // const payload = {
-  //   name: validationScheme.studentFullName,
-  //   last_name: validationScheme.fullName,
-  //   document_number: validationScheme.dni,
-  //   phone: validationScheme.phoneNumber,
-  //   photo: namePhoto.value[0],
-  //   tutor_id: "1",
-  //   student_id: [tutor[0].id],
-  //   studentLeavesAlone: validationSchema.studentLeavesAlone,
-
-  // datosAuthorizedForWithdrawal(payload);
-
-  // toast("Registro Exitoso", {
-  //   description: `Autorizado ${payload.name} registrado correctamente.`,
-  //   action: {
-  //     label: "Cerrar",
-  //     onClick: () => console.log("Undo"),
-  //   },
-  // });
+  datosAuthorizedForWithdrawal(formData);
 
   // // cargaImagen(namePhoto.value[0]);
-  // setTimeout(function () {
-  //   const { push } = useRouter();
-  //   push("/login");
-  // }, 2000);
+  setTimeout(function () {
+    const { push } = useRouter();
+    push("/login");
+  }, 2000);
 };
 
 const fetchTutors = async () => {
@@ -321,7 +311,7 @@ onMounted(async () => {
                 class="input"
                 name="phoneNumber"
                 type="text"
-                placeholder="555 555-1234"
+                placeholder="569 123 45678"
                 :disabled="disabledInput"
               />
               <ErrorMessage name="phoneNumber" class="error-message" />
@@ -342,11 +332,13 @@ onMounted(async () => {
                   v-if="imageUrl"
                   :src="imageUrl"
                   class="h-full rounded-lg w-full"
+                  alt="Imagen seleccionada"
                 />
                 <img
                   v-if="!imageUrl"
                   src="@/assets/images/empty-photo.png"
                   class="h-full rounded-lg w-full"
+                  alt="Imagen seleccionada"
                 />
               </figure>
               <div>
