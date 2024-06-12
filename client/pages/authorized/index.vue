@@ -3,48 +3,77 @@ import * as z from "zod";
 import { ErrorMessage, Field } from "vee-validate";
 import { ref } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
-import {
-  DateFormatter,
-  type DateValue,
-  // getLocalTimeZone,
-} from "@internationalized/date";
 import { authorizedService } from "@/services";
 import { useAuthStore } from "@/store/useAuthStore";
-// import { AlarmClock, CalendarX2Icon } from "lucide-vue-next";
 import { FormStep, FormWizard } from "@/components/ui/steps";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuthorizedStore } from "@/store/useAuthorizedStore";
 import type { StudentType } from "@/types/models";
+import { wait } from "@/lib/utils";
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 5MB
 const ACCEPTED_FILE_TYPES = ["image/jpeg", "image/png"];
 const { user } = useAuthStore();
 
-console.log("user", user);
 const validationSchema = [
   toTypedSchema(
-    z.object({
-      // TODO: Crear un array para almacenar todos los id cuando se selecione el checkbox de studentLeavesAlone https://zod.dev/?id=nonempty
-      studentFullName: z
-        .string({
-          required_error: "Este campo es requerido",
-        })
-        .optional(),
-      selectAllStudents: z.boolean().default(false).optional(),
-      fullName: z
-        .string({ required_error: "Nombre y Apellido es requerido" })
-        .min(2, { message: "Nombre completo debe ser de 2 caracteres" }),
-      dni: z
-        .string({ required_error: "DNI es requerido" })
-        .min(8, { message: "DNI debe ser de 8 caracteres" }),
-      // TODO: añadir phone code input
-      // phoneCode: z.string({ required_error: "Código es requerido" }),
-      phoneNumber: z
-        .string({ required_error: "Teléfono es requerido" })
-        .min(10, { message: "Teléfono debe ser de 10 caracteres" }),
-      studentLeavesAlone: z.boolean().default(false).optional(),
-      tutorId: z.string().default(`${user}`).optional(),
-    }),
+    z
+      .object({
+        studentFullName: z
+          .string({
+            required_error: "Este campo es requerido",
+          })
+          .optional(),
+        selectAllStudents: z.boolean().default(false).optional(),
+        fullName: z
+          .string({ required_error: "Nombre y Apellido es requerido" })
+          .min(2, { message: "Nombre completo debe ser de 2 caracteres" })
+          .optional(),
+        dni: z
+          .string({ required_error: "DNI es requerido" })
+          .min(8, { message: "DNI debe ser de 8 caracteres" })
+          .optional(),
+        phoneNumber: z
+          .string({ required_error: "Teléfono es requerido" })
+          .min(10, { message: "Teléfono debe ser de 10 caracteres" })
+          .optional(),
+        studentLeavesAlone: z.boolean().default(false).optional(),
+        tutorId: z.string().default(`${user}`).optional(),
+      })
+      .superRefine((val, ctx) => {
+        if (!val.studentLeavesAlone) {
+          if (val.studentFullName === undefined) {
+            if (!val.selectAllStudents) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ["studentFullName"],
+                message: "Este campo es requerido",
+              });
+            }
+          }
+          if (val.fullName === undefined) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ["fullName"],
+              message: "Nombre y Apellido es requerido",
+            });
+          }
+          if (val.dni === undefined) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ["dni"],
+              message: "DNI es requerido",
+            });
+          }
+          if (val.phoneNumber === undefined) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ["phoneNumber"],
+              message: "Teléfono es requerido",
+            });
+          }
+        }
+      }),
   ),
   toTypedSchema(
     z.object({
@@ -54,18 +83,15 @@ const validationSchema = [
           return !file || file.size <= MAX_UPLOAD_SIZE;
         }, "El tamaño del archivo debe ser inferior a 5 MB.")
         .refine((file) => {
-          // console.log("file", file);
-
           return ACCEPTED_FILE_TYPES.includes(file.type);
         }, "Sólo se admiten los formatos .jpg y .png"),
-      // TODO: Crear un array para almacenar todos los id cuando se selecione el checkbox de studentLeavesAlone https://zod.dev/?id=nonempty
+
       studentFullName: z.string({ required_error: "Este campo es requerido" }),
       fullName: z.string({ required_error: "Nombre y Apellido es requerido" }),
       dni: z
         .string({ required_error: "DNI es requerido" })
         .min(8, { message: "Mínimo 8 caracteres" }),
-      // TODO: añadir phone code input
-      // phoneCode: z.string({ required_error: "Código es requerido" }),
+
       phoneNumber: z
         .string({ required_error: "Teléfono es requerido" })
         .min(8, { message: "Mínimo 8 caracteres" }),
@@ -73,33 +99,13 @@ const validationSchema = [
       tutorId: z.string().default(`${user}`).optional(),
     }),
   ),
-  toTypedSchema(
-    z.object({
-      // TODO: validar este campo
-      datetime: z.date({
-        required_error: "A date of birth is required.",
-      }),
-    }),
-  ),
 ];
-
-// const countryCodes = [
-//   { label: "Chile", value: "+56" },
-//   { label: "España", value: "+34" },
-//   { label: "Venezuela", value: "+58" },
-// ] as const;
-const df = new DateFormatter("es-ES", {
-  dateStyle: "long",
-});
 
 const disabledStudentsSelect = ref(false);
 const disabledInput = ref(false);
 const imageUrl = ref(null);
 const EventfileInput = ref(null);
 const studentsId: Ref<string[]> = ref([]);
-const studentsName: Ref<string[]> = ref([]);
-
-const value = ref<DateValue>();
 
 const emit = defineEmits(["imageloaded"]);
 
@@ -108,6 +114,7 @@ const { datosAuthorizedForWithdrawal } = authorizedService();
 const store = useAuthorizedStore();
 
 const studentList: Ref<StudentType[]> = ref([]);
+const alertDialog: Ref<boolean> = ref(false);
 
 const handleDisabledInput = () => {
   disabledInput.value = !disabledInput.value;
@@ -134,9 +141,7 @@ const onEventFilePicked = (event: any) => {
   fileReader.readAsDataURL(files[0]);
 };
 
-// FALTA ACTIVAR EL LEAVE ALONE SIN MARCAR OTRO CAMPO
-const onSubmit = (formData: any) => {
-  console.log("formMMMm", formData);
+const onSubmit = async (formData: any) => {
   formData.tutorId = user;
   if (formData.selectAllStudents) {
     if (disabledStudentsSelect.value) {
@@ -144,23 +149,21 @@ const onSubmit = (formData: any) => {
         student.id.toString(),
       );
       formData.studentFullName = studentsId.value;
-      console.log("studentsId=>", formData.studentFullName);
-      datosAuthorizedForWithdrawal(formData);
+
+      await datosAuthorizedForWithdrawal(formData);
     }
-    // }  else if (formData.studentLeavesAlone) {
-    //   formData.fullName = "Se retira sin acompañante";
-    //   formData.dni = "Se retira sin acompañante";
-    //   formData.phoneNumber = "9999999999";
-    // leaveAlone(formData);
   }
 
-  datosAuthorizedForWithdrawal(formData);
+  try {
+    await wait(3000);
+    console.log("formData", formData);
+  } catch (err) {
+    console.log("err=>", err);
+  } finally {
+    alertDialog.value = true;
+  }
 
-  // // cargaImagen(namePhoto.value[0]);
-  setTimeout(function () {
-    const { push } = useRouter();
-    push("/login");
-  }, 2000);
+  // datosAuthorizedForWithdrawal(formData);
 };
 
 const fetchTutors = async () => {
@@ -186,7 +189,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <NuxtLayout name="main-layout" as="main" class="grid items-center">
+  <main class="grid items-center px-4 lg:px-6">
     <img
       src="@/assets/images/tutor-background.png"
       class="fixed inset-0 w-full h-full object-cover"
@@ -206,7 +209,7 @@ onMounted(async () => {
               <div class="relative">
                 <Select
                   v-bind="componentField"
-                  :disabled="disabledStudentsSelect"
+                  :disabled="disabledStudentsSelect || disabledInput"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar alumno" />
@@ -367,6 +370,18 @@ onMounted(async () => {
         </div>
       </FormStep>
 
+      <AlertDialog v-model:open="alertDialog">
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle class="text-start"
+              >¡Excelente! El curso completo fue retirado</AlertDialogTitle
+            >
+          </AlertDialogHeader>
+          <AlertDialogFooter class="justify-end">
+            <AlertDialogCancel> Ok </AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <!-- Step 3 -->
       <!-- <FormStep> -->
       <!-- <Field v-slot="{ componentField, value }" name="datetime" type="date"> QUEDA COMENTADA-->
@@ -430,7 +445,7 @@ onMounted(async () => {
       <!-- </Field> QUEDA COMENTADA-->
       <!-- </FormStep> -->
     </FormWizard>
-  </NuxtLayout>
+  </main>
 </template>
 
 <style scoped>
