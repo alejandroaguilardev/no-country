@@ -62,6 +62,10 @@ const navItems = [
     label: "Estudiantes",
     url: "/admin/students",
   },
+  {
+    label: "Historial de retiros",
+    url: "/admin/historical",
+  },
 ];
 
 const onLogout = () => {
