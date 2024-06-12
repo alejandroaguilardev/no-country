@@ -5,7 +5,9 @@ use App\Http\Controllers\Authorizeds\LeaveAloneAuthorizedController;
 use App\Http\Controllers\Authorizeds\SearchAuthorizedController;
 use App\Http\Controllers\Authorizeds\UpdateAuthorizedController;
 use App\Http\Controllers\Courses\SearchCourseController;
+use App\Http\Controllers\Authorizeds\GetAuthorizedController;
 use App\Http\Controllers\HistoricalRetireds\HistoricalRetiredController;
+use App\Http\Controllers\Retired\ResetRetiredController;
 use App\Http\Controllers\Retired\SearchRetiredController;
 use App\Http\Controllers\Retired\UpdateRetiredController;
 use App\Http\Controllers\Storage\ImageSaveController;
@@ -24,6 +26,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware([AdminEnsureTokenIsValid::class])->group(function () {
     Route::get('/historicalretired', HistoricalRetiredController::class);
+    Route::get('/resetretiredstatus', ResetRetiredController::class);
+    Route::get('/getauthorizeds', GetAuthorizedController::class);
 });
 
 Route::middleware([TutorEnsureTokenIsValid::class])->group(function () {
