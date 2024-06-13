@@ -1,4 +1,3 @@
-import { toast } from "vue-sonner";
 import api from "../utils/authAxios";
 
 export const authorizedService = () => {
@@ -24,7 +23,11 @@ export const authorizedService = () => {
     }
   };
 
-  const datosAuthorizedForWithdrawal = async (payload: any) => {
+  const datosAuthorizedForWithdrawal = async (
+    payload: any,
+    tutorId: number,
+    studentsId: number[],
+  ) => {
     console.log("payload function", payload);
     const formdata = new FormData();
     formdata.append("name", payload.fullName);
@@ -32,30 +35,19 @@ export const authorizedService = () => {
     formdata.append("document_number", payload.dni);
     formdata.append("phone", payload.phoneNumber);
     formdata.append("photo", payload.tutorPhoto);
-    formdata.append("tutor_id", payload.tutorId.id);
-    [1].forEach((value, index) => {
-      formdata.append(`student_id[${index}]`, value.toString());
+    formdata.append("tutor_id", tutorId.toString());
+    studentsId.forEach((studentId) => {
+      formdata.append("student_id[]", studentId.toString());
     });
-    try {
-      const data = await api.post(`/api/authorizeds`, formdata, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "Authorization": `Bearer ${tokenSaved}`,
-        },
-      });
-      if (data.status === 200) {
-        toast("Registro Exitoso", {
-          description: `Autorizado ${payload.fullName} registrado correctamente.`,
-          action: {
-            label: "Cerrar",
-            onClick: () => console.log("Undo"),
-          },
-        });
-      }
-      return data;
-    } catch (error) {
-      console.log("error en datosAuthorizedForWithdrawal", error);
-    }
+
+    const data = await api.post(`/api/authorizeds`, formdata, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Authorization": `Bearer ${tokenSaved}`,
+      },
+    });
+
+    return data;
   };
   const cargaImagen = async (image: any) => {
     const formdata = new FormData();
@@ -69,14 +61,8 @@ export const authorizedService = () => {
       console.log("error", error);
     }
   };
-  const leaveAlone = async (formdata: any) => {
-    try {
-      await api.post(`/api/authorizeds/leave-alone`, formdata, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-    } catch (error) {
-      console.log("error", error);
-    }
+  const leaveAlone = async (payload: any) => {
+    await api.post(`/api/authorizeds/leave-alone`, payload);
   };
   return {
     getCargasApoderado,

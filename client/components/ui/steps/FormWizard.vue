@@ -46,13 +46,12 @@ const { values, handleSubmit, isSubmitting, isValidating } = useForm({
 
 // We are using the "submit" handler to progress to next steps
 // and to submit the form if its the last step
-const onSubmit = handleSubmit((values) => {
+const onSubmit = handleSubmit(() => {
   if (!isLastStep.value && !values.studentLeavesAlone) {
     currentStepIdx.value++;
 
     return;
   }
-
   // Let the parent know the form was filled across all steps
   emit("submit", values);
 });
@@ -84,10 +83,20 @@ function goToPrev() {
       </h3>
     </div>
 
-    <slot />
+    <slot :values="values" />
 
     <template v-if="!values.studentLeavesAlone">
       <div class="w-full flex flex-col md:flex-row gap-4 justify-center">
+        <Button
+          v-if="hasPrevious"
+          variant="blue"
+          size="lg"
+          class="px-12"
+          type="button"
+          @click="goToPrev"
+        >
+          Anterior
+        </Button>
         <Button
           size="lg"
           variant="blue"
@@ -107,16 +116,6 @@ function goToPrev() {
     </template>
 
     <div v-else class="w-full flex flex-col md:flex-row gap-4 justify-center">
-      <Button
-        v-if="hasPrevious"
-        variant="blue"
-        size="lg"
-        class="px-12"
-        type="button"
-        @click="goToPrev"
-      >
-        Anterior
-      </Button>
       <Button
         size="lg"
         variant="blue"
