@@ -4,6 +4,7 @@ import { ErrorMessage, Field } from "vee-validate";
 import { ref } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { toast } from "vue-sonner";
+import { useRouter } from "vue-router";
 import { authorizedService } from "@/services";
 import { useAuthStore } from "@/store/useAuthStore";
 import { FormStep, FormWizard } from "@/components/ui/steps";
@@ -14,6 +15,8 @@ import type { StudentType } from "@/types/models";
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 5MB
 const ACCEPTED_FILE_TYPES = ["image/jpeg", "image/png"];
 const { user } = useAuthStore();
+// Methods dependencies
+const router = useRouter();
 
 const validationSchema = [
   toTypedSchema(
@@ -137,6 +140,9 @@ const onSubmit = async (formData: any) => {
       await datosAuthorizedForWithdrawal(formData, user!.id!, studentsId);
     }
     alertDialog.value = true;
+    setTimeout(() => {
+      router.push("/");
+    }, 2000);
   } catch (err) {
     toast.error(
       "Ocurrió un error y no se pudieron guardar los datos, intente nuevamente más tarde",
