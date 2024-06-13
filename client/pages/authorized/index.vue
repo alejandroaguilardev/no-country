@@ -3,13 +3,13 @@ import * as z from "zod";
 import { ErrorMessage, Field } from "vee-validate";
 import { ref } from "vue";
 import { toTypedSchema } from "@vee-validate/zod";
+import { toast } from "vue-sonner";
 import { authorizedService } from "@/services";
 import { useAuthStore } from "@/store/useAuthStore";
 import { FormStep, FormWizard } from "@/components/ui/steps";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuthorizedStore } from "@/store/useAuthorizedStore";
 import type { StudentType } from "@/types/models";
-import { wait } from "@/lib/utils";
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 5MB
 const ACCEPTED_FILE_TYPES = ["image/jpeg", "image/png"];
@@ -19,7 +19,7 @@ const validationSchema = [
   toTypedSchema(
     z
       .object({
-        studentFullName: z
+        targetStudentId: z
           .string({
             required_error: "Este campo es requerido",
           })
@@ -42,11 +42,11 @@ const validationSchema = [
       })
       .superRefine((val, ctx) => {
         if (!val.studentLeavesAlone) {
-          if (val.studentFullName === undefined) {
+          if (val.targetStudentId === undefined) {
             if (!val.selectAllStudents) {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                path: ["studentFullName"],
+                path: ["targetStudentId"],
                 message: "Este campo es requerido",
               });
             }
@@ -85,85 +85,63 @@ const validationSchema = [
         .refine((file) => {
           return ACCEPTED_FILE_TYPES.includes(file.type);
         }, "Sólo se admiten los formatos .jpg y .png"),
-
-      studentFullName: z.string({ required_error: "Este campo es requerido" }),
-      fullName: z.string({ required_error: "Nombre y Apellido es requerido" }),
-      dni: z
-        .string({ required_error: "DNI es requerido" })
-        .min(8, { message: "Mínimo 8 caracteres" }),
-
-      phoneNumber: z
-        .string({ required_error: "Teléfono es requerido" })
-        .min(8, { message: "Mínimo 8 caracteres" }),
-      studentLeavesAlone: z.boolean().default(false).optional(),
-      tutorId: z.string().default(`${user}`).optional(),
     }),
   ),
 ];
 
 const disabledStudentsSelect = ref(false);
-const disabledInput = ref(false);
-const imageUrl = ref(null);
-const EventfileInput = ref(null);
-const studentsId: Ref<string[]> = ref([]);
+const imageUrl: Ref<string> = ref("");
 
-const emit = defineEmits(["imageloaded"]);
-
-const { datosAuthorizedForWithdrawal } = authorizedService();
+const { datosAuthorizedForWithdrawal, leaveAlone } = authorizedService();
 
 const store = useAuthorizedStore();
 
 const studentList: Ref<StudentType[]> = ref([]);
 const alertDialog: Ref<boolean> = ref(false);
 
-const handleDisabledInput = () => {
-  disabledInput.value = !disabledInput.value;
-};
-
 const handleDisableSelect = () => {
   disabledStudentsSelect.value = !disabledStudentsSelect.value;
 };
-const namePhoto = ref();
+
 const onEventFilePicked = (event: any) => {
   const files = event.target.files;
-  const image = files[0];
-  namePhoto.value = files;
   const filename = files[0].name;
-  if (filename.lastIndexOf(".") <= 0) {
-    return alert("Por favor adicione um arquivo válido");
-  }
-  console.log("imageeen", files);
   const fileReader = new FileReader();
+
+  if (filename.lastIndexOf(".") <= 0) {
+    return alert("Por favor adicione un arquivo válido");
+  }
+
   fileReader.addEventListener("load", () => {
-    imageUrl.value = fileReader.result;
-    emit("imageloaded", imageUrl.value);
+    imageUrl.value = fileReader.result as string;
   });
   fileReader.readAsDataURL(files[0]);
 };
 
 const onSubmit = async (formData: any) => {
-  formData.tutorId = user;
-  if (formData.selectAllStudents) {
-    if (disabledStudentsSelect.value) {
-      studentsId.value = studentList.value.map((student) =>
-        student.id.toString(),
-      );
-      formData.studentFullName = studentsId.value;
+  const studentsId: number[] = [];
 
-      await datosAuthorizedForWithdrawal(formData);
-    }
+  if (formData.selectAllStudents) {
+    studentList.value.forEach((student) => studentsId.push(student.id));
+  } else {
+    studentsId.push(formData.targetStudentId);
   }
 
   try {
-    await wait(3000);
-    console.log("formData", formData);
-  } catch (err) {
-    console.log("err=>", err);
-  } finally {
+    if (formData.studentLeavesAlone) {
+      await leaveAlone({
+        leave_alone: 1,
+        student_id: studentsId,
+      });
+    } else {
+      await datosAuthorizedForWithdrawal(formData, user!.id!, studentsId);
+    }
     alertDialog.value = true;
+  } catch (err) {
+    toast.error(
+      "Ocurrió un error y no se pudieron guardar los datos, intente nuevamente más tarde",
+    );
   }
-
-  // datosAuthorizedForWithdrawal(formData);
 };
 
 const fetchTutors = async () => {
@@ -174,14 +152,6 @@ const fetchTutors = async () => {
     console.log("err=>", err);
   }
 };
-
-watch(disabledStudentsSelect, () => {
-  if (disabledStudentsSelect.value) {
-    studentsId.value = studentList.value.map((student) =>
-      student.id.toString(),
-    );
-  }
-});
 
 onMounted(async () => {
   await fetchTutors();
@@ -195,40 +165,42 @@ onMounted(async () => {
       class="fixed inset-0 w-full h-full object-cover"
       alt="Background"
     />
-    <FormWizard :validation-schema="validationSchema" @submit="onSubmit">
+    <FormWizard
+      v-slot="{ values }"
+      :validation-schema="validationSchema"
+      @submit="onSubmit"
+    >
       <!-- Step 1 -->
       <FormStep>
         <div class="grid gap-8 max-w-[425px] mx-auto">
           <Field
             v-slot="{ componentField }"
-            name="studentFullName"
+            name="targetStudentId"
             type="select"
           >
-            <div class="grid lg:grid-cols-[0.6fr_1fr] gap-6 items-center">
-              <label for="studentFullName" class="label">Alumno</label>
-              <div class="relative">
-                <Select
-                  v-bind="componentField"
-                  :disabled="disabledStudentsSelect || disabledInput"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar alumno" />
-                  </SelectTrigger>
+            <div class="flex flex-col">
+              <label for="targetStudentId" class="label mb-6">Alumno</label>
+              <Select
+                v-bind="componentField"
+                :disabled="values.selectAllStudents"
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Seleccionar alumno" />
+                </SelectTrigger>
 
-                  <SelectContent>
-                    <SelectGroup
-                      v-for="student in studentList"
-                      :key="student.id"
-                      class="p-0"
-                    >
-                      <SelectItem :value="student.id.toString()">
-                        {{ student.name }}
-                      </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-                <ErrorMessage name="studentFullName" class="error-message" />
-              </div>
+                <SelectContent>
+                  <SelectGroup
+                    v-for="student in studentList"
+                    :key="student.id"
+                    class="p-0"
+                  >
+                    <SelectItem :value="student.id.toString()">
+                      {{ student.name }}
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <ErrorMessage name="targetStudentId" class="error-message" />
             </div>
           </Field>
 
@@ -256,7 +228,7 @@ onMounted(async () => {
             </Field>
 
             <Field
-              v-slot="{ value, handleChange }"
+              v-slot="{ handleChange }"
               name="studentLeavesAlone"
               type="checkbox"
               :value="true"
@@ -264,61 +236,53 @@ onMounted(async () => {
             >
               <div
                 class="grid grid-cols-[1fr_auto] gap-4 lg:gap-20 items-center w-full justify-between"
-                @click="handleDisabledInput()"
               >
                 <label for="studentLeavesAlone" class="label">
                   El alumno se retira sin acompañante
                 </label>
                 <Checkbox
                   id="studentLeavesAlone"
-                  :checked="value"
                   @update:checked="handleChange"
                 />
               </div>
             </Field>
           </div>
-          <div class="grid lg:grid-cols-[0.6fr_1fr] gap-6 items-center">
-            <label for="fullName" class="label">Nombre y apellido</label>
-            <div class="relative">
-              <Field
-                id="fullName"
-                name="fullName"
-                class="input"
-                placeholder="Nombre Completo"
-                :disabled="disabledInput"
-              />
-              <ErrorMessage name="fullName" class="error-message" />
-            </div>
+          <div class="flex flex-col">
+            <label for="fullName" class="label mb-6">Nombre y apellido</label>
+            <Field
+              id="fullName"
+              name="fullName"
+              class="input"
+              placeholder="Nombre Completo"
+              :disabled="values.studentLeavesAlone"
+            />
+            <ErrorMessage name="fullName" class="error-message" />
           </div>
 
-          <div class="grid lg:grid-cols-[0.6fr_1fr] gap-6 items-center">
-            <label for="dni" class="label">D.N.I</label>
-            <div class="relative">
-              <Field
-                id="dni"
-                class="input"
-                name="dni"
-                type="text"
-                placeholder="D.N.I"
-                :disabled="disabledInput"
-              />
-              <ErrorMessage name="dni" class="error-message" />
-            </div>
+          <div class="flex flex-col">
+            <label for="dni" class="label mb-6">D.N.I</label>
+            <Field
+              id="dni"
+              class="input"
+              name="dni"
+              type="text"
+              placeholder="D.N.I"
+              :disabled="values.studentLeavesAlone"
+            />
+            <ErrorMessage name="dni" class="error-message" />
           </div>
 
-          <div class="grid lg:grid-cols-[0.6fr_1fr] gap-6 items-center">
-            <label for="dni" class="label">Teléfono</label>
-            <div class="relative">
-              <Field
-                id="phoneNumber"
-                class="input"
-                name="phoneNumber"
-                type="text"
-                placeholder="569 123 45678"
-                :disabled="disabledInput"
-              />
-              <ErrorMessage name="phoneNumber" class="error-message" />
-            </div>
+          <div class="flex flex-col">
+            <label for="dni" class="label mb-6">Teléfono</label>
+            <Field
+              id="phoneNumber"
+              class="input"
+              name="phoneNumber"
+              type="text"
+              placeholder="569 123 45678"
+              :disabled="values.studentLeavesAlone"
+            />
+            <ErrorMessage name="phoneNumber" class="error-message" />
           </div>
         </div>
       </FormStep>
@@ -352,7 +316,6 @@ onMounted(async () => {
                   <div class="relative">
                     <Field
                       id="tutorPhoto"
-                      ref="EventfileInput"
                       class="input border-none !bg-background py-6 h-auto"
                       name="tutorPhoto"
                       type="file"
@@ -374,7 +337,7 @@ onMounted(async () => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle class="text-start"
-              >¡Excelente! El curso completo fue retirado</AlertDialogTitle
+              >Datos actualizados con éxito</AlertDialogTitle
             >
           </AlertDialogHeader>
           <AlertDialogFooter class="justify-end">
@@ -382,68 +345,6 @@ onMounted(async () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <!-- Step 3 -->
-      <!-- <FormStep> -->
-      <!-- <Field v-slot="{ componentField, value }" name="datetime" type="date"> QUEDA COMENTADA-->
-      <!-- <div class="grid gap-8 max-w-[425px] mb-20 mx-auto">
-          <Popover>
-            <div class="grid lg:grid-cols-[0.6fr_1fr] gap-6 items-center">
-              <label class="label">Fecha de inicio</label>
-              <PopoverTrigger as-child>
-                <Button
-                  variant="outline"
-                  :class="
-                    cn(
-                      'w-full justify-start text-left font-normal',
-                      !value && 'text-muted-foreground',
-                    )
-                  "
-                >
-                  <CalendarX2Icon class="mr-2 h-4 w-4" />
-                  {{
-                    value
-                      ? df.format(value.toDate(getLocalTimeZone()))
-                      : "Pick a date"
-                  }}
-                </Button>
-              </PopoverTrigger>
-            </div>
-
-            <PopoverContent class="w-auto p-0">
-              <Calendar v-model="value" mode="datetime" initial-focus />
-            </PopoverContent>
-          </Popover>
-          <Popover>
-            <div class="grid lg:grid-cols-[0.6fr_1fr] gap-6 items-center">
-              <label class="label">Fecha de inicio</label>
-              <PopoverTrigger as-child>
-                <Button
-                  variant="outline"
-                  :class="
-                    cn(
-                      'w-full justify-start text-left font-normal',
-                      !value && 'text-muted-foreground',
-                    )
-                  "
-                >
-                  <AlarmClock class="mr-2 h-4 w-4" />
-                  {{
-                    value
-                      ? df.format(value.toDate(getLocalTimeZone()))
-                      : "Pick a date"
-                  }}
-                </Button>
-              </PopoverTrigger>
-            </div>
-
-            <PopoverContent class="w-auto p-0">
-              <Calendar v-model="value" mode="datetime" initial-focus />
-            </PopoverContent>
-          </Popover>
-        </div> -->
-
-      <!-- </Field> QUEDA COMENTADA-->
-      <!-- </FormStep> -->
     </FormWizard>
   </main>
 </template>
@@ -470,6 +371,6 @@ onMounted(async () => {
 }
 
 .error-message {
-  @apply text-destructive text-sm font-medium absolute mt-1;
+  @apply text-destructive text-sm font-medium mt-1;
 }
 </style>
