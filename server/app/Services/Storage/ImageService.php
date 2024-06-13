@@ -19,13 +19,13 @@ final class ImageService
             $constraint->aspectRatio();
             $constraint->upsize();
         })
-            ->save(Storage::path($path . $filename));
+            ->save(public_path($path . $filename));
         return $filename;
     }
 
     public function search(string $name, string $path)
     {
-        $imagePath = Storage::path($path . $name);
+        $imagePath = public_path($path . $name);
         $this->ensureFileExists($imagePath);
 
         $file = File::get($imagePath);
@@ -39,7 +39,7 @@ final class ImageService
 
     public function remove(string $name, string $path): void
     {
-        $imagePath = Storage::path($path . $name);
+        $imagePath = public_path($path . $name);
         $this->ensureFileExists($imagePath);
         File::delete($imagePath);
     }
@@ -53,8 +53,8 @@ final class ImageService
 
     private function ensurePathExists(string $path): void
     {
-        if (!Storage::exists($path)) {
-            Storage::makeDirectory($path);
+        if (!File::exists(public_path($path))) {
+            File::makeDirectory(public_path($path), 0755, true);
         }
     }
 }

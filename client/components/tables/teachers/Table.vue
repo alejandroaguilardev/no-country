@@ -12,11 +12,13 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { TeacherTableDTO } from "@/dto/teacherTableDTO";
+import WithoutContent from "@/components/tables/WithoutContent.vue";
 
 const props = defineProps<{
   columns: ColumnDef<TeacherTableDTO, TValue>[];
   data: TeacherTableDTO[];
   loading: boolean;
+  failed: boolean;
 }>();
 
 const table = useVueTable({
@@ -38,7 +40,11 @@ const table = useVueTable({
           v-for="headerGroup in table.getHeaderGroups()"
           :key="headerGroup.id"
         >
-          <TableHead v-for="header in headerGroup.headers" :key="header.id">
+          <TableHead
+            v-for="header in headerGroup.headers"
+            :key="header.id"
+            :class="`w-[${header.getSize()}px]`"
+          >
             <FlexRender
               v-if="!header.isPlaceholder"
               :render="header.column.columnDef.header"
@@ -51,26 +57,23 @@ const table = useVueTable({
         <template v-if="loading">
           <TableRow v-for="index in 10" :key="index">
             <TableCell>
-              <Skeleton class="h-4 w-16 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
             <TableCell>
-              <Skeleton class="h-4 w-38 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
             <TableCell>
-              <Skeleton class="h-4 w-38 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
             <TableCell>
-              <Skeleton class="h-4 w-38 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
             <TableCell>
-              <Skeleton class="h-4 w-38 bg-slate-300" />
-            </TableCell>
-            <TableCell>
-              <Skeleton class="h-4 w-38 bg-slate-300" />
+              <Skeleton class="h-4 my-[2px] w-full bg-slate-300" />
             </TableCell>
           </TableRow>
         </template>
-        <template v-else-if="table.getRowModel().rows?.length">
+        <template v-else-if="table.getRowModel().rows?.length && !failed">
           <TableRow
             v-for="row in table.getRowModel().rows"
             :key="row.id"
@@ -85,11 +88,7 @@ const table = useVueTable({
           </TableRow>
         </template>
         <template v-else>
-          <TableRow>
-            <TableCell :col-span="columns.length" class="h-24 text-center">
-              Sin resultados.
-            </TableCell>
-          </TableRow>
+          <WithoutContent :failed="failed" :columns="columns.length" />
         </template>
       </TableBody>
     </Table>

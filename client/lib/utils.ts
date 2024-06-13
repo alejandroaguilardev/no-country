@@ -18,9 +18,9 @@ export const getStudentStatusText = (
   if (presence === 1) {
     if (leaveAlone === 0) {
       if (status === 1) {
-        return "No retirado";
-      } else {
         return "Retirado";
+      } else {
+        return "Por retirar";
       }
     } else {
       return "Sale solo";
@@ -38,9 +38,9 @@ export const getStudentStatusVariant = (
   if (presence === 1) {
     if (leaveAlone === 0) {
       if (status === 1) {
-        return StudentStatusEnum.NO_WITHDRAWN;
-      } else {
         return StudentStatusEnum.WITHDRAWN;
+      } else {
+        return StudentStatusEnum.NO_WITHDRAWN;
       }
     } else {
       return StudentStatusEnum.LEAVE_ALONE;
