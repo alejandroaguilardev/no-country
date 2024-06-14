@@ -1,0 +1,1350 @@
+{
+	"info": {
+		"_postman_id": "23c26a26-32b6-4136-83c5-a255e1767594",
+		"name": "Safe-Kids. 🤔",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34988226",
+		"_collection_link": "https://c18-102-m-php-vue.postman.co/workspace/Team-Workspace~4747b16a-36ae-431a-81e8-3c0c34f1f407/collection/34988226-23c26a26-32b6-4136-83c5-a255e1767594?action=share&source=collection_link&creator=34988226"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"admin@example.com\",\r\n    \"password\":\"nocountry\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/auth/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/auth/refresh",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/auth/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "**Autenticación de usuarios de prueba:**  \n{ name:\"teacher\", email: \"[teacher@example.com](https://mailto:teacher@example.com)\", password: \"nocountry\"},\n\n{ name:\"tutor\", email: \"[tutor@example.com](https://mailto:tutor@example.com)\", password: \"nocountry\"},\n\n{ name:\"admin\", email: \"[admin@example.com](https://mailto:admin@example.com)\", password: \"nocountry\"}\n\n**Accesos :**\n\n1. **Admin** TIene Acceso a todas las rutas.\n2. **Tutor**: Tiene acceso a:\n    1. /storage\n    2. /autorizaeds/update-autorizeds\n    3. /autorizaeds/leave-alone\n    4. /tutors/sesion-actual-get-students\n    5. /tutors/sesion-actual-get-autorizaeds\n3. **Teachers**: tiene acceso a:\n    1. /coruses\n    2. /students\n    3. /teachers\n    4. /tutors\n    5. / Retired\n    6. /autorozeds/get-records\n4. **Cualquier usuario:** autenticado tiene acceso a /Auth y /Storage"
+		},
+		{
+			"name": "Authorizeds",
+			"item": [
+				{
+					"name": "get-records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:12px;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"    .innerTable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .innerTable th {font-size:12px;background-color:#87ceeb;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .innerTable td {font-size:12px;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .innerTable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Created At</th>\r",
+									"        <th>Updated At</th>\r",
+									"        <th>Name</th>\r",
+									"        <th>Lastname</th>\r",
+									"        <th>Document Number</th>\r",
+									"        <th>Phone</th>\r",
+									"        <th>Photo</th>\r",
+									"        <th>Tutor ID</th>\r",
+									"        <th>Students</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response.rows}}\r",
+									"        <tr id=row_{{@key}}>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{created_at}}</td>\r",
+									"            <td>{{updated_at}}</td>\r",
+									"            <td>{{name}}</td>\r",
+									"            <td>{{lastname}}</td>\r",
+									"            <td>{{documentnumber}}</td>\r",
+									"            <td>{{phone}}</td>\r",
+									"            <td>{{photo}}</td>\r",
+									"            <td>{{tutor_id}}</td>\r",
+									"            <td>\r",
+									"                <table class=\"innerTable\">\r",
+									"                    <tr>\r",
+									"                        <th>ID</th>\r",
+									"                        <th>Created At</th>\r",
+									"                        <th>Updated At</th>\r",
+									"                        <th>Name</th>\r",
+									"                        <th>Lastname</th>\r",
+									"                        <th>Document Number</th>\r",
+									"                        <th>Course ID</th>\r",
+									"                        <th>Tutor ID</th>\r",
+									"                        <th>Authorized ID</th>\r",
+									"                    </tr>\r",
+									"                    {{#each students}}\r",
+									"                        <tr>\r",
+									"                            <td>{{id}}</td>\r",
+									"                            <td>{{created_at}}</td>\r",
+									"                            <td>{{updated_at}}</td>\r",
+									"                            <td>{{name}}</td>\r",
+									"                            <td>{{lastname}}</td>\r",
+									"                            <td>{{documentnumber}}</td>\r",
+									"                            <td>{{course_id}}</td>\r",
+									"                            <td>{{tutor_id}}</td>\r",
+									"                            <td>{{authorized_id}}</td>\r",
+									"                        </tr>\r",
+									"                    {{/each}}\r",
+									"                </table>\r",
+									"            </td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return { response: pm.response.json() }\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/authorizeds",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"authorizeds"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Query Params:\n\n- `'limit': 'integer|min:1|max:100',`\n    \n- `'offset': 'integer|min:0',`\n    \n\nPor defecto\n\n- `limit=10`\n    \n- `offset=0`"
+					},
+					"response": []
+				},
+				{
+					"name": "leave-alone",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"leave_alone\":1,\r\n    \"student_id\":[1,2,3]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/authorizeds/leave-alone",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"authorizeds",
+								"leave-alone"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-authorized",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/home/cactus/Downloads/WhatsApp-para-Android-1536x1295-3144207227.jpg",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "alejandro",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "alejandro",
+									"type": "text"
+								},
+								{
+									"key": "document_number",
+									"value": "432682374",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "3421243322",
+									"type": "text"
+								},
+								{
+									"key": "tutor_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "student_id",
+									"value": "[1]",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/authorizeds",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"authorizeds"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Autorizados por los apoderados"
+		},
+		{
+			"name": "Courses",
+			"item": [
+				{
+					"name": "get-records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:12px;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Created At</th>\r",
+									"        <th>Updated At</th>\r",
+									"        <th>Description</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response.rows}}\r",
+									"        <tr>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{created_at}}</td>\r",
+									"            <td>{{updated_at}}</td>\r",
+									"            <td>{{description}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/courses",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"courses"
+							]
+						},
+						"description": "Query Params:\n\n- `'limit': 'integer|min:1|max:100',`\n    \n- `'offset': 'integer|min:0',`\n    \n\nPor defecto\n\n- `limit=10`\n    \n- `offset=0`"
+					},
+					"response": []
+				}
+			],
+			"description": "Colección de Cursos / Grados\n\nCursos variados disponibles para el desarrollo integral."
+		},
+		{
+			"name": "Students",
+			"item": [
+				{
+					"name": "get-records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:12px;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Name</th>\r",
+									"        <th>Last Name</th>\r",
+									"        <th>Document Number</th>\r",
+									"        <th>Course ID</th>\r",
+									"        <th>Tutor ID</th>\r",
+									"        <th>Authorized ID</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response.rows}}\r",
+									"        <tr>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{name}}</td>\r",
+									"            <td>{{lastname}}</td>\r",
+									"            <td>{{documentnumber}}</td>\r",
+									"            <td>{{course_id}}</td>\r",
+									"            <td>{{tutor_id}}</td>\r",
+									"            <td>{{authorized_id}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/students",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"students"
+							],
+							"query": [
+								{
+									"key": "filters[0][field]",
+									"value": "course.description",
+									"disabled": true
+								},
+								{
+									"key": "filters[0][value]",
+									"value": "1B",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "100",
+									"disabled": true
+								},
+								{
+									"key": "offset",
+									"value": "10",
+									"disabled": true
+								},
+								{
+									"key": "sorts[0][orderBy]",
+									"value": "name",
+									"disabled": true
+								},
+								{
+									"key": "sorts[0][orderType]",
+									"value": "desc",
+									"disabled": true
+								},
+								{
+									"key": "sorts[1][orderBy]",
+									"value": "last_name",
+									"disabled": true
+								},
+								{
+									"key": "sorts[1][orderType]",
+									"value": "desc",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Query Params:\n\n- `'limit': 'integer|min:1|max:100',`\n    \n- `'offset': 'integer|min:0',`\n    \n\nPor defecto\n\n- `limit=10`\n    \n- `offset=0`"
+					},
+					"response": []
+				},
+				{
+					"name": "get-students-by-course",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/students/course/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"course",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Estudiantes/ alumnos de la App."
+		},
+		{
+			"name": "Teachers",
+			"item": [
+				{
+					"name": "get-records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:12px;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Name</th>\r",
+									"        <th>Last Name</th>\r",
+									"        <th>Phone</th>\r",
+									"        <th>Email</th>\r",
+									"        <th>Course ID</th>\r",
+									"        <th>Course Description</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response.rows}}\r",
+									"        <tr id=row_{{@key}}>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{name}}</td>\r",
+									"            <td>{{lastname}}</td>\r",
+									"            <td>{{phone}}</td>\r",
+									"            <td>{{email}}</td>\r",
+									"            <td>{{course_id}}</td>\r",
+									"            <td>{{course.description}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/teachers",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"teachers"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "offset",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Query Params:\n\n- `'limit': 'integer|min:1|max:100',`\n    \n- `'offset': 'integer|min:0',`\n    \n\nPor defecto\n\n- `limit=10`\n    \n- `offset=0`"
+					},
+					"response": []
+				}
+			],
+			"description": "Colección Profesores"
+		},
+		{
+			"name": "Tutors",
+			"item": [
+				{
+					"name": "get-records",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:12px;color:#333333;width:80%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:12px;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Name</th>\r",
+									"        <th>Last Name</th>\r",
+									"        <th>Email</th>\r",
+									"        <th>Phone</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response.rows}}\r",
+									"        <tr>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{name}}</td>\r",
+									"            <td>{{lastname}}</td>\r",
+									"            <td>{{email}}</td>\r",
+									"            <td>{{phone}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/tutors",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tutors"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20",
+									"disabled": true
+								},
+								{
+									"key": "offset",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Query Params:\n\n- `'limit': 'integer|min:1|max:100',`\n    \n- `'offset': 'integer|min:0',`\n    \n\nPor defecto\n\n- `limit=10`\n    \n- `offset=0`"
+					},
+					"response": []
+				},
+				{
+					"name": "sesion-actual-get-students",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/tutors/students",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tutors",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sesion-actual-get-authorizeds",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/tutors/authorizeds",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tutors",
+								"authorizeds"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Colección Tutores/Apoderados"
+		},
+		{
+			"name": "Storage",
+			"item": [
+				{
+					"name": "upload-image",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:12px;color:#333333;width:80%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:12px;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Name</th>\r",
+									"        <th>Last Name</th>\r",
+									"        <th>Email</th>\r",
+									"        <th>Phone</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response.rows}}\r",
+									"        <tr>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{name}}</td>\r",
+									"            <td>{{lastname}}</td>\r",
+									"            <td>{{email}}</td>\r",
+									"            <td>{{phone}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/cactus/Downloads/WhatsApp-para-Android-1536x1295-3144207227.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/upload-image",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"upload-image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "image",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:12px;color:#333333;width:80%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:14px;background-color:#87ceeb;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:12px;border-width: 1px;padding: 4px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>ID</th>\r",
+									"        <th>Name</th>\r",
+									"        <th>Last Name</th>\r",
+									"        <th>Email</th>\r",
+									"        <th>Phone</th>\r",
+									"    </tr>\r",
+									"    \r",
+									"    {{#each response.rows}}\r",
+									"        <tr>\r",
+									"            <td>{{id}}</td>\r",
+									"            <td>{{name}}</td>\r",
+									"            <td>{{lastname}}</td>\r",
+									"            <td>{{email}}</td>\r",
+									"            <td>{{phone}}</td>\r",
+									"        </tr>\r",
+									"    {{/each}}\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/image/1717596057.jpg",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"image",
+								"1717596057.jpg"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Storage para subir las imagenes y consultar imagenes.  \nFormatos permitidos: jpeg,png,gif,webp\n\npeso maximo :25600"
+		},
+		{
+			"name": "Retired",
+			"item": [
+				{
+					"name": "update-retired",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `",
+									"<style type=\"text/css\">",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
+									"    .tftable tr {background-color:#ffffff;}",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
+									"    .tftable tr:hover {background-color:#e0ffff;}",
+									"</style>",
+									"",
+									"<table class=\"tftable\" border=\"1\">",
+									"    <tr>",
+									"        <th>Status</th>",
+									"        <th>Content-Type</th>",
+									"        <th>Body</th>",
+									"    </tr>",
+									"    <tr>",
+									"        <td>404</td>",
+									"        <td>text/html</td>",
+									"        <td>",
+									"            <!DOCTYPE html>",
+									"            <html lang=\"en\">",
+									"                <head>",
+									"                    <meta charset=\"utf-8\">",
+									"                    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+									"                    <title>Not Found</title>",
+									"                    ...",
+									"                </head>",
+									"                <body class=\"antialiased\">",
+									"                    <div class=\"relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0\">",
+									"                        <div class=\"max-w-xl mx-auto sm:px-6 lg:px-8\">",
+									"                            <div class=\"flex items-center pt-8 sm:justify-start sm:pt-0\">",
+									"                                <div class=\"px-4 text-lg text-gray-500 border-r border-gray-400 tracking-wider\">",
+									"                                    404",
+									"                                </div>",
+									"                                <div class=\"ml-4 text-lg text-gray-500 uppercase tracking-wider\">",
+									"                                    Not Found",
+									"                                </div>",
+									"                            </div>",
+									"                        </div>",
+									"                    </div>",
+									"                </body>",
+									"            </html>",
+									"        </td>",
+									"    </tr>",
+									"</table>",
+									"`;",
+									"",
+									"function constructVisualizerPayload() {",
+									"    var response = {",
+									"        status: 404,",
+									"        contentType: \"text/html\",",
+									"        body: `<!DOCTYPE html>",
+									"        <html lang=\"en\">",
+									"            <head>",
+									"                <meta charset=\"utf-8\">",
+									"                <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+									"                <title>Not Found</title>",
+									"                ...",
+									"            </head>",
+									"            <body class=\"antialiased\">",
+									"                <div class=\"relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0\">",
+									"                    <div class=\"max-w-xl mx-auto sm:px-6 lg:px-8\">",
+									"                        <div class=\"flex items-center pt-8 sm:justify-start sm:pt-0\">",
+									"                            <div class=\"px-4 text-lg text-gray-500 border-r border-gray-400 tracking-wider\">",
+									"                                404",
+									"                            </div>",
+									"                            <div class=\"ml-4 text-lg text-gray-500 uppercase tracking-wider\">",
+									"                                Not Found",
+									"                            </div>",
+									"                        </div>",
+									"                    </div>",
+									"                </div>",
+									"            </body>",
+									"        </html>`",
+									"    };",
+									"    return { response };",
+									"}",
+									"",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\":\"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/retireds/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"retireds",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update-ausent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var template = `\r",
+									"<style type=\"text/css\">\r",
+									"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+									"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+									"    .tftable tr {background-color:#ffffff;}\r",
+									"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+									"    .tftable tr:hover {background-color:#e0ffff;}\r",
+									"</style>\r",
+									"\r",
+									"<table class=\"tftable\" border=\"1\">\r",
+									"    <tr>\r",
+									"        <th>Message</th>\r",
+									"    </tr>\r",
+									"    <tr>\r",
+									"        <td>{{response.message}}</td>\r",
+									"    </tr>\r",
+									"</table>\r",
+									"`;\r",
+									"\r",
+									"function constructVisualizerPayload() {\r",
+									"    return {response: pm.response.json()}\r",
+									"}\r",
+									"\r",
+									"pm.visualizer.set(template, constructVisualizerPayload());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"presence\":\"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/ausent/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"ausent",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-records",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Historico de retiros",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/historicalretired",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"historicalretired"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restablecer el estado de retirado",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/resetretiredstatus",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"resetretiredstatus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Autorizados",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/getauthorizeds",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"getauthorizeds"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
